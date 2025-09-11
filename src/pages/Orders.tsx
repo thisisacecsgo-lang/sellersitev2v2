@@ -33,7 +33,7 @@ const Orders = () => {
     const now = new Date();
     const upcomingPickups = filteredOrders
       .filter(o => isAfter(parseISO(o.pickupWindowStart), now) && o.status !== 'Completed')
-      .map(o => format(parseISO(o.pickupWindowStart), "HH:mm"));
+      .map(o => format(parseISO(o.pickupWindowStart), "MMM d, HH:mm"));
     
     return {
       totalOrders: filteredOrders.length,
