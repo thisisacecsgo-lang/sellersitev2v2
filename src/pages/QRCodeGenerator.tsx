@@ -1,6 +1,6 @@
 import { useState, useMemo, useRef } from "react";
 import { Link } from "react-router-dom";
-import { QRCode } from "qrcode.react"; // Changed from default import to named import
+import QRCode from "qrcode.react";
 import { mockProducts } from "@/data/mockData";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import BackButton from "@/components/BackButton";
