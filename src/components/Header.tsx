@@ -26,7 +26,7 @@ const Header = () => {
               onClick={() => setIsSheetOpen(false)} // Close sheet on link click
             >
               <img src="/images/logooo.png" alt="MySite Logo" className="h-10 w-10"/>
-              <span className="not-sr-only">Hiesige Höfe</span> {/* Removed sr-only and added not-sr-only for visibility */}
+              {/* Removed: <span className="not-sr-only">Hiesige Höfe</span> */}
             </Link>
             <Link
               to="/seller/seller-5"

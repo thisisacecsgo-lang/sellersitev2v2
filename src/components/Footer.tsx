@@ -13,9 +13,9 @@ export const Footer = () => {
                   alt="Мой логотип"
                   className="h-13 w-16"
               />
-              <span className="text-xl font-bold text-foreground">
+              {/* Removed: <span className="text-xl font-bold text-foreground">
                 Hiesige Höfe
-              </span>
+              </span> */}
             </Link>
             <p className="text-muted-foreground text-sm">
               Connecting local growers with their communities to reduce food waste.
