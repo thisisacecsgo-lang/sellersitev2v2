@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%; /* #FFFFFF */
+    --foreground: 27 39% 39%; /* #8B5E3C */
+
+    --card: 0 0% 100%;
+    --card-foreground: 27 39% 39%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 27 39% 39%;
+
+    --primary: 81 58% 35%; /* #6B8E23 */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 111 33% 88%; /* #D4E9D2 */
+    --secondary-foreground: 81 58% 35%;
+
+    --muted: 45 62% 81%; /* #E9D8A6 */
+    --muted-foreground: 27 39% 39%;
+
+    --accent: 45 62% 81%;
+    --accent-foreground: 27 39% 39%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 111 33% 88%;
+    --input: 111 33% 88%;
+    --ring: 81 58% 35%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold tracking-tight;
+  }
+  h1 {
+    @apply text-4xl md:text-5xl;
+  }
+  h2 {
+    @apply text-3xl;
+  }
+  h3 {
+    @apply text-2xl;
+  }
+  p {
+    @apply leading-7;
+  }
+}
+
+@layer utilities {
+  /* Custom scrollbar for webkit browsers */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted));
+  }
+
+  /* Custom scrollbar for firefox */
+  .custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+
+  @keyframes blitz {
+    0% { background-color: transparent; }
+    50% { background-color: hsl(var(--primary) / 0.15); }
+    100% { background-color: transparent; }
+  }
+  .blitz-effect {
+    animation: blitz 1.5s ease-out;
+  }
+}

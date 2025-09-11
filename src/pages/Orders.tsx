@@ -1,0 +1,174 @@
+import { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
+import { mockOrders } from "@/data/mockOrders";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format, isSameDay, parseISO, isAfter } from "date-fns";
+import { Calendar as CalendarIcon, Package, Clock, ClipboardList, FileDown } from "lucide-react";
+import { showSuccess } from "@/utils/toast";
+
+const Orders = () => {
+  const [date, setDate] = useState<Date | undefined>(new Date());
+
+  const filteredOrders = useMemo(() => {
+    if (!date) return [];
+    return mockOrders.filter((order) =>
+      isSameDay(parseISO(order.pickupWindowStart), date)
+    ).sort((a, b) => parseISO(a.pickupWindowStart).getTime() - parseISO(b.pickupWindowStart).getTime());
+  }, [date]);
+
+  const { totalOrders, nextPickup } = useMemo(() => {
+    const now = new Date();
+    const upcomingPickups = filteredOrders
+      .filter(o => isAfter(parseISO(o.pickupWindowStart), now) && o.status !== 'Completed')
+      .map(o => format(parseISO(o.pickupWindowStart), "HH:mm"));
+    
+    return {
+      totalOrders: filteredOrders.length,
+      nextPickup: upcomingPickups.length > 0 ? upcomingPickups[0] : "None",
+    };
+  }, [filteredOrders]);
+
+  const getStatusBadge = (status: "Pending" | "Ready for Pickup" | "Completed") => {
+    const baseClasses = "w-16 h-5 text-xs flex items-center justify-center"; // Further adjusted width and font size
+    switch (status) {
+      case "Pending":
+        return <Badge variant="secondary" className={baseClasses}>Pending</Badge>;
+      case "Ready for Pickup":
+        return <Badge className={cn("bg-blue-500 text-white hover:bg-blue-600", baseClasses)}>Ready</Badge>; // Shortened text
+      case "Completed":
+        return <Badge className={cn("bg-primary text-primary-foreground hover:bg-primary/90", baseClasses)}>Done</Badge>; // Shortened text
+      default:
+        return <Badge className={baseClasses}>{status}</Badge>;
+    }
+  };
+
+  const handleExport = (format: 'CSV' | 'PDF') => {
+    showSuccess(`Exporting orders as ${format}... (demo)`);
+    console.log(`Exporting ${filteredOrders.length} orders as ${format}`);
+  };
+
+  return (
+    <div className="container mx-auto p-4 md:p-8">
+      <h1 className="text-3xl font-bold mb-6">Orders & Reports</h1>
+      
+      <div className="grid gap-4 md:grid-cols-2 mb-8">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Orders Today</CardTitle>
+            <ClipboardList className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{totalOrders}</div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Next Pickup</CardTitle>
+            <Clock className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{nextPickup}</div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <CardTitle>Orders for {date ? format(date, "PPP") : "..."}</CardTitle>
+            <div className="flex items-center gap-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-[240px] justify-start text-left font-normal",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="end">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <Button variant="outline" size="sm" onClick={() => handleExport('CSV')}>
+                <FileDown className="mr-2 h-4 w-4" />
+                CSV
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => handleExport('PDF')}>
+                <FileDown className="mr-2 h-4 w-4" />
+                PDF
+              </Button>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="min-w-[90px] text-xs p-2">Product</TableHead> {/* Smaller min-width, reduced padding */}
+                  <TableHead className="text-xs p-2">Qty</TableHead> {/* Shortened text, reduced padding */}
+                  <TableHead className="text-xs p-2">Client</TableHead> {/* Reduced padding */}
+                  <TableHead className="text-xs p-2">Status</TableHead> {/* Reduced padding */}
+                  <TableHead className="text-right text-xs p-2">Pickup</TableHead> {/* Shortened text, reduced padding */}
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredOrders.length > 0 ? (
+                  filteredOrders.map((order) => (
+                    <TableRow key={order.id}>
+                      <TableCell className="py-2 px-2"> {/* Reduced padding */}
+                        <Link to={`/product/${order.productId}`} className="flex items-center gap-2 group"> {/* Reduced gap */}
+                          <div className="w-8 h-8 rounded-md overflow-hidden flex-shrink-0 border bg-muted"> {/* Smaller image */}
+                            <img src={order.productImageUrl} alt={order.productName} className="w-full h-full object-cover" />
+                          </div>
+                          <span className="font-medium text-xs group-hover:text-primary group-hover:underline">{order.productName}</span> {/* Smaller font size */}
+                        </Link>
+                      </TableCell>
+                      <TableCell className="py-2 px-2 text-xs">{order.quantity}</TableCell> {/* Smaller font size, reduced padding */}
+                      <TableCell className="py-2 px-2 text-xs">{order.clientName}</TableCell> {/* Smaller font size, reduced padding */}
+                      <TableCell className="py-2 px-2">{getStatusBadge(order.status)}</TableCell> {/* Reduced padding */}
+                      <TableCell className="text-right py-2 px-2 text-xs"> {/* Smaller font size, reduced padding */}
+                        {format(parseISO(order.pickupWindowStart), "HH:mm")} - {format(parseISO(order.pickupWindowEnd), "HH:mm")}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={5} className="h-24 text-center text-sm"> {/* Smaller font size */}
+                      No orders for this date.
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+export default Orders;
