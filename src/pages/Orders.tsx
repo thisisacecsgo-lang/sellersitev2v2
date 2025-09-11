@@ -128,36 +128,36 @@ const Orders = () => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="min-w-[90px] text-xs p-2">Product</TableHead> {/* Smaller min-width, reduced padding */}
-                  <TableHead className="text-xs p-2">Qty</TableHead> {/* Shortened text, reduced padding */}
-                  <TableHead className="text-xs p-2">Client</TableHead> {/* Reduced padding */}
-                  <TableHead className="text-xs p-2">Status</TableHead> {/* Reduced padding */}
-                  <TableHead className="text-right text-xs p-2">Pickup</TableHead> {/* Shortened text, reduced padding */}
+                  <TableHead className="min-w-[90px] text-xs p-2">Product</TableHead>
+                  <TableHead className="text-xs p-2">Qty</TableHead>
+                  {/* Removed Client TableHead */}
+                  <TableHead className="text-xs p-2">Status</TableHead>
+                  <TableHead className="text-right text-xs p-2">Pickup</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredOrders.length > 0 ? (
                   filteredOrders.map((order) => (
                     <TableRow key={order.id}>
-                      <TableCell className="py-2 px-2"> {/* Reduced padding */}
-                        <Link to={`/product/${order.productId}`} className="flex items-center gap-2 group"> {/* Reduced gap */}
-                          <div className="w-8 h-8 rounded-md overflow-hidden flex-shrink-0 border bg-muted"> {/* Smaller image */}
+                      <TableCell className="py-2 px-2">
+                        <Link to={`/product/${order.productId}`} className="flex items-center gap-2 group">
+                          <div className="w-8 h-8 rounded-md overflow-hidden flex-shrink-0 border bg-muted">
                             <img src={order.productImageUrl} alt={order.productName} className="w-full h-full object-cover" />
                           </div>
-                          <span className="font-medium text-xs group-hover:text-primary group-hover:underline">{order.productName}</span> {/* Smaller font size */}
+                          <span className="font-medium text-xs group-hover:text-primary group-hover:underline">{order.productName}</span>
                         </Link>
                       </TableCell>
-                      <TableCell className="py-2 px-2 text-xs">{order.quantity}</TableCell> {/* Smaller font size, reduced padding */}
-                      <TableCell className="py-2 px-2 text-xs">{order.clientName}</TableCell> {/* Smaller font size, reduced padding */}
-                      <TableCell className="py-2 px-2">{getStatusBadge(order.status)}</TableCell> {/* Reduced padding */}
-                      <TableCell className="text-right py-2 px-2 text-xs"> {/* Smaller font size, reduced padding */}
+                      <TableCell className="py-2 px-2 text-xs">{order.quantity}</TableCell>
+                      {/* Removed Client TableCell */}
+                      <TableCell className="py-2 px-2">{getStatusBadge(order.status)}</TableCell>
+                      <TableCell className="text-right py-2 px-2 text-xs">
                         {format(parseISO(order.pickupWindowStart), "HH:mm")} - {format(parseISO(order.pickupWindowEnd), "HH:mm")}
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={5} className="h-24 text-center text-sm"> {/* Smaller font size */}
+                    <TableCell colSpan={4} className="h-24 text-center text-sm"> {/* Adjusted colSpan from 5 to 4 */}
                       No orders for this date.
                     </TableCell>
                   </TableRow>
