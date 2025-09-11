@@ -7,12 +7,14 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Flag, MessageSquareReply } from "lucide-react";
+import { MoreVertical, Flag, MessageSquareReply, Send } from "lucide-react";
 import { ReportReviewDialog } from "./ReportReviewDialog";
 import { ReplyToReviewDialog } from "./ReplyToReviewDialog";
+import { PrivateReplyDialog } from "./PrivateReplyDialog";
 
 interface ReviewCardProps {
   review: Review;
@@ -22,6 +24,7 @@ interface ReviewCardProps {
 export const ReviewCard = ({ review, onReplySubmit }: ReviewCardProps) => {
   const [isReportDialogOpen, setIsReportDialogOpen] = useState(false);
   const [isReplyDialogOpen, setIsReplyDialogOpen] = useState(false);
+  const [isPrivateReplyDialogOpen, setIsPrivateReplyDialogOpen] = useState(false);
 
   return (
     <>
@@ -44,9 +47,14 @@ export const ReviewCard = ({ review, onReplySubmit }: ReviewCardProps) => {
                 {!review.sellerReply && (
                   <DropdownMenuItem onClick={() => setIsReplyDialogOpen(true)}>
                     <MessageSquareReply className="mr-2 h-4 w-4" />
-                    <span>Reply</span>
+                    <span>Reply Publicly</span>
                   </DropdownMenuItem>
                 )}
+                <DropdownMenuItem onClick={() => setIsPrivateReplyDialogOpen(true)}>
+                  <Send className="mr-2 h-4 w-4" />
+                  <span>Reply Privately</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => setIsReportDialogOpen(true)}>
                   <Flag className="mr-2 h-4 w-4" />
                   <span>Report</span>
@@ -81,6 +89,11 @@ export const ReviewCard = ({ review, onReplySubmit }: ReviewCardProps) => {
         isOpen={isReplyDialogOpen}
         onOpenChange={setIsReplyDialogOpen}
         onReplySubmit={onReplySubmit}
+      />
+      <PrivateReplyDialog
+        review={review}
+        isOpen={isPrivateReplyDialogOpen}
+        onOpenChange={setIsPrivateReplyDialogOpen}
       />
     </>
   );
