@@ -15,8 +15,8 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { format, isSameDay, parseISO, isAfter } from "date-fns";
-import { Calendar as CalendarIcon, Package, Clock, ClipboardList, FileDown } from "lucide-react";
+import { format, isSameDay, parseISO, isAfter, addDays } from "date-fns";
+import { Calendar as CalendarIcon, Clock, ClipboardList, FileDown } from "lucide-react";
 import { showSuccess } from "@/utils/toast";
 
 const Orders = () => {
@@ -28,6 +28,13 @@ const Orders = () => {
       isSameDay(parseISO(order.pickupWindowStart), date)
     ).sort((a, b) => parseISO(a.pickupWindowStart).getTime() - parseISO(b.pickupWindowStart).getTime());
   }, [date]);
+
+  const tomorrowsOrders = useMemo(() => {
+    const tomorrow = addDays(new Date(), 1);
+    return mockOrders.filter((order) =>
+      isSameDay(parseISO(order.pickupWindowStart), tomorrow)
+    ).sort((a, b) => parseISO(a.pickupWindowStart).getTime() - parseISO(b.pickupWindowStart).getTime());
+  }, []);
 
   const { totalOrders, nextPickup } = useMemo(() => {
     const now = new Date();
@@ -42,14 +49,14 @@ const Orders = () => {
   }, [filteredOrders]);
 
   const getStatusBadge = (status: "Pending" | "Ready for Pickup" | "Completed") => {
-    const baseClasses = "w-16 h-5 text-xs flex items-center justify-center"; // Further adjusted width and font size
+    const baseClasses = "w-16 h-5 text-xs flex items-center justify-center";
     switch (status) {
       case "Pending":
         return <Badge variant="secondary" className={baseClasses}>Pending</Badge>;
       case "Ready for Pickup":
-        return <Badge className={cn("bg-blue-500 text-white hover:bg-blue-600", baseClasses)}>Ready</Badge>; // Shortened text
+        return <Badge className={cn("bg-blue-500 text-white hover:bg-blue-600", baseClasses)}>Ready</Badge>;
       case "Completed":
-        return <Badge className={cn("bg-primary text-primary-foreground hover:bg-primary/90", baseClasses)}>Done</Badge>; // Shortened text
+        return <Badge className={cn("bg-primary text-primary-foreground hover:bg-primary/90", baseClasses)}>Done</Badge>;
       default:
         return <Badge className={baseClasses}>{status}</Badge>;
     }
@@ -59,6 +66,48 @@ const Orders = () => {
     showSuccess(`Exporting orders as ${format}... (demo)`);
     console.log(`Exporting ${filteredOrders.length} orders as ${format}`);
   };
+
+  const OrderTable = ({ orders, noOrdersMessage }: { orders: typeof mockOrders, noOrdersMessage: string }) => (
+    <div className="overflow-x-auto">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead className="min-w-[90px] text-xs p-2">Product</TableHead>
+            <TableHead className="text-xs p-2">Qty</TableHead>
+            <TableHead className="text-xs p-2">Status</TableHead>
+            <TableHead className="text-right text-xs p-2">Pickup</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {orders.length > 0 ? (
+            orders.map((order) => (
+              <TableRow key={order.id}>
+                <TableCell className="py-2 px-2">
+                  <Link to={`/product/${order.productId}`} className="flex items-center gap-2 group">
+                    <div className="w-8 h-8 rounded-md overflow-hidden flex-shrink-0 border bg-muted">
+                      <img src={order.productImageUrl} alt={order.productName} className="w-full h-full object-cover" />
+                    </div>
+                    <span className="font-medium text-xs group-hover:text-primary group-hover:underline">{order.productName}</span>
+                  </Link>
+                </TableCell>
+                <TableCell className="py-2 px-2 text-xs">{order.quantity}</TableCell>
+                <TableCell className="py-2 px-2">{getStatusBadge(order.status)}</TableCell>
+                <TableCell className="text-right py-2 px-2 text-xs">
+                  {format(parseISO(order.pickupWindowStart), "HH:mm")} - {format(parseISO(order.pickupWindowEnd), "HH:mm")}
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={4} className="h-24 text-center text-sm">
+                {noOrdersMessage}
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </div>
+  );
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -124,47 +173,16 @@ const Orders = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="min-w-[90px] text-xs p-2">Product</TableHead>
-                  <TableHead className="text-xs p-2">Qty</TableHead>
-                  {/* Removed Client TableHead */}
-                  <TableHead className="text-xs p-2">Status</TableHead>
-                  <TableHead className="text-right text-xs p-2">Pickup</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredOrders.length > 0 ? (
-                  filteredOrders.map((order) => (
-                    <TableRow key={order.id}>
-                      <TableCell className="py-2 px-2">
-                        <Link to={`/product/${order.productId}`} className="flex items-center gap-2 group">
-                          <div className="w-8 h-8 rounded-md overflow-hidden flex-shrink-0 border bg-muted">
-                            <img src={order.productImageUrl} alt={order.productName} className="w-full h-full object-cover" />
-                          </div>
-                          <span className="font-medium text-xs group-hover:text-primary group-hover:underline">{order.productName}</span>
-                        </Link>
-                      </TableCell>
-                      <TableCell className="py-2 px-2 text-xs">{order.quantity}</TableCell>
-                      {/* Removed Client TableCell */}
-                      <TableCell className="py-2 px-2">{getStatusBadge(order.status)}</TableCell>
-                      <TableCell className="text-right py-2 px-2 text-xs">
-                        {format(parseISO(order.pickupWindowStart), "HH:mm")} - {format(parseISO(order.pickupWindowEnd), "HH:mm")}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={4} className="h-24 text-center text-sm"> {/* Adjusted colSpan from 5 to 4 */}
-                      No orders for this date.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
+          <OrderTable orders={filteredOrders} noOrdersMessage="No orders for this date." />
+        </CardContent>
+      </Card>
+
+      <Card className="mt-8">
+        <CardHeader>
+          <CardTitle>Orders for Tomorrow ({format(addDays(new Date(), 1), "PPP")})</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <OrderTable orders={tomorrowsOrders} noOrdersMessage="No orders for tomorrow." />
         </CardContent>
       </Card>
     </div>
