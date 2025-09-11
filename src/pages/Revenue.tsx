@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DollarSign, Percent, Wallet, CalendarCheck, FileDown } from "lucide-react";
+import { DollarSign, Wallet, FileDown } from "lucide-react";
 import { mockRevenueSummary, mockPaymentHistory } from "@/data/mockRevenueData";
 import { format, parseISO } from "date-fns";
 import { showSuccess } from "@/utils/toast";
@@ -42,7 +42,7 @@ const Revenue = () => {
       <h1 className="text-3xl font-bold mb-6">Revenue Report</h1>
       <div className="space-y-8">
         <h2 className="text-2xl font-bold">Current Financial Overview</h2>
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
@@ -53,7 +53,6 @@ const Revenue = () => {
               <p className="text-xs text-muted-foreground">Total earnings to date</p>
             </CardContent>
           </Card>
-          {/* Removed Commission Card */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">To Be Paid</CardTitle>
@@ -62,20 +61,6 @@ const Revenue = () => {
             <CardContent>
               <div className="text-2xl font-bold">€{mockRevenueSummary.toBePaid.toFixed(2)}</div>
               <p className="text-xs text-muted-foreground">Next payout amount</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Payment Status</CardTitle>
-              <CalendarCheck className="h-4 w-4 text-muted-foreground" />
-            </CardHeader>
-            <CardContent>
-              <div className="text-2xl font-bold">{mockRevenueSummary.paymentStatus}</div>
-              {mockRevenueSummary.expectedDate && (
-                <p className="text-xs text-muted-foreground">
-                  Expected: {format(parseISO(mockRevenueSummary.expectedDate), "PPP")}
-                </p>
-              )}
             </CardContent>
           </Card>
         </div>
@@ -89,7 +74,7 @@ const Revenue = () => {
                   <TableRow>
                     <TableHead className="min-w-[100px]">Date</TableHead>
                     <TableHead>Amount</TableHead>
-                    <TableHead>Commission</TableHead>
+                    <TableHead>Commission (15%)</TableHead>
                     <TableHead>Net Amount</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
@@ -97,25 +82,29 @@ const Revenue = () => {
                 </TableHeader>
                 <TableBody>
                   {mockPaymentHistory.length > 0 ? (
-                    mockPaymentHistory.map((payment) => (
-                      <TableRow key={payment.id}>
-                        <TableCell>{format(parseISO(payment.date), "PPP")}</TableCell>
-                        <TableCell>€{payment.amount.toFixed(2)}</TableCell>
-                        <TableCell>€{payment.commission.toFixed(2)}</TableCell>
-                        <TableCell>€{payment.netAmount.toFixed(2)}</TableCell>
-                        <TableCell>{getPaymentStatusBadge(payment.status)}</TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleDownloadReceipt(payment.id)}
-                          >
-                            <FileDown className="h-4 w-4 mr-2" />
-                            Receipt
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))
+                    mockPaymentHistory.map((payment) => {
+                      const commission = payment.amount * 0.15;
+                      const netAmount = payment.amount - commission;
+                      return (
+                        <TableRow key={payment.id}>
+                          <TableCell>{format(parseISO(payment.date), "PPP")}</TableCell>
+                          <TableCell>€{payment.amount.toFixed(2)}</TableCell>
+                          <TableCell>€{commission.toFixed(2)}</TableCell>
+                          <TableCell>€{netAmount.toFixed(2)}</TableCell>
+                          <TableCell>{getPaymentStatusBadge(payment.status)}</TableCell>
+                          <TableCell className="text-right">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleDownloadReceipt(payment.id)}
+                            >
+                              <FileDown className="h-4 w-4 mr-2" />
+                              Receipt
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
                   ) : (
                     <TableRow>
                       <TableCell colSpan={6} className="h-24 text-center">
