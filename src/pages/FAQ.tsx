@@ -7,61 +7,150 @@ import {
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import BackButton from "@/components/BackButton";
 import { Link } from "react-router-dom";
+import {
+  Lightbulb,
+  Camera,
+  Edit,
+  ClipboardCheck,
+  Banknote,
+  MessageSquareHeart,
+  ShieldAlert,
+  UserCircle,
+} from "lucide-react";
 
 const faqs = [
   {
-    question: "How do I add a new product to my profile?",
+    question: "How do I add a new product?",
     answer: (
-      <>
-        You can add a new product by clicking the "Add New Product" button in the sidebar. This will take you to a form where you can fill in all the details about your product, such as its name, category, price, and quantity. You can find this button at the bottom of the main menu on the left.
-        <br /><br />
-        <Link to="/product/new" className="text-primary hover:underline">Click here to add a product now.</Link>
-      </>
+      <div className="space-y-4">
+        <p>
+          Adding a product is simple! Navigate to the sidebar and click the{" "}
+          <Link to="/product/new" className="text-primary font-semibold hover:underline">
+            Add New Product
+          </Link>{" "}
+          button. This will open a form where you can detail everything about your item.
+        </p>
+        <div className="p-4 bg-secondary/50 rounded-lg border">
+          <h4 className="font-semibold flex items-center gap-2 mb-2">
+            <Lightbulb className="h-5 w-5 text-primary" />
+            Pro Tips for a Great Listing:
+          </h4>
+          <ul className="list-disc list-inside space-y-2 text-sm text-muted-foreground">
+            <li>
+              <strong className="text-foreground">Good Photos are Key:</strong> Use clear, bright photos. You can upload multiple images to show different angles. A good photo is your best sales tool!
+            </li>
+            <li>
+              <strong className="text-foreground">Write a Clear Description:</strong> Tell customers what makes your product special. Is it organic? A family recipe? Mention the taste, texture, and best uses.
+            </li>
+            <li>
+              <strong className="text-foreground">Be Specific with Quantity:</strong> Instead of "a box," use specific units like "500g," "1 liter," or "1 dozen." This helps customers understand exactly what they're buying.
+            </li>
+          </ul>
+        </div>
+      </div>
     ),
   },
   {
-    question: "How can I quickly update the quantity of my products?",
+    question: "How do I manage my product inventory?",
     answer: (
-      <>
-        The "Update Qty" page is designed for rapid stock updates. You can "scan" a product (which simulates finding it quickly) and then use quick-action buttons (+1, -1, +5) or enter a new value directly to adjust the available quantity. This is perfect for when you've just harvested or sold items offline.
-        <br /><br />
-        <Link to="/update-quantity" className="text-primary hover:underline">Go to the Update Quantity page.</Link>
-      </>
+      <div className="space-y-4">
+        <p>
+          Keeping your stock levels accurate is crucial. We have two main ways to manage your products:
+        </p>
+        <ul className="list-decimal list-inside space-y-3">
+          <li>
+            <strong>For quick, bulk updates:</strong> The{" "}
+            <Link to="/update-quantity" className="text-primary font-semibold hover:underline">
+              Update Qty
+            </Link>{" "}
+            page is your best friend. It's designed for speed. "Scan" a product and use the quick-action buttons or type in a number to add to or replace the current stock count.
+          </li>
+          <li>
+            <strong>For detailed changes:</strong> To change a product's name, price, description, or photos, go to the product's page and click the{" "}
+            <span className="inline-flex items-center gap-1 font-semibold"><Edit className="h-4 w-4" />Edit</span> button. You can also hide or delete the product from this page.
+          </li>
+        </ul>
+      </div>
     ),
   },
   {
-    question: "How do I manage my orders?",
+    question: "How do I handle my orders?",
     answer: (
-      <>
-        The "Orders" page shows all your incoming orders, sorted by date. You can view today's orders, see upcoming orders for tomorrow, and check past dates using the calendar. This page helps you track what needs to be prepared for pickup and when.
-        <br /><br />
-        <Link to="/orders" className="text-primary hover:underline">View your orders here.</Link>
-      </>
+      <div className="space-y-4">
+        <p>
+          All your sales are organized on the{" "}
+          <Link to="/orders" className="text-primary font-semibold hover:underline">
+            Orders
+          </Link>{" "}
+          page. You can see orders for today, tomorrow, or any other day using the calendar.
+        </p>
+        <div className="flex items-start gap-3">
+          <ClipboardCheck className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+          <div>
+            <h4 className="font-semibold">Understanding Order Statuses:</h4>
+            <p className="text-sm text-muted-foreground">
+              Each order has a status to help you track its progress: <span className="font-semibold text-foreground">Pending</span> (new order), <span className="font-semibold text-foreground">Ready for Pickup</span> (you've prepared it), and <span className="font-semibold text-foreground">Completed</span> (the customer has it).
+            </p>
+          </div>
+        </div>
+      </div>
     ),
   },
   {
-    question: "How can I see my earnings and payment history?",
+    question: "How do my earnings and payments work?",
     answer: (
-      <>
-        Your financial information is available on the "Revenue" page. It provides an overview of your total revenue, upcoming payouts, and a detailed history of past payments from the platform.
-        <br /><br />
-        <Link to="/revenue" className="text-primary hover:underline">Check your revenue report.</Link>
-      </>
+      <div className="space-y-4">
+        <p>
+          You can track all your finances on the{" "}
+          <Link to="/revenue" className="text-primary font-semibold hover:underline">
+            Revenue
+          </Link>{" "}
+          page. It shows your total sales, the platform's commission, and your net earnings.
+        </p>
+        <div className="flex items-start gap-3">
+          <Banknote className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+          <div>
+            <h4 className="font-semibold">Payouts:</h4>
+            <p className="text-sm text-muted-foreground">
+              The "To Be Paid" section shows the amount for your next payout. The payment history table below gives a detailed breakdown of all past transactions and their status.
+            </p>
+          </div>
+        </div>
+      </div>
     ),
   },
   {
-    question: "Can I respond to customer reviews?",
-    answer:
-      "Yes! On the \"My Reviews\" page, you can interact with customer feedback. You have the option to post a public reply that appears directly under a review, or send a private message to the buyer to address their comments directly. Engaging with reviews is a great way to build trust with your customers.",
-  },
-  {
-    question: "How do I edit my profile information?",
+    question: "How should I interact with customer reviews?",
     answer: (
-      <>
-        You can edit your farm's name, description, and other details by going to your profile page and clicking the "Edit Profile" button. Keeping your profile updated helps customers learn more about you and your practices.
-        <br /><br />
-        <Link to="/seller/seller-5" className="text-primary hover:underline">Go to your profile.</Link>
-      </>
+      <div className="space-y-4">
+        <p>
+          Engaging with reviews on the{" "}
+          <Link to="/my-reviews" className="text-primary font-semibold hover:underline">
+            My Reviews
+          </Link>{" "}
+          page helps build customer trust and loyalty.
+        </p>
+        <ul className="list-none space-y-3">
+          <li className="flex items-start gap-3">
+            <MessageSquareHeart className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
+            <div>
+              <h4 className="font-semibold">Public vs. Private Replies:</h4>
+              <p className="text-sm text-muted-foreground">
+                Use a <strong className="text-foreground">Public Reply</strong> to thank customers or address feedback that others might find helpful. Use a <strong className="text-foreground">Private Reply</strong> to resolve a specific issue directly with a customer or to send a personal thank you note.
+              </p>
+            </div>
+          </li>
+          <li className="flex items-start gap-3">
+            <ShieldAlert className="h-5 w-5 text-destructive mt-1 flex-shrink-0" />
+            <div>
+              <h4 className="font-semibold">Inappropriate Reviews:</h4>
+              <p className="text-sm text-muted-foreground">
+                If you receive a review that is spam, abusive, or not relevant, you can use the "Report" option. Our team will investigate it.
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
     ),
   },
 ];
@@ -72,15 +161,17 @@ const FAQ = () => {
       <BackButton />
       <AppBreadcrumb />
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold mb-2 text-center">Frequently Asked Questions</h1>
+        <h1 className="text-3xl font-bold mb-2 text-center">Help & Support</h1>
         <p className="text-muted-foreground text-center mb-8">
-          Find answers to common questions about managing your seller profile and products.
+          Your guide to managing your seller profile, products, and sales.
         </p>
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((faq, index) => (
             <AccordionItem value={`item-${index}`} key={index}>
-              <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
-              <AccordionContent className="text-base">
+              <AccordionTrigger className="text-left text-lg hover:no-underline">
+                {faq.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-base prose prose-sm max-w-none prose-p:leading-relaxed prose-a:text-primary">
                 {faq.answer}
               </AccordionContent>
             </AccordionItem>
