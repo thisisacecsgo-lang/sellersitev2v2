@@ -16,6 +16,7 @@ import CreateProduct from "./pages/CreateProduct";
 import MyReviews from "./pages/MyReviews";
 import EditSellerProfile from "./pages/EditSellerProfile"; // Import EditSellerProfile
 import ScrollToTop from "./components/ScrollToTop";
+import FAQ from "./pages/FAQ"; // Import FAQ page
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,7 @@ const App = () => (
             <Route path="/orders" element={<Orders />} />
             <Route path="/revenue" element={<Revenue />} />
             <Route path="/my-reviews" element={<MyReviews />} />
+            <Route path="/faq" element={<FAQ />} /> {/* New FAQ route */}
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

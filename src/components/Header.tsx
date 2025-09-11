@@ -3,7 +3,7 @@
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingBasket, Menu, User, ScanLine, ClipboardList, DollarSign, PlusCircle, MessageSquare } from "lucide-react";
+import { ShoppingBasket, Menu, User, ScanLine, ClipboardList, DollarSign, PlusCircle, MessageSquare, HelpCircle } from "lucide-react";
 import { useState } from "react"; // Import useState
 
 const Header = () => {
@@ -67,6 +67,14 @@ const Header = () => {
             >
               <MessageSquare className="h-5 w-5" />
               My Reviews
+            </Link>
+            <Link
+              to="/faq"
+              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              onClick={() => setIsSheetOpen(false)} // Close sheet on link click
+            >
+              <HelpCircle className="h-5 w-5" />
+              FAQ
             </Link>
             <Link
               to="/product/new"

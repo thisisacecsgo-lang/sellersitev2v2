@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShoppingBasket, User, ScanLine, ClipboardList, DollarSign, PlusCircle, MessageSquare } from "lucide-react";
+import { ShoppingBasket, User, ScanLine, ClipboardList, DollarSign, PlusCircle, MessageSquare, HelpCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Sidebar = () => {
@@ -47,6 +47,13 @@ const Sidebar = () => {
           >
             <MessageSquare className="h-4 w-4" />
             My Reviews
+          </Link>
+          <Link
+            to="/faq"
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+          >
+            <HelpCircle className="h-4 w-4" />
+            FAQ
           </Link>
           <div className="mt-4 pt-4 border-t border-border">
             <Link to="/product/new" className="flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:bg-secondary">
