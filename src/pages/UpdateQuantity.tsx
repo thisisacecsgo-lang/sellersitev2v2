@@ -11,12 +11,14 @@ import BackButton from "@/components/BackButton";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { showError, showSuccess } from "@/utils/toast";
 
 const UpdateQuantity = () => {
   const [products, setProducts] = useState<Product[]>(mockProducts.filter(p => p.sellerId === 'seller-5'));
   const [scannedProduct, setScannedProduct] = useState<Product | null>(null);
   const [updateMode, setUpdateMode] = useState<'add' | 'replace'>('add');
   const [inputValue, setInputValue] = useState("");
+  const [productIdInput, setProductIdInput] = useState("");
   const [showSavedConfirmation, setShowSavedConfirmation] = useState(false);
 
   const parseQuantity = (quantityStr: string): { value: number, unit: string } => {
@@ -25,12 +27,16 @@ const UpdateQuantity = () => {
     return { value, unit };
   };
 
-  const handleScan = () => {
-    if (products.length === 0) return;
-    const randomIndex = Math.floor(Math.random() * products.length);
-    const randomProduct = products[randomIndex];
-    setScannedProduct(randomProduct);
-    setInputValue("");
+  const handleScanProduct = (id: string) => {
+    const product = products.find(p => p.id === id);
+    if (product) {
+      setScannedProduct(product);
+      setInputValue("");
+      showSuccess(`Product "${product.name}" scanned.`);
+    } else {
+      setScannedProduct(null);
+      showError("Product not found. Please check the ID.");
+    }
   };
 
   const updateProductQuantity = (newQuantity: number) => {
@@ -55,7 +61,10 @@ const UpdateQuantity = () => {
   const handleDirectInput = () => {
     if (!scannedProduct) return;
     const newValue = parseInt(inputValue, 10);
-    if (isNaN(newValue)) return;
+    if (isNaN(newValue)) {
+      showError("Please enter a valid number.");
+      return;
+    }
     if (updateMode === 'replace') {
       updateProductQuantity(newValue);
     } else {
@@ -78,10 +87,32 @@ const UpdateQuantity = () => {
       <Card className="max-w-3xl mx-auto shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl">Update Available Quantity</CardTitle>
-          <CardDescription>Scan a product to quickly update its stock.</CardDescription>
+          <CardDescription>Scan a product's QR code or enter its ID to quickly update stock.</CardDescription>
         </CardHeader>
         <CardContent className="min-h-[450px] flex flex-col justify-center items-center bg-secondary/20 rounded-b-lg p-4 sm:p-6">
-          {scannedProduct ? (
+          {!scannedProduct ? (
+            <div className="w-full space-y-4 text-center">
+              <div className="flex items-center gap-2">
+                <Input
+                  placeholder="Enter Product ID (e.g., 1, 4, 10)"
+                  value={productIdInput}
+                  onChange={(e) => setProductIdInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      handleScanProduct(productIdInput);
+                    }
+                  }}
+                />
+                <Button onClick={() => handleScanProduct(productIdInput)}>
+                  <ScanLine className="mr-2 h-4 w-4" />
+                  Scan
+                </Button>
+              </div>
+              <p className="text-muted-foreground">
+                Use the "Generate QR Codes" tab to print QR codes for your products.
+              </p>
+            </div>
+          ) : (
             <div className="w-full space-y-6">
               <Card className="overflow-hidden border-2 border-primary/20 shadow-md">
                 <CardHeader className="bg-secondary/50 p-4 border-b">
@@ -135,18 +166,10 @@ const UpdateQuantity = () => {
                 </CardContent>
               </Card>
               <div className="text-center">
-                <Button onClick={handleScan} size="lg">
-                  Scan Next Product <ArrowRight className="ml-2 h-4 w-4" />
+                <Button onClick={() => setScannedProduct(null)} size="lg">
+                  Scan New Product <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
-            </div>
-          ) : (
-            <div className="text-center space-y-4">
-              <Button onClick={handleScan} size="lg" className="h-28 w-28 rounded-full flex-col gap-2 shadow-lg hover:shadow-primary/30 transition-shadow">
-                <ScanLine className="h-10 w-10" />
-                <span className="font-semibold">Scan</span>
-              </Button>
-              <p className="text-muted-foreground">Click to scan a product.</p>
             </div>
           )}
         </CardContent>

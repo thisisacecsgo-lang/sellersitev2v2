@@ -3,7 +3,7 @@
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, User, ScanLine, ClipboardList, DollarSign, PlusCircle, MessageSquare, HelpCircle, BarChart } from "lucide-react";
+import { Menu, User, ScanLine, ClipboardList, DollarSign, PlusCircle, MessageSquare, HelpCircle, BarChart, QrCode } from "lucide-react";
 import { useState } from "react";
 
 const Header = () => {
@@ -58,6 +58,14 @@ const Header = () => {
             >
               <ScanLine className="h-5 w-5" />
               Update Qty
+            </Link>
+            <Link
+              to="/generate-qrcodes"
+              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              onClick={() => setIsSheetOpen(false)}
+            >
+              <QrCode className="h-5 w-5" />
+              Generate QR Codes
             </Link>
             <Link
               to="/revenue"
