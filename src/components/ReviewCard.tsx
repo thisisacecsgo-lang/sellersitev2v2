@@ -32,7 +32,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
             <StarRating rating={review.rating} />
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button variant="secondary" size="icon" className="h-8 w-8 rounded-full bg-background/80 hover:bg-background">
                   <MoreVertical className="h-4 w-4" />
                   <span className="sr-only">Review Actions</span>
                 </Button>
