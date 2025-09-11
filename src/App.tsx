@@ -14,9 +14,10 @@ import Orders from "./pages/Orders";
 import Revenue from "./pages/Revenue";
 import CreateProduct from "./pages/CreateProduct";
 import MyReviews from "./pages/MyReviews";
-import EditSellerProfile from "./pages/EditSellerProfile"; // Import EditSellerProfile
+import EditSellerProfile from "./pages/EditSellerProfile";
 import ScrollToTop from "./components/ScrollToTop";
-import FAQ from "./pages/FAQ"; // Import FAQ page
+import FAQ from "./pages/FAQ";
+import Statistics from "./pages/Statistics"; // Import Statistics page
 
 const queryClient = new QueryClient();
 
@@ -34,12 +35,13 @@ const App = () => (
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/product/:id/edit" element={<EditProduct />} />
             <Route path="/seller/:id" element={<SellerProfile />} />
-            <Route path="/seller/:id/edit" element={<EditSellerProfile />} /> {/* New route for editing seller profile */}
+            <Route path="/seller/:id/edit" element={<EditSellerProfile />} />
             <Route path="/update-quantity" element={<UpdateQuantity />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/revenue" element={<Revenue />} />
             <Route path="/my-reviews" element={<MyReviews />} />
-            <Route path="/faq" element={<FAQ />} /> {/* New FAQ route */}
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/statistics" element={<Statistics />} /> {/* New Statistics route */}
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

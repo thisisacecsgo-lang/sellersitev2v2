@@ -55,6 +55,7 @@ export interface Order {
   productName: string;
   productImageUrl: string;
   quantity: string;
+  priceAtPurchase: number; // New field for accurate revenue
   clientName: string;
   status: "Pending" | "Ready for Pickup" | "Completed";
   pickupWindowStart: string; // ISO date string

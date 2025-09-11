@@ -3,15 +3,15 @@
 import { Link } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { ShoppingBasket, Menu, User, ScanLine, ClipboardList, DollarSign, PlusCircle, MessageSquare, HelpCircle } from "lucide-react";
-import { useState } from "react"; // Import useState
+import { Menu, User, ScanLine, ClipboardList, DollarSign, PlusCircle, MessageSquare, HelpCircle, BarChart } from "lucide-react";
+import { useState } from "react";
 
 const Header = () => {
-  const [isSheetOpen, setIsSheetOpen] = useState(false); // State to control sheet visibility
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}> {/* Control sheet with state */}
+      <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
         <SheetTrigger asChild>
           <Button size="icon" variant="outline" className="sm:hidden">
             <Menu className="h-5 w-5" />
@@ -23,15 +23,14 @@ const Header = () => {
             <Link
               to="/"
               className="group flex h-10 w-auto shrink-0 items-center justify-center gap-9 text-lg font-semibold text-foreground md:text-base"
-              onClick={() => setIsSheetOpen(false)} // Close sheet on link click
+              onClick={() => setIsSheetOpen(false)}
             >
               <img src="/images/logooo.png" alt="MySite Logo" className="h-10 w-10"/>
-              {/* Removed: <span className="not-sr-only">Hiesige Höfe</span> */}
             </Link>
             <Link
               to="/seller/seller-5"
               className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-              onClick={() => setIsSheetOpen(false)} // Close sheet on link click
+              onClick={() => setIsSheetOpen(false)}
             >
               <User className="h-5 w-5" />
               My Profile
@@ -39,15 +38,23 @@ const Header = () => {
             <Link
               to="/orders"
               className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-              onClick={() => setIsSheetOpen(false)} // Close sheet on link click
+              onClick={() => setIsSheetOpen(false)}
             >
               <ClipboardList className="h-5 w-5" />
               Orders
             </Link>
             <Link
+              to="/statistics"
+              className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
+              onClick={() => setIsSheetOpen(false)}
+            >
+              <BarChart className="h-5 w-5" />
+              Statistics
+            </Link>
+            <Link
               to="/update-quantity"
               className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-              onClick={() => setIsSheetOpen(false)} // Close sheet on link click
+              onClick={() => setIsSheetOpen(false)}
             >
               <ScanLine className="h-5 w-5" />
               Update Qty
@@ -55,7 +62,7 @@ const Header = () => {
             <Link
               to="/revenue"
               className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-              onClick={() => setIsSheetOpen(false)} // Close sheet on link click
+              onClick={() => setIsSheetOpen(false)}
             >
               <DollarSign className="h-5 w-5" />
               Revenue
@@ -63,7 +70,7 @@ const Header = () => {
             <Link
               to="/my-reviews"
               className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-              onClick={() => setIsSheetOpen(false)} // Close sheet on link click
+              onClick={() => setIsSheetOpen(false)}
             >
               <MessageSquare className="h-5 w-5" />
               My Reviews
@@ -71,7 +78,7 @@ const Header = () => {
             <Link
               to="/faq"
               className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-              onClick={() => setIsSheetOpen(false)} // Close sheet on link click
+              onClick={() => setIsSheetOpen(false)}
             >
               <HelpCircle className="h-5 w-5" />
               FAQ
@@ -79,7 +86,7 @@ const Header = () => {
             <Link
               to="/product/new"
               className="flex items-center gap-4 px-2.5 text-primary hover:text-foreground"
-              onClick={() => setIsSheetOpen(false)} // Close sheet on link click
+              onClick={() => setIsSheetOpen(false)}
             >
               <PlusCircle className="h-5 w-5" />
               Add New Product
@@ -88,7 +95,6 @@ const Header = () => {
         </SheetContent>
       </Sheet>
       <div className="relative ml-auto flex-1 md:grow-0">
-        {/* Future content like search or user menu can go here */}
       </div>
     </header>
   );

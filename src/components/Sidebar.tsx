@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShoppingBasket, User, ScanLine, ClipboardList, DollarSign, PlusCircle, MessageSquare, HelpCircle } from "lucide-react";
+import { User, ScanLine, ClipboardList, DollarSign, PlusCircle, MessageSquare, HelpCircle, BarChart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Sidebar = () => {
@@ -26,6 +26,13 @@ const Sidebar = () => {
           >
             <ClipboardList className="h-4 w-4" />
             Orders
+          </Link>
+          <Link
+            to="/statistics"
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+          >
+            <BarChart className="h-4 w-4" />
+            Statistics
           </Link>
           <Link
             to="/update-quantity"
