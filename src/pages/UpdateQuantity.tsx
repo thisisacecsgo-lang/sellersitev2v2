@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { mockProducts } from "@/data/mockData";
 import type { Product } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,11 @@ import BackButton from "@/components/BackButton";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { useLocation } from "react-router-dom";
+import { showSuccess } from "@/utils/toast";
 
 const UpdateQuantity = () => {
+  const location = useLocation();
   const [products, setProducts] = useState<Product[]>(mockProducts.filter(p => p.sellerId === 'seller-5'));
   const [scannedProduct, setScannedProduct] = useState<Product | null>(null);
   const [updateMode, setUpdateMode] = useState<'add' | 'replace'>('add');
@@ -25,15 +28,7 @@ const UpdateQuantity = () => {
     return { value, unit };
   };
 
-  const handleScan = () => {
-    if (products.length === 0) return;
-    const randomIndex = Math.floor(Math.random() * products.length);
-    const randomProduct = products[randomIndex];
-    setScannedProduct(randomProduct);
-    setInputValue("");
-  };
-
-  const updateProductQuantity = (newQuantity: number) => {
+  const updateProductQuantity = useCallback((newQuantity: number) => {
     if (!scannedProduct) return;
     const { unit } = parseQuantity(scannedProduct.availableQuantity);
     const finalQuantity = Math.max(0, newQuantity);
@@ -44,7 +39,7 @@ const UpdateQuantity = () => {
     setScannedProduct(updatedProduct);
     setShowSavedConfirmation(true);
     setTimeout(() => setShowSavedConfirmation(false), 1500);
-  };
+  }, [scannedProduct]);
 
   const handleQuickUpdate = (amount: number) => {
     if (!scannedProduct) return;
@@ -70,6 +65,26 @@ const UpdateQuantity = () => {
       handleDirectInput();
     }
   };
+
+  const handleScan = () => {
+    if (products.length === 0) return;
+    const randomIndex = Math.floor(Math.random() * products.length);
+    const randomProduct = products[randomIndex];
+    setScannedProduct(randomProduct);
+    setInputValue("");
+  };
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const productId = queryParams.get('productId');
+    if (productId) {
+      const productFromUrl = products.find(p => p.id === productId);
+      if (productFromUrl) {
+        setScannedProduct(productFromUrl);
+        showSuccess(`Product "${productFromUrl.name}" loaded from QR code.`);
+      }
+    }
+  }, [location.search, products]); // Depend on products to ensure it's updated if mockProducts changes
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -135,7 +150,10 @@ const UpdateQuantity = () => {
                 </CardContent>
               </Card>
               <div className="text-center">
-                <Button onClick={handleScan} size="lg">
+                <Button onClick={() => setScannedProduct(null)} size="lg" variant="outline">
+                  Clear Product
+                </Button>
+                <Button onClick={handleScan} size="lg" className="ml-4">
                   Scan Next Product <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
@@ -146,7 +164,7 @@ const UpdateQuantity = () => {
                 <ScanLine className="h-10 w-10" />
                 <span className="font-semibold">Scan</span>
               </Button>
-              <p className="text-muted-foreground">Click to scan a product.</p>
+              <p className="text-muted-foreground">Click to scan a product or use a QR code.</p>
             </div>
           )}
         </CardContent>

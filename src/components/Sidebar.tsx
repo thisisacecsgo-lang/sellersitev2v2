@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { User, ScanLine, ClipboardList, DollarSign, PlusCircle, MessageSquare, HelpCircle, BarChart } from "lucide-react";
+import { User, ScanLine, ClipboardList, DollarSign, PlusCircle, MessageSquare, HelpCircle, BarChart, QrCode } from "lucide-react"; // Import QrCode icon
 import { Button } from "@/components/ui/button";
 
 const Sidebar = () => {
@@ -40,6 +40,13 @@ const Sidebar = () => {
           >
             <ScanLine className="h-4 w-4" />
             Update Qty
+          </Link>
+          <Link
+            to="/qr-code-generator" // New link
+            className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
+          >
+            <QrCode className="h-4 w-4" />
+            QR Code Generator
           </Link>
           <Link
             to="/revenue"
