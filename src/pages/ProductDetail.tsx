@@ -12,6 +12,7 @@ import {
   Leaf,
   Truck,
   Eye,
+  Edit, // Import Edit icon
 } from "lucide-react";
 import { mockProducts, mockSellers } from "@/data/mockData";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
@@ -56,7 +57,7 @@ const ProductDetail = () => {
       <AppBreadcrumb />
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
         <div className="lg:col-span-2">
-          <Carousel className="w-full relative"> {/* Added 'relative' here */}
+          <Carousel className="w-full relative">
             <CarouselContent>
               {product.imageUrls.map((img, index) => (
                 <CarouselItem key={index}>
@@ -68,14 +69,22 @@ const ProductDetail = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 hidden sm:flex" /> {/* Adjusted positioning */}
-            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex" /> {/* Adjusted positioning */}
+            <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 hidden sm:flex" />
+            <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex" />
           </Carousel>
         </div>
         <div className="space-y-6">
-          <div className="flex items-center gap-3">
-            <CategoryIcon category={product.category} className="h-8 w-8 text-muted-foreground" />
-            <h1 className="text-4xl font-bold">{product.name}</h1>
+          <div className="flex items-center justify-between gap-3"> {/* Added justify-between */}
+            <div className="flex items-center gap-3">
+              <CategoryIcon category={product.category} className="h-8 w-8 text-muted-foreground" />
+              <h1 className="text-4xl font-bold">{product.name}</h1>
+            </div>
+            <Button asChild variant="outline" size="sm"> {/* Added Edit Button */}
+              <Link to={`/product/edit/${product.id}`} className="flex items-center gap-1">
+                <Edit className="h-4 w-4" />
+                Edit
+              </Link>
+            </Button>
           </div>
           <div className="flex items-center gap-2">
             <Tag className="h-6 w-6 text-primary" />
