@@ -74,15 +74,17 @@ const ProductDetail = () => {
           </Carousel>
         </div>
         <div className="space-y-6">
-          <div className="flex items-center justify-between gap-3"> {/* Added justify-between */}
+          <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <CategoryIcon category={product.category} className="h-8 w-8 text-muted-foreground" />
               <h1 className="text-4xl font-bold">{product.name}</h1>
             </div>
-            <Button asChild variant="outline" size="sm"> {/* Added Edit Button */}
-              <Link to={`/product/edit/${product.id}`} className="flex items-center gap-1">
-                <Edit className="h-4 w-4" />
-                Edit
+            <Button asChild variant="outline" size="sm">
+              <Link to={`/product/${product.id}/edit`}>
+                <span className="flex items-center gap-1">
+                  <Edit className="h-4 w-4" />
+                  Edit
+                </span>
               </Link>
             </Button>
           </div>

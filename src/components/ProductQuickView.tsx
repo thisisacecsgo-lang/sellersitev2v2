@@ -57,8 +57,10 @@ export const ProductQuickView = ({ product }: ProductQuickViewProps) => {
             </Button>
             <Button size="lg" className="w-full" asChild>
               <Link to={`/product/${product.id}/edit`}>
-                <Edit className="mr-2 h-4 w-4" />
-                Edit Product
+                <span className="flex items-center gap-2">
+                  <Edit className="mr-2 h-4 w-4" />
+                  Edit Product
+                </span>
               </Link>
             </Button>
           </div>
