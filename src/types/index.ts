@@ -4,6 +4,10 @@ export interface Review {
   rating: 1 | 2 | 3 | 4 | 5;
   comment: string;
   date: string; // ISO date string
+  sellerReply?: {
+    text: string;
+    date: string; // ISO date string
+  };
 }
 
 export interface Seller {

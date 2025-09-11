@@ -30,6 +30,10 @@ export const mockSellers: Seller[] = [
             rating: 4,
             comment: "Smoked salmon was delicious, though a bit saltier than I prefer. Would still order again.",
             date: "2024-10-27T12:30:00Z",
+            sellerReply: {
+                text: "Thank you for your feedback, Fiona! We're glad you enjoyed the salmon. We'll take your comment about the saltiness into consideration for our next batch.",
+                date: "2024-10-28T09:00:00Z"
+            }
         },
     ],
     totalAds: 17,

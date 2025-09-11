@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { mockSellers } from "@/data/mockData";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import BackButton from "@/components/BackButton";
@@ -8,7 +8,7 @@ import { Star } from "lucide-react";
 
 const MyReviews = () => {
   // Assuming 'seller-5' is the current logged-in seller for this demo
-  const seller = mockSellers.find((s) => s.id === "seller-5");
+  const [seller, setSeller] = useState(() => mockSellers.find((s) => s.id === "seller-5"));
 
   const { averageRating } = useMemo(() => {
     if (!seller || seller.reviews.length === 0) {
@@ -17,6 +17,32 @@ const MyReviews = () => {
     const avg = seller.reviews.reduce((acc, r) => acc + r.rating, 0) / seller.reviews.length;
     return { averageRating: avg };
   }, [seller]);
+
+  const handleReplySubmit = (reviewId: string, replyText: string) => {
+    if (!seller) return;
+
+    const updatedReviews = seller.reviews.map(review => {
+      if (review.id === reviewId) {
+        return {
+          ...review,
+          sellerReply: {
+            text: replyText,
+            date: new Date().toISOString(),
+          },
+        };
+      }
+      return review;
+    });
+
+    const updatedSeller = { ...seller, reviews: updatedReviews };
+    setSeller(updatedSeller);
+
+    // Also update the global mock data to persist across navigations (for demo purposes)
+    const sellerIndex = mockSellers.findIndex(s => s.id === seller.id);
+    if (sellerIndex !== -1) {
+      mockSellers[sellerIndex] = updatedSeller;
+    }
+  };
 
   if (!seller) {
     return (
@@ -63,7 +89,11 @@ const MyReviews = () => {
           {seller.reviews.length > 0 ? (
             <div className="space-y-4">
               {seller.reviews.map((review) => (
-                <ReviewCard key={review.id} review={review} />
+                <ReviewCard 
+                  key={review.id} 
+                  review={review} 
+                  onReplySubmit={handleReplySubmit}
+                />
               ))}
             </div>
           ) : (
