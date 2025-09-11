@@ -17,8 +17,7 @@ import MyReviews from "./pages/MyReviews";
 import EditSellerProfile from "./pages/EditSellerProfile";
 import ScrollToTop from "./components/ScrollToTop";
 import FAQ from "./pages/FAQ";
-import Statistics from "./pages/Statistics";
-import QRCodeGenerator from "./pages/QRCodeGenerator"; // Import QRCodeGenerator page
+import Statistics from "./pages/Statistics"; // Import Statistics page
 
 const queryClient = new QueryClient();
 
@@ -42,8 +41,7 @@ const App = () => (
             <Route path="/revenue" element={<Revenue />} />
             <Route path="/my-reviews" element={<MyReviews />} />
             <Route path="/faq" element={<FAQ />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/qr-code-generator" element={<QRCodeGenerator />} /> {/* New QR Code Generator route */}
+            <Route path="/statistics" element={<Statistics />} /> {/* New Statistics route */}
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>
