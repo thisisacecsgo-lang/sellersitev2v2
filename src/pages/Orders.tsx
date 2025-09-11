@@ -75,7 +75,7 @@ const Orders = () => {
             <TableHead className="min-w-[90px] text-xs p-2">Product</TableHead>
             <TableHead className="text-xs p-2">Qty</TableHead>
             <TableHead className="text-xs p-2">Status</TableHead>
-            <TableHead className="text-right text-xs p-2">Pickup</TableHead>
+            <TableHead className="text-right text-xs p-2">pick-up ready from</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
