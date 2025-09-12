@@ -15,7 +15,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { ScanLine, ArrowRight } from "lucide-react";
+import { ScanLine, ArrowRight, Hash } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import { Badge } from "@/components/ui/badge";
@@ -25,7 +25,7 @@ import { format } from "date-fns";
 
 const UpdateQuantity = () => {
   const [scannedProduct, setScannedProduct] = useState<Product | null>(null);
-  const [productIdInput, setProductIdInput] = useState("");
+  const [lookupInput, setLookupInput] = useState("");
   const [editingBatch, setEditingBatch] = useState<ProductBatch | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [updateMode, setUpdateMode] = useState<'add' | 'replace'>('add');
@@ -37,14 +37,16 @@ const UpdateQuantity = () => {
     return { value, unit };
   };
 
-  const handleScanProduct = (id: string) => {
-    const product = mockProducts.find(p => p.id === id);
+  const handleProductLookup = (input: string) => {
+    if (!input.trim()) return;
+    // Check if it's a 5-digit article number or a product ID (for QR scan)
+    const product = mockProducts.find(p => p.articleNumber === input || p.id === input);
     if (product) {
       setScannedProduct(product);
-      showSuccess(`Product "${product.name}" scanned.`);
+      showSuccess(`Product "${product.name}" found.`);
     } else {
       setScannedProduct(null);
-      showError("Product not found. Please check the ID.");
+      showError("Product not found. Please check the number or ID.");
     }
   };
 
@@ -113,20 +115,24 @@ const UpdateQuantity = () => {
       <Card className="max-w-4xl mx-auto shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl">Update Batch Quantity</CardTitle>
-          <CardDescription>Scan a product's QR code or enter its ID to manage stock for each batch.</CardDescription>
+          <CardDescription>Scan a product's QR code or enter its article number to manage stock.</CardDescription>
         </CardHeader>
         <CardContent className="p-4 sm:p-6">
           {!scannedProduct ? (
             <div className="min-h-[200px] flex flex-col justify-center items-center text-center space-y-4">
               <div className="flex items-center gap-2 w-full max-w-sm">
-                <Input
-                  placeholder="Enter Product ID (e.g., 1, 9, 10)"
-                  value={productIdInput}
-                  onChange={(e) => setProductIdInput(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === 'Enter') handleScanProduct(productIdInput); }}
-                />
-                <Button onClick={() => handleScanProduct(productIdInput)}>
-                  <ScanLine className="mr-2 h-4 w-4" /> Scan
+                <div className="relative flex-grow">
+                  <ScanLine className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                  <Input
+                    placeholder="Scan QR or enter Article No."
+                    className="pl-10"
+                    value={lookupInput}
+                    onChange={(e) => setLookupInput(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleProductLookup(lookupInput); }}
+                  />
+                </div>
+                <Button onClick={() => handleProductLookup(lookupInput)}>
+                  Find Product
                 </Button>
               </div>
               <p className="text-muted-foreground">
@@ -135,40 +141,49 @@ const UpdateQuantity = () => {
             </div>
           ) : (
             <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div>
-                  <h3 className="text-2xl font-bold text-foreground">{scannedProduct.name}</h3>
-                  <p className="text-muted-foreground">Select a batch to update its quantity.</p>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 border rounded-lg bg-secondary/30">
+                <div className="flex items-center gap-4">
+                  <img src={scannedProduct.imageUrls[0]} alt={scannedProduct.name} className="w-20 h-20 object-cover rounded-md border" />
+                  <div>
+                    <h3 className="text-2xl font-bold text-foreground">{scannedProduct.name}</h3>
+                    <p className="text-muted-foreground font-mono flex items-center gap-2"><Hash className="h-4 w-4" />{scannedProduct.articleNumber}</p>
+                  </div>
                 </div>
-                <Button variant="outline" onClick={() => setScannedProduct(null)}>
-                  Scan New Product <ArrowRight className="ml-2 h-4 w-4" />
+                <Button variant="outline" onClick={() => { setScannedProduct(null); setLookupInput(""); }}>
+                  Find New Product <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
               <Card>
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Production Date</TableHead>
-                      <TableHead>Expiry Date</TableHead>
-                      <TableHead>Current Quantity</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {scannedProduct.batches.map((batch) => (
-                      <TableRow key={batch.id}>
-                        <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
-                        <TableCell>{format(new Date(batch.expiryDate), "PPP")}</TableCell>
-                        <TableCell>
-                          <Badge variant="secondary">{batch.availableQuantity}</Badge>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button size="sm" onClick={() => handleOpenDialog(batch)}>Update</Button>
-                        </TableCell>
+                <CardHeader>
+                  <CardTitle>Available Batches</CardTitle>
+                  <CardDescription>Select a batch to update its quantity.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Production Date</TableHead>
+                        <TableHead>Expiry Date</TableHead>
+                        <TableHead>Current Quantity</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {scannedProduct.batches.map((batch) => (
+                        <TableRow key={batch.id}>
+                          <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
+                          <TableCell>{format(new Date(batch.expiryDate), "PPP")}</TableCell>
+                          <TableCell>
+                            <Badge variant="secondary">{batch.availableQuantity}</Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button size="sm" onClick={() => handleOpenDialog(batch)}>Update</Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </CardContent>
               </Card>
             </div>
           )}
