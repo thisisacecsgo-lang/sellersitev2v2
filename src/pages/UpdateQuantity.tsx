@@ -1,9 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { mockProducts } from "@/data/mockData";
 import type { Product, ProductBatch } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -15,7 +14,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
-import { ScanLine, ArrowRight, Hash } from "lucide-react";
+import { ScanLine, ArrowRight, Hash, Minus, Plus } from "lucide-react";
 import BackButton from "@/components/BackButton";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import { Badge } from "@/components/ui/badge";
@@ -28,14 +27,20 @@ const UpdateQuantity = () => {
   const [lookupInput, setLookupInput] = useState("");
   const [editingBatch, setEditingBatch] = useState<ProductBatch | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [updateMode, setUpdateMode] = useState<'add' | 'replace'>('add');
-  const [inputValue, setInputValue] = useState("");
+  const [newQuantityInput, setNewQuantityInput] = useState("");
 
   const parseQuantity = (quantityStr: string): { value: number, unit: string } => {
     const value = parseFloat(quantityStr) || 0;
     const unit = quantityStr.replace(String(value), '').trim();
     return { value, unit };
   };
+
+  useEffect(() => {
+    if (editingBatch) {
+      const { value } = parseQuantity(editingBatch.availableQuantity);
+      setNewQuantityInput(String(value));
+    }
+  }, [editingBatch]);
 
   const handleArticleLookup = (articleNumber: string) => {
     if (!articleNumber.trim()) return;
@@ -50,7 +55,6 @@ const UpdateQuantity = () => {
   };
 
   const handleQrScan = () => {
-    // Simulate scanning a random product for demo purposes
     const sellerProducts = mockProducts.filter(p => p.sellerId === 'seller-5');
     if (sellerProducts.length === 0) {
       showError("No products available to scan.");
@@ -63,8 +67,6 @@ const UpdateQuantity = () => {
 
   const handleOpenDialog = (batch: ProductBatch) => {
     setEditingBatch(batch);
-    setInputValue("");
-    setUpdateMode("add");
     setIsDialogOpen(true);
   };
 
@@ -94,28 +96,23 @@ const UpdateQuantity = () => {
     }
   };
 
-  const handleQuickUpdateInDialog = (amount: number) => {
+  const handleQuickUpdate = (amount: number) => {
     if (!editingBatch) return;
     const { value: currentValue } = parseQuantity(editingBatch.availableQuantity);
-    updateBatchQuantity(editingBatch.id, currentValue + amount);
+    const newValue = currentValue + amount;
+    updateBatchQuantity(editingBatch.id, newValue);
+    showSuccess(`Quantity updated to ${newValue}.`);
   };
 
-  const handleDirectInputInDialog = () => {
+  const handleSetQuantity = () => {
     if (!editingBatch) return;
-    const newValue = parseInt(inputValue, 10);
+    const newValue = parseInt(newQuantityInput, 10);
     if (isNaN(newValue)) {
       showError("Please enter a valid number.");
       return;
     }
-
-    if (updateMode === 'replace') {
-      updateBatchQuantity(editingBatch.id, newValue);
-    } else {
-      const { value: currentValue } = parseQuantity(editingBatch.availableQuantity);
-      updateBatchQuantity(editingBatch.id, currentValue + newValue);
-    }
-    setInputValue("");
-    showSuccess("Batch quantity updated!");
+    updateBatchQuantity(editingBatch.id, newValue);
+    showSuccess("Batch quantity has been set.");
     setIsDialogOpen(false);
   };
 
@@ -224,46 +221,43 @@ const UpdateQuantity = () => {
               </DialogDescription>
             </DialogHeader>
             <div className="space-y-6 py-4">
-              <div className="text-center">
+              <div className="text-center p-4 rounded-lg bg-secondary/30 border">
                 <p className="text-sm text-muted-foreground">Current Quantity</p>
-                <p className="text-4xl font-bold">{editingBatch.availableQuantity}</p>
+                <p className="text-4xl font-bold blitz-effect" key={editingBatch.availableQuantity}>{editingBatch.availableQuantity}</p>
               </div>
+              
+              <div className="space-y-2">
+                <Label className="font-semibold">Quick Adjustments</Label>
+                <div className="grid grid-cols-4 gap-2">
+                  <Button variant="outline" onClick={() => handleQuickUpdate(-5)}>-5</Button>
+                  <Button variant="outline" onClick={() => handleQuickUpdate(-1)}>-1</Button>
+                  <Button variant="outline" onClick={() => handleQuickUpdate(1)}>+1</Button>
+                  <Button variant="outline" onClick={() => handleQuickUpdate(5)}>+5</Button>
+                </div>
+              </div>
+
               <Separator />
+
               <div className="space-y-2">
-                <Label className="font-semibold">Quick Actions</Label>
+                <Label htmlFor="set-quantity-input" className="font-semibold">Set New Total Quantity</Label>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" onClick={() => handleQuickUpdateInDialog(-5)}>-5</Button>
-                  <Button variant="outline" onClick={() => handleQuickUpdateInDialog(-1)}>-1</Button>
-                  <Button variant="outline" onClick={() => handleQuickUpdateInDialog(1)}>+1</Button>
-                  <Button variant="outline" onClick={() => handleQuickUpdateInDialog(5)}>+5</Button>
-                </div>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="direct-input" className="font-semibold">Direct Input</Label>
-                <div className="flex items-center gap-2">
+                  <Button variant="ghost" size="icon" onClick={() => setNewQuantityInput(String(Math.max(0, parseInt(newQuantityInput, 10) - 1) || 0))}><Minus className="h-4 w-4" /></Button>
                   <Input
-                    id="direct-input"
+                    id="set-quantity-input"
                     type="number"
-                    placeholder={updateMode === 'add' ? "e.g., 10 to add" : "e.g., 50 to set"}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') handleDirectInputInDialog(); }}
+                    className="text-center text-lg font-bold"
+                    placeholder="e.g., 50"
+                    value={newQuantityInput}
+                    onChange={(e) => setNewQuantityInput(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') handleSetQuantity(); }}
                   />
+                  <Button variant="ghost" size="icon" onClick={() => setNewQuantityInput(String(parseInt(newQuantityInput, 10) + 1 || 1))}><Plus className="h-4 w-4" /></Button>
                 </div>
-              </div>
-              <div className="flex items-center justify-center space-x-4 rounded-lg border p-3 bg-secondary/30">
-                <Label htmlFor="update-mode" className={updateMode === 'add' ? 'font-semibold text-primary' : 'text-muted-foreground'}>Add to Current</Label>
-                <Switch
-                  id="update-mode"
-                  checked={updateMode === 'replace'}
-                  onCheckedChange={(checked) => setUpdateMode(checked ? 'replace' : 'add')}
-                />
-                <Label htmlFor="update-mode" className={updateMode === 'replace' ? 'font-semibold text-primary' : 'text-muted-foreground'}>Replace Value</Label>
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-              <Button onClick={handleDirectInputInDialog}>Save Changes</Button>
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Close</Button>
+              <Button onClick={handleSetQuantity}>Set Quantity</Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
