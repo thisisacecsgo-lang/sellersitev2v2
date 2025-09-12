@@ -22,6 +22,13 @@ import CategoryIcon from "@/components/CategoryIcon";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { showSuccess } from "@/utils/toast";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -43,6 +50,11 @@ const ProductDetail = () => {
       </div>
     );
   }
+
+  const handleCopy = (text: string) => {
+    navigator.clipboard.writeText(text);
+    showSuccess("Article number copied to clipboard!");
+  };
 
   const totalAvailableQuantity = product.batches.reduce((acc, batch) => {
     const quantity = parseFloat(batch.availableQuantity) || 0;
@@ -96,11 +108,25 @@ const ProductDetail = () => {
                 : "Free"}
             </p>
           </div>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div
+                  className="inline-flex items-center gap-3 py-1 px-3 rounded-full bg-secondary cursor-pointer transition-colors hover:bg-muted"
+                  onClick={() => handleCopy(product.articleNumber)}
+                >
+                  <Hash className="h-4 w-4 text-secondary-foreground" />
+                  <span className="text-base font-mono text-secondary-foreground">
+                    {product.articleNumber}
+                  </span>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Copy Article Number</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <div className="space-y-4 text-lg">
-            <div className="flex items-center gap-3">
-              <Hash className="h-5 w-5 text-muted-foreground" />
-              <span>Article No: {product.articleNumber}</span>
-            </div>
             <div className="flex items-center gap-3">
               <Eye className="h-5 w-5 text-muted-foreground" />
               <span>Status: Public</span>

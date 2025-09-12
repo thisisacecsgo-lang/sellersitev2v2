@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/types";
-import { Tag, Eye, Calendar, Package, Edit, MoreVertical, EyeOff, Trash2 } from "lucide-react";
+import { Tag, Eye, Calendar, Package, Edit, MoreVertical, EyeOff, Trash2, Hash } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -145,6 +145,10 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
           <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
             <Eye className="h-4 w-4" />
             <span>{product.visibility === 'public' ? 'Public' : 'Hidden'}</span>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+            <Hash className="h-3 w-3" />
+            <span>{product.articleNumber}</span>
           </div>
         </CardContent>
         <CardFooter className="p-3 pt-0">
