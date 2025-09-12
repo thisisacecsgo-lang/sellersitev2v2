@@ -36,6 +36,7 @@ import { CalendarIcon } from "lucide-react";
 
 const productSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters." }),
+  articleNumber: z.string().length(5, { message: "Must be a 5-digit number." }).regex(/^\d+$/, { message: "Must contain only digits." }),
   category: z.string().min(1, { message: "Please select a category." }),
   availableQuantity: z.string().min(1, { message: "Quantity is required." }),
   price: z.coerce.number().min(0, { message: "Price must be a positive number." }),
@@ -55,6 +56,7 @@ const CreateProduct = () => {
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
+      articleNumber: "",
       category: "",
       availableQuantity: "",
       price: 0,
@@ -151,6 +153,19 @@ const CreateProduct = () => {
               <CardTitle>Details & Pricing</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="articleNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Article Number</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., 12345" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="category"

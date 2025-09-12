@@ -38,6 +38,7 @@ export interface Product {
   id:string;
   sellerId: string;
   name: string;
+  articleNumber: string;
   category: string;
   price: number | "free";
   region: string;

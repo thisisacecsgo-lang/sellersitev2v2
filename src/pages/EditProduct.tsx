@@ -60,6 +60,7 @@ import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react";
 // Schema for the main product details
 const productSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters." }),
+  articleNumber: z.string().length(5, { message: "Must be a 5-digit number." }).regex(/^\d+$/, { message: "Must contain only digits." }),
   category: z.string().min(1, { message: "Please select a category." }),
   price: z.coerce.number().min(0, { message: "Price must be a positive number." }),
   description: z.string().optional(),
@@ -89,6 +90,7 @@ const EditProduct = () => {
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: product?.name || "",
+      articleNumber: product?.articleNumber || "",
       category: product?.category || "",
       price: typeof product?.price === 'number' ? product.price : 0,
       description: product?.description || "",
@@ -201,6 +203,7 @@ const EditProduct = () => {
               <CardTitle>Details & Pricing</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField control={productForm.control} name="articleNumber" render={({ field }) => (<FormItem><FormLabel>Article Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={productForm.control} name="category" render={({ field }) => (<FormItem><FormLabel>Category</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent><SelectItem value="Fruits and berries">Fruits and berries</SelectItem><SelectItem value="Vegetables">Vegetables</SelectItem><SelectItem value="Bakery">Bakery</SelectItem><SelectItem value="Dairy products">Dairy products</SelectItem><SelectItem value="Meat and poultry">Meat and poultry</SelectItem><SelectItem value="Seafood">Seafood</SelectItem><SelectItem value="Animal products">Animal products</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
               <FormField control={productForm.control} name="price" render={({ field }) => (<FormItem><FormLabel>Price (€)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={productForm.control} name="deliveryTimeInDays" render={({ field }) => (<FormItem><FormLabel>Available in (days)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />

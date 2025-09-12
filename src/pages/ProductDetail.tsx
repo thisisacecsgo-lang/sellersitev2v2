@@ -11,6 +11,7 @@ import {
   Eye,
   Edit,
   Wrench,
+  Hash,
 } from "lucide-react";
 import { mockProducts, mockSellers } from "@/data/mockData";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
@@ -96,6 +97,10 @@ const ProductDetail = () => {
             </p>
           </div>
           <div className="space-y-4 text-lg">
+            <div className="flex items-center gap-3">
+              <Hash className="h-5 w-5 text-muted-foreground" />
+              <span>Article No: {product.articleNumber}</span>
+            </div>
             <div className="flex items-center gap-3">
               <Eye className="h-5 w-5 text-muted-foreground" />
               <span>Status: Public</span>
