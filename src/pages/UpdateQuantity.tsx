@@ -37,17 +37,28 @@ const UpdateQuantity = () => {
     return { value, unit };
   };
 
-  const handleProductLookup = (input: string) => {
-    if (!input.trim()) return;
-    // Check if it's a 5-digit article number or a product ID (for QR scan)
-    const product = mockProducts.find(p => p.articleNumber === input || p.id === input);
+  const handleArticleLookup = (articleNumber: string) => {
+    if (!articleNumber.trim()) return;
+    const product = mockProducts.find(p => p.articleNumber === articleNumber);
     if (product) {
       setScannedProduct(product);
       showSuccess(`Product "${product.name}" found.`);
     } else {
       setScannedProduct(null);
-      showError("Product not found. Please check the number or ID.");
+      showError("Product not found for this article number.");
     }
+  };
+
+  const handleQrScan = () => {
+    // Simulate scanning a random product for demo purposes
+    const sellerProducts = mockProducts.filter(p => p.sellerId === 'seller-5');
+    if (sellerProducts.length === 0) {
+      showError("No products available to scan.");
+      return;
+    }
+    const randomProduct = sellerProducts[Math.floor(Math.random() * sellerProducts.length)];
+    setScannedProduct(randomProduct);
+    showSuccess(`Simulated scan: Found "${randomProduct.name}".`);
   };
 
   const handleOpenDialog = (batch: ProductBatch) => {
@@ -119,25 +130,38 @@ const UpdateQuantity = () => {
         </CardHeader>
         <CardContent className="p-4 sm:p-6">
           {!scannedProduct ? (
-            <div className="min-h-[200px] flex flex-col justify-center items-center text-center space-y-4">
-              <div className="flex items-center gap-2 w-full max-w-sm">
-                <div className="relative flex-grow">
-                  <ScanLine className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-                  <Input
-                    placeholder="Scan QR or enter Article No."
-                    className="pl-10"
-                    value={lookupInput}
-                    onChange={(e) => setLookupInput(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === 'Enter') handleProductLookup(lookupInput); }}
-                  />
-                </div>
-                <Button onClick={() => handleProductLookup(lookupInput)}>
-                  Find Product
+            <div className="min-h-[300px] flex flex-col justify-center items-center text-center space-y-8">
+              <div className="w-full max-w-sm">
+                <Button size="lg" className="w-full py-8 text-lg" onClick={handleQrScan}>
+                  <ScanLine className="mr-4 h-8 w-8" />
+                  Scan Product QR Code
                 </Button>
+                <p className="text-xs text-muted-foreground mt-2">Click to simulate scanning a random product.</p>
               </div>
-              <p className="text-muted-foreground">
-                Use the "Generate QR Codes" tab to print QR codes for your products.
-              </p>
+              <div className="flex items-center w-full max-w-sm">
+                <div className="flex-grow border-t"></div>
+                <span className="flex-shrink mx-4 text-muted-foreground">OR</span>
+                <div className="flex-grow border-t"></div>
+              </div>
+              <div className="w-full max-w-sm space-y-2">
+                <Label htmlFor="article-input" className="text-md">Enter Article Number</Label>
+                <div className="flex items-center gap-2">
+                  <div className="relative flex-grow">
+                    <Hash className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      id="article-input"
+                      placeholder="e.g., 10001"
+                      className="pl-10"
+                      value={lookupInput}
+                      onChange={(e) => setLookupInput(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleArticleLookup(lookupInput); }}
+                    />
+                  </div>
+                  <Button onClick={() => handleArticleLookup(lookupInput)}>
+                    Find
+                  </Button>
+                </div>
+              </div>
             </div>
           ) : (
             <div className="space-y-6">
