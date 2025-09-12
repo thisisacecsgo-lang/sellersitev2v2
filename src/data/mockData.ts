@@ -48,7 +48,6 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Apples",
     category: "Fruits and berries",
-    availableQuantity: "1kg",
     price: 5.99,
     region: "Flensburg",
     imageUrls: ["/images/apple.jpg"],
@@ -57,20 +56,21 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: "2025-05-28T10:00:00Z",
-    productionDate: "2025-05-27T00:00:00Z",
-    expiryDate: "2025-08-30T00:00:00Z",
     isVegan: true,
     isVegetarian: true,
     harvestOnDemand: false,
     deliveryTimeInDays: 1,
     freshness: "fresh",
+    batches: [
+      { id: "batch-1a", productionDate: "2025-05-27T00:00:00Z", expiryDate: "2025-08-30T00:00:00Z", availableQuantity: "1kg" },
+      { id: "batch-1b", productionDate: "2025-05-20T00:00:00Z", expiryDate: "2025-08-23T00:00:00Z", availableQuantity: "3kg" }
+    ]
   },
   {
     id: "4",
     sellerId: "seller-5",
     name: "Eggs",
     category: "Animal products",
-    availableQuantity: "2kg",
     price: 4.5,
     region: "Flensburg",
     imageUrls: ["/images/eggs.jpg"],
@@ -79,20 +79,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
-    productionDate: "2025-03-24T00:00:00Z",
-    expiryDate: "2025-11-15T00:00:00Z",
     isVegan: false,
     isVegetarian: true,
     harvestOnDemand: false,
     deliveryTimeInDays: 1,
     freshness: "fresh",
+    batches: [
+      { id: "batch-4a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-15T00:00:00Z", availableQuantity: "2kg" }
+    ]
   },
   {
     id: "10",
     sellerId: "seller-5",
     name: "Chicken Thighs",
     category: "Meat and poultry",
-    availableQuantity: "500g",
     price: 12.0,
     region: "Flensburg",
     imageUrls: ["/images/c.jpg"],
@@ -100,20 +100,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
-    productionDate: "2025-06-22T00:00:00Z",
-    expiryDate: "2025-08-21T00:00:00Z",
     isVegan: false,
     isVegetarian: false,
     harvestOnDemand: false,
     deliveryTimeInDays: 2,
     freshness: "frozen",
+    batches: [
+      { id: "batch-10a", productionDate: "2025-06-22T00:00:00Z", expiryDate: "2025-08-21T00:00:00Z", availableQuantity: "500g" }
+    ]
   },
   {
     id: "13",
     sellerId: "seller-5",
     name: "Carrots",
     category: "Vegetables",
-    availableQuantity: "3kg",
     price: 3.5,
     region: "Flensburg",
     imageUrls: ["https://images.unsplash.com/photo-1590868309235-ea34bed7bd7f?q=80&w=2500&auto=format&fit=crop", "https://images.unsplash.com/photo-1582515072990-f23b7e418185?q=80&w=2500&auto=format&fit=crop", "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?q=80&w=2500&auto=format&fit=crop"],
@@ -121,20 +121,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
-    productionDate: "2025-03-24T00:00:00Z",
-    expiryDate: "2025-11-15T00:00:00Z",
     isVegan: true,
     isVegetarian: true,
     harvestOnDemand: true,
     deliveryTimeInDays: 1,
     freshness: "fresh",
+    batches: [
+      { id: "batch-13a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-15T00:00:00Z", availableQuantity: "3kg" }
+    ]
   },
   {
     id: "9",
     sellerId: "seller-5",
     name: "Goat Cheese",
     category: "Dairy products",
-    availableQuantity: "200g",
     price: 8.5,
     region: "Flensburg",
     imageUrls: ["/images/ch.jpg"],
@@ -142,20 +142,21 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
-    productionDate: "2025-07-12T00:00:00Z",
-    expiryDate: "2025-10-05T00:00:00Z",
     isVegan: false,
     isVegetarian: true,
     harvestOnDemand: true,
     deliveryTimeInDays: 2,
     freshness: "fresh",
+    batches: [
+      { id: "batch-9a", productionDate: "2025-07-12T00:00:00Z", expiryDate: "2025-10-05T00:00:00Z", availableQuantity: "200g" },
+      { id: "batch-9b", productionDate: "2025-07-05T00:00:00Z", expiryDate: "2025-09-28T00:00:00Z", availableQuantity: "150g" }
+    ]
   },
   {
     id: "12",
     sellerId: "seller-5",
     name: "Sourdough Bread",
     category: "Bakery",
-    availableQuantity: "600g",
     price: 8.0,
     region: "Flensburg",
     imageUrls: ["/images/br.jpg"],
@@ -163,20 +164,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
-    productionDate: "2025-05-20T00:00:00Z",
-    expiryDate: "2025-09-27T00:00:00Z",
     isVegan: true,
     isVegetarian: true,
     harvestOnDemand: false,
     deliveryTimeInDays: 1,
     freshness: "fresh",
+    batches: [
+      { id: "batch-12a", productionDate: "2025-05-20T00:00:00Z", expiryDate: "2025-09-27T00:00:00Z", availableQuantity: "600g" }
+    ]
   },
   {
     id: "19",
     sellerId: "seller-5",
     name: "Raw Cow's Milk",
     category: "Dairy products",
-    availableQuantity: "1l",
     price: 9.0,
     region: "Flensburg",
     imageUrls: ["/images/mi.jpg"],
@@ -184,20 +185,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
-    productionDate: "2025-08-13T00:00:00Z",
-    expiryDate: "2025-08-30T00:00:00Z",
     isVegan: false,
     isVegetarian: true,
     harvestOnDemand: false,
     deliveryTimeInDays: 2,
     freshness: "fresh",
+    batches: [
+      { id: "batch-19a", productionDate: "2025-08-13T00:00:00Z", expiryDate: "2025-08-30T00:00:00Z", availableQuantity: "1l" }
+    ]
   },
   {
     id: "20",
     sellerId: "seller-5",
     name: "raw Salmon Fillet",
     category: "Seafood",
-    availableQuantity: "1.5kg",
     price: 18.0,
     region: "Flensburg",
     imageUrls: ["/images/me.jpg"],
@@ -205,20 +206,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
-    productionDate: "2025-03-24T00:00:00Z",
-    expiryDate: "2025-11-23T00:00:00Z",
     isVegan: false,
     isVegetarian: false,
     harvestOnDemand: false,
     deliveryTimeInDays: 2,
     freshness: "fresh",
+    batches: [
+      { id: "batch-20a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-23T00:00:00Z", availableQuantity: "1.5kg" }
+    ]
   },
   {
     id: "3",
     sellerId: "seller-5",
     name: "Homemade Strawberry Jam",
     category: "Fruits and berries",
-    availableQuantity: "250g",
     price: 7.0,
     region: "Flensburg",
     imageUrls: ["/images/jam.jpg"],
@@ -227,20 +228,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
-    productionDate: "2025-05-14T00:00:00Z",
-    expiryDate: "2025-12-06T00:00:00Z",
     isVegan: true,
     isVegetarian: true,
     harvestOnDemand: true,
     deliveryTimeInDays: 3,
     freshness: "canned",
+    batches: [
+      { id: "batch-3a", productionDate: "2025-05-14T00:00:00Z", expiryDate: "2025-12-06T00:00:00Z", availableQuantity: "250g" }
+    ]
   },
   {
     id: "11",
     sellerId: "seller-5",
     name: "Wildflower Honey",
     category: "Animal products",
-    availableQuantity: "300g",
     price: 9.0,
     region: "Flensburg",
     imageUrls: ["https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?q=80&w=2500&auto=format&fit=crop", "https://images.unsplash.com/photo-1587049352851-8d4e89133924?q=80&w=2500&auto=format&fit=crop", "https://images.unsplash.com/photo-1571108400537-e6c278735a8a?q=80&w=2500&auto=format&fit=crop"],
@@ -248,20 +249,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
-    productionDate: "2025-06-04T00:00:00Z",
-    expiryDate: "2025-10-11T00:00:00Z",
     isVegan: false,
     isVegetarian: true,
     harvestOnDemand: false,
     deliveryTimeInDays: 4,
     freshness: "canned",
+    batches: [
+      { id: "batch-11a", productionDate: "2025-06-04T00:00:00Z", expiryDate: "2025-10-11T00:00:00Z", availableQuantity: "300g" }
+    ]
   },
   {
     id: "14",
     sellerId: "seller-5",
     name: "Frozen Blueberries",
     category: "Fruits and berries",
-    availableQuantity: "500g",
     price: 10.5,
     region: "Flensburg",
     imageUrls: ["/images/bl.jpg"],
@@ -269,20 +270,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
-    productionDate: "2025-04-08T00:00:00Z",
-    expiryDate: "2025-09-16T00:00:00Z",
     isVegan: true,
     isVegetarian: true,
     harvestOnDemand: false,
     deliveryTimeInDays: 3,
     freshness: "frozen",
+    batches: [
+      { id: "batch-14a", productionDate: "2025-04-08T00:00:00Z", expiryDate: "2025-09-16T00:00:00Z", availableQuantity: "500g" }
+    ]
   },
   {
     id: "17",
     sellerId: "seller-5",
     name: "Fresh Raspberries",
     category: "Fruits and berries",
-    availableQuantity: "3kg",
     price: 6.0,
     region: "Flensburg",
     imageUrls: ["/images/ras.jpg"],
@@ -290,20 +291,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
-    productionDate: "2025-04-30T00:00:00Z",
-    expiryDate: "2025-08-17T00:00:00Z",
     isVegan: true,
     isVegetarian: true,
     harvestOnDemand: true,
     deliveryTimeInDays: 2,
     freshness: "fresh",
+    batches: [
+      { id: "batch-17a", productionDate: "2025-04-30T00:00:00Z", expiryDate: "2025-08-17T00:00:00Z", availableQuantity: "3kg" }
+    ]
   },
   {
     id: "26",
     sellerId: "seller-5",
     name: "Organic Quinoa",
     category: "Bakery",
-    availableQuantity: "1kg",
     price: 11.50,
     region: "Flensburg",
     imageUrls: ["/images/ki.jpg"],
@@ -311,20 +312,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: now.toISOString(),
-    productionDate: addDays(now, -30).toISOString(),
-    expiryDate: addDays(now, 335).toISOString(),
     isVegan: true,
     isVegetarian: true,
     harvestOnDemand: false,
     deliveryTimeInDays: 3,
     freshness: "canned",
+    batches: [
+      { id: "batch-26a", productionDate: addDays(now, -30).toISOString(), expiryDate: addDays(now, 335).toISOString(), availableQuantity: "1kg" }
+    ]
   },
   {
     id: "28",
     sellerId: "seller-5",
     name: "Fresh Oysters",
     category: "Seafood",
-    availableQuantity: "1kg",
     price: 24.00,
     region: "Flensburg",
     imageUrls: ["/images/ou.jpg"],
@@ -332,20 +333,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: now.toISOString(),
-    productionDate: addDays(now, -1).toISOString(),
-    expiryDate: addDays(now, 2).toISOString(),
     isVegan: false,
     isVegetarian: false,
     harvestOnDemand: true,
     deliveryTimeInDays: 1,
     freshness: "fresh",
+    batches: [
+      { id: "batch-28a", productionDate: addDays(now, -1).toISOString(), expiryDate: addDays(now, 2).toISOString(), availableQuantity: "1kg" }
+    ]
   },
   {
     id: "29",
     sellerId: "seller-5",
     name: "Smoked Salmon",
     category: "Seafood",
-    availableQuantity: "200g",
     price: 16.50,
     region: "Flensburg",
     imageUrls: ["/images/sal.jpg"],
@@ -353,20 +354,20 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: addDays(now, -10).toISOString(),
-    productionDate: addDays(now, -12).toISOString(),
-    expiryDate: addDays(now, 20).toISOString(),
     isVegan: false,
     isVegetarian: false,
     harvestOnDemand: false,
     deliveryTimeInDays: 3,
     freshness: "frozen",
+    batches: [
+      { id: "batch-29a", productionDate: addDays(now, -12).toISOString(), expiryDate: addDays(now, 20).toISOString(), availableQuantity: "200g" }
+    ]
   },
   {
     id: "30",
     sellerId: "seller-5",
     name: "Dungeness Crab",
     category: "Seafood",
-    availableQuantity: "1 whole crab",
     price: 28.00,
     region: "Flensburg",
     imageUrls: ["https://images.unsplash.com/photo-1601192042869-a8a346349df8?q=80&w=2500&auto=format&fit=crop", "https://images.unsplash.com/photo-1553634440-a396d817152e?q=80&w=2500&auto=format&fit=crop", "https://images.unsplash.com/photo-1562720131-b608a1723a95?q=80&w=2500&auto=format&fit=crop"],
@@ -374,20 +375,18 @@ export const mockProducts: Product[] = [
     status: "sold",
     visibility: "public",
     createdAt: addDays(now, -5).toISOString(),
-    productionDate: addDays(now, -6).toISOString(),
-    expiryDate: addDays(now, -3).toISOString(),
     isVegan: false,
     isVegetarian: false,
     harvestOnDemand: false,
     deliveryTimeInDays: 1,
     freshness: "fresh",
+    batches: []
   },
   {
     id: "31",
     sellerId: "seller-5",
     name: "Canned Albacore Tuna",
     category: "Seafood",
-    availableQuantity: "3kg",
     price: 9.50,
     region: "Flensburg",
     imageUrls: ["/images/tun.jpg"],
@@ -395,12 +394,13 @@ export const mockProducts: Product[] = [
     status: "available",
     visibility: "public",
     createdAt: addDays(now, -40).toISOString(),
-    productionDate: addDays(now, -50).toISOString(),
-    expiryDate: addDays(now, 1045).toISOString(),
     isVegan: false,
     isVegetarian: false,
     harvestOnDemand: false,
     deliveryTimeInDays: 4,
     freshness: "canned",
+    batches: [
+      { id: "batch-31a", productionDate: addDays(now, -50).toISOString(), expiryDate: addDays(now, 1045).toISOString(), availableQuantity: "3kg" }
+    ]
   },
 ];

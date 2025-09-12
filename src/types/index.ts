@@ -27,12 +27,18 @@ export interface Seller {
   description?: string; // New field for seller description
 }
 
+export interface ProductBatch {
+  id: string;
+  productionDate: string; // ISO date string
+  expiryDate: string; // ISO date string
+  availableQuantity: string;
+}
+
 export interface Product {
   id:string;
   sellerId: string;
   name: string;
   category: string;
-  availableQuantity: string;
   price: number | "free";
   region: string;
   imageUrls: string[];
@@ -40,13 +46,12 @@ export interface Product {
   status: "available" | "sold";
   visibility: "public" | "hidden";
   createdAt: string; // ISO date string
-  productionDate?: string; // ISO date string
-  expiryDate?: string; // ISO date string
   isVegan: boolean;
   isVegetarian: boolean;
   harvestOnDemand: boolean;
   deliveryTimeInDays: number;
   freshness: "fresh" | "frozen" | "canned";
+  batches: ProductBatch[];
 }
 
 export interface Order {

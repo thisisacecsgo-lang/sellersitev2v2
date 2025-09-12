@@ -31,7 +31,7 @@ import {
 import { ProductQuickView } from "./ProductQuickView";
 import { cn } from "@/lib/utils";
 import CategoryIcon from "./CategoryIcon";
-import { format, formatDistanceToNowStrict } from "date-fns";
+import { format, formatDistanceToNowStrict, isAfter } from "date-fns";
 
 interface ProductCardProps {
   product: Product;
@@ -47,14 +47,21 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
 
   const imageUrl = product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls[0] : "/placeholder.svg";
 
-  const isAvailableInFuture = product.productionDate && new Date(product.productionDate) > new Date();
+  const freshestBatch = product.batches.length > 0 ? product.batches.reduce((a, b) => new Date(a.productionDate) > new Date(b.productionDate) ? a : b) : null;
+  const isAvailableInFuture = freshestBatch && isAfter(new Date(freshestBatch.productionDate), new Date());
 
   const availabilityText = () => {
-    if (!isAvailableInFuture || !product.productionDate) return null;
-    const date = new Date(product.productionDate);
+    if (!isAvailableInFuture || !freshestBatch) return null;
+    const date = new Date(freshestBatch.productionDate);
     const distance = formatDistanceToNowStrict(date, { addSuffix: true });
     return `Available ${distance} (${format(date, "MMM d")})`;
   };
+
+  const totalAvailableQuantity = product.batches.reduce((acc, batch) => {
+    const quantity = parseFloat(batch.availableQuantity) || 0;
+    return acc + quantity;
+  }, 0);
+  const unit = product.batches.length > 0 ? (product.batches[0].availableQuantity.replace(/[0-9.,]/g, '').trim()) : '';
 
   return (
     <Dialog open={isQuickViewOpen} onOpenChange={setIsQuickViewOpen}>
@@ -133,7 +140,7 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
             <Package className="h-4 w-4" />
-            <span>{product.availableQuantity}</span>
+            <span>{totalAvailableQuantity} {unit}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
             <Eye className="h-4 w-4" />

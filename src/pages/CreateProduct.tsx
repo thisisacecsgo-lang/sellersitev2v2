@@ -44,8 +44,8 @@ const productSchema = z.object({
   isVegetarian: z.boolean().default(false),
   harvestOnDemand: z.boolean().default(false),
   deliveryTimeInDays: z.coerce.number().int().min(0, { message: "Must be a positive number." }).default(1),
-  productionDate: z.string().optional(), // New field
-  expiryDate: z.string().optional(), // New field
+  productionDate: z.string().optional(),
+  expiryDate: z.string().optional(),
 });
 
 const CreateProduct = () => {
@@ -70,23 +70,35 @@ const CreateProduct = () => {
 
   const onSubmit = (values: z.infer<typeof productSchema>) => {
     console.log("New product created:", values);
-    // Simulate adding to mock data (in a real app, this would be an API call)
-    const newProductId = (mockProducts.length + 1).toString(); // Simple ID generation
+    const newProductId = (mockProducts.length + 1).toString();
     const newProduct = {
       id: newProductId,
-      sellerId: "seller-5", // Assuming current seller is seller-5
-      imageUrls: ["/placeholder.svg"], // Default image
+      sellerId: "seller-5",
+      imageUrls: ["/placeholder.svg"],
       status: "available",
       visibility: "public",
       createdAt: new Date().toISOString(),
-      freshness: "fresh", // Default freshness
+      freshness: "fresh",
       ...values,
-      productionDate: values.productionDate || undefined, // Ensure it's undefined if empty
-      expiryDate: values.expiryDate || undefined, // Ensure it's undefined if empty
+      batches: [
+        {
+          id: `batch-${newProductId}-1`,
+          productionDate: values.productionDate || new Date().toISOString(),
+          expiryDate: values.expiryDate || new Date().toISOString(),
+          availableQuantity: values.availableQuantity,
+        },
+      ],
     };
-    mockProducts.push(newProduct); // Add to mock data
+    // @ts-ignore
+    delete newProduct.productionDate;
+    // @ts-ignore
+    delete newProduct.expiryDate;
+    // @ts-ignore
+    delete newProduct.availableQuantity;
+
+    mockProducts.push(newProduct);
     showSuccess("Product created successfully!");
-    navigate(`/product/${newProductId}`); // Navigate to the new product's detail page
+    navigate(`/product/${newProductId}`);
   };
 
   return (

@@ -5,21 +5,22 @@ import {
   MapPin,
   Package,
   Info,
-  Calendar,
-  Clock,
-  Wrench,
   Vegan,
   Leaf,
   Truck,
   Eye,
-  Edit, // Import Edit icon
+  Edit,
+  Wrench,
 } from "lucide-react";
 import { mockProducts, mockSellers } from "@/data/mockData";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
-import { format, isAfter, formatDistanceToNowStrict } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 import BackButton from "@/components/BackButton";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import CategoryIcon from "@/components/CategoryIcon";
+import { Card } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -28,15 +29,6 @@ const ProductDetail = () => {
   const seller = product
     ? mockSellers.find((s) => s.id === product.sellerId)
     : undefined;
-
-  const isAvailableInFuture = product?.productionDate && isAfter(new Date(product.productionDate), new Date());
-
-  const availabilityText = () => {
-    if (!isAvailableInFuture || !product?.productionDate) return null;
-    const date = new Date(product.productionDate);
-    const distance = formatDistanceToNowStrict(date, { addSuffix: true });
-    return `Available ${distance} (${format(date, "PPP")})`;
-  };
 
   if (!product || !seller) {
     return (
@@ -50,6 +42,13 @@ const ProductDetail = () => {
       </div>
     );
   }
+
+  const totalAvailableQuantity = product.batches.reduce((acc, batch) => {
+    const quantity = parseFloat(batch.availableQuantity) || 0;
+    return acc + quantity;
+  }, 0);
+
+  const unit = product.batches.length > 0 ? (product.batches[0].availableQuantity.replace(/[0-9.,]/g, '').trim()) : '';
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -107,40 +106,18 @@ const ProductDetail = () => {
             </div>
             <div className="flex items-center gap-3">
               <Package className="h-5 w-5 text-muted-foreground" />
-              <span>Available Quantity: {product.availableQuantity}</span>
+              <span>Total Available: {totalAvailableQuantity} {unit}</span>
             </div>
             <div className="flex items-center gap-3">
               <Truck className="h-5 w-5 text-muted-foreground" />
               <span>Delivery: {product.deliveryTimeInDays} day(s)</span>
             </div>
-            {isAvailableInFuture && (
-              <div className="flex items-start gap-3 text-primary font-medium">
-                <Calendar className="h-5 w-5 text-muted-foreground mt-1" />
-                <span className="text-base">{availabilityText()}</span>
-              </div>
-            )}
             {product.description && (
               <div className="flex items-start gap-3">
                 <Info className="h-5 w-5 text-muted-foreground mt-1" />
                 <p className="text-muted-foreground text-base">
                   {product.description}
                 </p>
-              </div>
-            )}
-            {product.productionDate && !isAvailableInFuture && (
-              <div className="flex items-start gap-3">
-                <Calendar className="h-5 w-5 text-muted-foreground mt-1" />
-                <span className="text-base">
-                  Produced: {format(new Date(product.productionDate), "PPP")}
-                </span>
-              </div>
-            )}
-            {product.expiryDate && (
-              <div className="flex items-start gap-3">
-                <Clock className="h-5 w-5 text-muted-foreground mt-1" />
-                <span className="text-base">
-                  Best before: {format(new Date(product.expiryDate), "PPP")}
-                </span>
               </div>
             )}
             {product.harvestOnDemand && (
@@ -163,6 +140,52 @@ const ProductDetail = () => {
             )}
           </div>
         </div>
+      </div>
+
+      <div className="mt-12">
+        <h2 className="text-2xl font-bold mb-4">Available Batches</h2>
+        <Card>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Production Date</TableHead>
+                <TableHead>Best Before</TableHead>
+                <TableHead>Days Left</TableHead>
+                <TableHead>Available</TableHead>
+                <TableHead className="text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {product.batches.length > 0 ? (
+                product.batches.map(batch => {
+                  const expiry = new Date(batch.expiryDate);
+                  const daysLeft = differenceInDays(expiry, new Date());
+                  return (
+                    <TableRow key={batch.id}>
+                      <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
+                      <TableCell>{format(expiry, "PPP")}</TableCell>
+                      <TableCell>
+                        <Badge variant={daysLeft < 7 ? "destructive" : "secondary"}>
+                          {daysLeft > 0 ? `${daysLeft} days` : "Expired"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{batch.availableQuantity}</TableCell>
+                      <TableCell className="text-right">
+                        <Button size="sm" disabled>Add to Cart</Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center h-24">
+                    No available batches for this product.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </Card>
       </div>
     </div>
   );
