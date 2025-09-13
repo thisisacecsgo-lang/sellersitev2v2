@@ -47,6 +47,9 @@ const productSchema = z.object({
   harvestOnDemand: z.boolean().default(false),
   deliveryTimeInDays: z.coerce.number().int().min(0, { message: "Must be a positive number." }).default(1),
   expiryDate: z.string().optional(),
+}).refine((data) => !mockProducts.some(p => p.articleNumber === data.articleNumber), {
+  message: "This article number is already in use. Please choose another.",
+  path: ["articleNumber"],
 });
 
 const CreateProduct = () => {
@@ -72,7 +75,8 @@ const CreateProduct = () => {
 
   const onSubmit = (values: z.infer<typeof productSchema>) => {
     console.log("New product created:", values);
-    const newProductId = (mockProducts.length + 1).toString();
+    const maxId = mockProducts.reduce((max, p) => Math.max(max, parseInt(p.id, 10)), 0);
+    const newProductId = (maxId + 1).toString();
     const newProduct = {
       id: newProductId,
       sellerId: "seller-5",

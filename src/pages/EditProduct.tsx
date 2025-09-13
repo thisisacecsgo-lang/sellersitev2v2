@@ -44,7 +44,6 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import BackButton from "@/components/BackButton";
@@ -122,6 +121,15 @@ const EditProduct = () => {
   }
 
   const onProductSubmit = (values: z.infer<typeof productSchema>) => {
+    const isDuplicate = mockProducts.some(p => p.id !== product.id && p.articleNumber === values.articleNumber);
+    if (isDuplicate) {
+      productForm.setError("articleNumber", {
+        type: "manual",
+        message: "This article number is already in use. Please choose another.",
+      });
+      return;
+    }
+
     const updatedProduct = { ...product, ...values };
     setProduct(updatedProduct);
     const productIndex = mockProducts.findIndex(p => p.id === product.id);
