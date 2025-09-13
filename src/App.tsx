@@ -3,7 +3,6 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import ProductDetail from "./pages/ProductDetail";
 import SellerProfile from "./pages/SellerProfile";
@@ -18,7 +17,7 @@ import EditSellerProfile from "./pages/EditSellerProfile";
 import ScrollToTop from "./components/ScrollToTop";
 import FAQ from "./pages/FAQ";
 import Statistics from "./pages/Statistics";
-import GenerateQrCodes from "./pages/GenerateQrCodes"; // Import GenerateQrCodes page
+import GenerateQrCodes from "./pages/GenerateQrCodes";
 
 const queryClient = new QueryClient();
 
@@ -31,7 +30,7 @@ const App = () => (
         <ScrollToTop />
         <Routes>
           <Route element={<Layout />}>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<SellerProfile />} />
             <Route path="/product/new" element={<CreateProduct />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/product/:id/edit" element={<EditProduct />} />
@@ -43,7 +42,7 @@ const App = () => (
             <Route path="/my-reviews" element={<MyReviews />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/statistics" element={<Statistics />} />
-            <Route path="/generate-qrcodes" element={<GenerateQrCodes />} /> {/* New QR Codes route */}
+            <Route path="/generate-qrcodes" element={<GenerateQrCodes />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

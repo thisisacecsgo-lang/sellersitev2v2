@@ -28,7 +28,7 @@ const Header = () => {
               <img src="/images/logooo.png" alt="MySite Logo" className="h-10 w-10"/>
             </Link>
             <Link
-              to="/seller/seller-5"
+              to="/"
               className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
               onClick={() => setIsSheetOpen(false)}
             >

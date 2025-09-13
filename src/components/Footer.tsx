@@ -22,15 +22,6 @@ export const Footer = () => {
             </p>
           </div>
           <div>
-            <h3 className="font-semibold mb-4">Shop</h3>
-            <ul className="space-y-2 text-sm">
-              <li><Link to="/" className="text-muted-foreground hover:text-primary">All Products</Link></li>
-              <li><Link to="/" className="text-muted-foreground hover:text-primary">Fruits</Link></li>
-              <li><Link to="/" className="text-muted-foreground hover:text-primary">Vegetables</Link></li>
-              <li><Link to="/" className="text-muted-foreground hover:text-primary">Pantry</Link></li>
-            </ul>
-          </div>
-          <div>
             <h3 className="font-semibold mb-4">About</h3>
             <ul className="space-y-2 text-sm">
               <li><Link to="/about" className="text-muted-foreground hover:text-primary">Our Story</Link></li>
