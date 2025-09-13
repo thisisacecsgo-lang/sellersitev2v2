@@ -65,7 +65,8 @@ export const mockProducts: Product[] = [
     freshness: "fresh",
     batches: [
       { id: "batch-1a", productionDate: "2025-05-27T00:00:00Z", expiryDate: "2025-08-30T00:00:00Z", availableQuantity: "1kg" },
-      { id: "batch-1b", productionDate: "2025-05-20T00:00:00Z", expiryDate: "2025-08-23T00:00:00Z", availableQuantity: "3kg" }
+      { id: "batch-1b", productionDate: "2025-05-20T00:00:00Z", expiryDate: "2025-08-23T00:00:00Z", availableQuantity: "3kg" },
+      { id: "batch-1c", productionDate: "2025-05-15T00:00:00Z", expiryDate: "2025-08-15T00:00:00Z", availableQuantity: "5kg" }
     ]
   },
   {
@@ -89,7 +90,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 1,
     freshness: "fresh",
     batches: [
-      { id: "batch-4a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-15T00:00:00Z", availableQuantity: "24 piece" }
+      { id: "batch-4a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-15T00:00:00Z", availableQuantity: "24 piece" },
+      { id: "batch-4b", productionDate: "2025-03-20T00:00:00Z", expiryDate: "2025-11-10T00:00:00Z", availableQuantity: "12 piece" },
+      { id: "batch-4c", productionDate: "2025-03-15T00:00:00Z", expiryDate: "2025-11-01T00:00:00Z", availableQuantity: "36 piece" }
     ]
   },
   {
@@ -112,7 +115,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 2,
     freshness: "frozen",
     batches: [
-      { id: "batch-10a", productionDate: "2025-06-22T00:00:00Z", expiryDate: "2025-08-21T00:00:00Z", availableQuantity: "5kg" }
+      { id: "batch-10a", productionDate: "2025-06-22T00:00:00Z", expiryDate: "2025-08-21T00:00:00Z", availableQuantity: "5kg" },
+      { id: "batch-10b", productionDate: "2025-06-15T00:00:00Z", expiryDate: "2025-08-14T00:00:00Z", availableQuantity: "2.5kg" },
+      { id: "batch-10c", productionDate: "2025-06-10T00:00:00Z", expiryDate: "2025-08-09T00:00:00Z", availableQuantity: "7kg" }
     ]
   },
   {
@@ -135,7 +140,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 1,
     freshness: "fresh",
     batches: [
-      { id: "batch-13a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-15T00:00:00Z", availableQuantity: "3kg" }
+      { id: "batch-13a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-15T00:00:00Z", availableQuantity: "3kg" },
+      { id: "batch-13b", productionDate: "2025-03-20T00:00:00Z", expiryDate: "2025-11-10T00:00:00Z", availableQuantity: "5kg" },
+      { id: "batch-13c", productionDate: "2025-03-18T00:00:00Z", expiryDate: "2025-11-05T00:00:00Z", availableQuantity: "2kg" }
     ]
   },
   {
@@ -159,7 +166,8 @@ export const mockProducts: Product[] = [
     freshness: "fresh",
     batches: [
       { id: "batch-9a", productionDate: "2025-07-12T00:00:00Z", expiryDate: "2025-10-05T00:00:00Z", availableQuantity: "2kg" },
-      { id: "batch-9b", productionDate: "2025-07-05T00:00:00Z", expiryDate: "2025-09-28T00:00:00Z", availableQuantity: "1.5kg" }
+      { id: "batch-9b", productionDate: "2025-07-05T00:00:00Z", expiryDate: "2025-09-28T00:00:00Z", availableQuantity: "1.5kg" },
+      { id: "batch-9c", productionDate: "2025-06-28T00:00:00Z", expiryDate: "2025-09-20T00:00:00Z", availableQuantity: "3kg" }
     ]
   },
   {
@@ -182,7 +190,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 1,
     freshness: "fresh",
     batches: [
-      { id: "batch-12a", productionDate: "2025-05-20T00:00:00Z", expiryDate: "2025-09-27T00:00:00Z", availableQuantity: "6kg" }
+      { id: "batch-12a", productionDate: "2025-05-20T00:00:00Z", expiryDate: "2025-09-27T00:00:00Z", availableQuantity: "6kg" },
+      { id: "batch-12b", productionDate: "2025-05-19T00:00:00Z", expiryDate: "2025-09-26T00:00:00Z", availableQuantity: "4.8kg" },
+      { id: "batch-12c", productionDate: "2025-05-18T00:00:00Z", expiryDate: "2025-09-25T00:00:00Z", availableQuantity: "3kg" }
     ]
   },
   {
@@ -205,7 +215,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 2,
     freshness: "fresh",
     batches: [
-      { id: "batch-19a", productionDate: "2025-08-13T00:00:00Z", expiryDate: "2025-08-30T00:00:00Z", availableQuantity: "10 liter" }
+      { id: "batch-19a", productionDate: "2025-08-13T00:00:00Z", expiryDate: "2025-08-30T00:00:00Z", availableQuantity: "10 liter" },
+      { id: "batch-19b", productionDate: "2025-08-12T00:00:00Z", expiryDate: "2025-08-29T00:00:00Z", availableQuantity: "5 liter" },
+      { id: "batch-19c", productionDate: "2025-08-11T00:00:00Z", expiryDate: "2025-08-28T00:00:00Z", availableQuantity: "15 liter" }
     ]
   },
   {
@@ -228,7 +240,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 2,
     freshness: "fresh",
     batches: [
-      { id: "batch-20a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-23T00:00:00Z", availableQuantity: "1.5kg" }
+      { id: "batch-20a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-23T00:00:00Z", availableQuantity: "1.5kg" },
+      { id: "batch-20b", productionDate: "2025-03-22T00:00:00Z", expiryDate: "2025-11-20T00:00:00Z", availableQuantity: "3kg" },
+      { id: "batch-20c", productionDate: "2025-03-20T00:00:00Z", expiryDate: "2025-11-18T00:00:00Z", availableQuantity: "2kg" }
     ]
   },
   {
@@ -252,7 +266,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 3,
     freshness: "canned",
     batches: [
-      { id: "batch-3a", productionDate: "2025-05-14T00:00:00Z", expiryDate: "2025-12-06T00:00:00Z", availableQuantity: "2.5kg" }
+      { id: "batch-3a", productionDate: "2025-05-14T00:00:00Z", expiryDate: "2025-12-06T00:00:00Z", availableQuantity: "2.5kg" },
+      { id: "batch-3b", productionDate: "2025-04-20T00:00:00Z", expiryDate: "2025-11-15T00:00:00Z", availableQuantity: "1.5kg" },
+      { id: "batch-3c", productionDate: "2025-04-10T00:00:00Z", expiryDate: "2025-11-01T00:00:00Z", availableQuantity: "4kg" }
     ]
   },
   {
@@ -275,7 +291,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 4,
     freshness: "canned",
     batches: [
-      { id: "batch-11a", productionDate: "2025-06-04T00:00:00Z", expiryDate: "2025-10-11T00:00:00Z", availableQuantity: "3kg" }
+      { id: "batch-11a", productionDate: "2025-06-04T00:00:00Z", expiryDate: "2025-10-11T00:00:00Z", availableQuantity: "3kg" },
+      { id: "batch-11b", productionDate: "2025-05-28T00:00:00Z", expiryDate: "2025-09-20T00:00:00Z", availableQuantity: "1.2kg" },
+      { id: "batch-11c", productionDate: "2025-05-15T00:00:00Z", expiryDate: "2025-09-01T00:00:00Z", availableQuantity: "6kg" }
     ]
   },
   {
@@ -298,7 +316,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 3,
     freshness: "frozen",
     batches: [
-      { id: "batch-14a", productionDate: "2025-04-08T00:00:00Z", expiryDate: "2025-09-16T00:00:00Z", availableQuantity: "5kg" }
+      { id: "batch-14a", productionDate: "2025-04-08T00:00:00Z", expiryDate: "2025-09-16T00:00:00Z", availableQuantity: "5kg" },
+      { id: "batch-14b", productionDate: "2025-03-20T00:00:00Z", expiryDate: "2025-08-20T00:00:00Z", availableQuantity: "10kg" },
+      { id: "batch-14c", productionDate: "2025-03-10T00:00:00Z", expiryDate: "2025-08-10T00:00:00Z", availableQuantity: "2.5kg" }
     ]
   },
   {
@@ -321,7 +341,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 2,
     freshness: "fresh",
     batches: [
-      { id: "batch-17a", productionDate: "2025-04-30T00:00:00Z", expiryDate: "2025-08-17T00:00:00Z", availableQuantity: "3kg" }
+      { id: "batch-17a", productionDate: "2025-04-30T00:00:00Z", expiryDate: "2025-08-17T00:00:00Z", availableQuantity: "3kg" },
+      { id: "batch-17b", productionDate: "2025-04-29T00:00:00Z", expiryDate: "2025-08-16T00:00:00Z", availableQuantity: "1kg" },
+      { id: "batch-17c", productionDate: "2025-04-28T00:00:00Z", expiryDate: "2025-08-15T00:00:00Z", availableQuantity: "2.5kg" }
     ]
   },
   {
@@ -344,7 +366,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 3,
     freshness: "canned",
     batches: [
-      { id: "batch-26a", productionDate: addDays(now, -30).toISOString(), expiryDate: addDays(now, 335).toISOString(), availableQuantity: "1kg" }
+      { id: "batch-26a", productionDate: addDays(now, -30).toISOString(), expiryDate: addDays(now, 335).toISOString(), availableQuantity: "1kg" },
+      { id: "batch-26b", productionDate: addDays(now, -45).toISOString(), expiryDate: addDays(now, 320).toISOString(), availableQuantity: "5kg" },
+      { id: "batch-26c", productionDate: addDays(now, -60).toISOString(), expiryDate: addDays(now, 305).toISOString(), availableQuantity: "10kg" }
     ]
   },
   {
@@ -367,7 +391,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 1,
     freshness: "fresh",
     batches: [
-      { id: "batch-28a", productionDate: addDays(now, -1).toISOString(), expiryDate: addDays(now, 2).toISOString(), availableQuantity: "36 piece" }
+      { id: "batch-28a", productionDate: addDays(now, -1).toISOString(), expiryDate: addDays(now, 2).toISOString(), availableQuantity: "36 piece" },
+      { id: "batch-28b", productionDate: addDays(now, -2).toISOString(), expiryDate: addDays(now, 1).toISOString(), availableQuantity: "24 piece" },
+      { id: "batch-28c", productionDate: addDays(now, 0).toISOString(), expiryDate: addDays(now, 3).toISOString(), availableQuantity: "48 piece" }
     ]
   },
   {
@@ -390,7 +416,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 3,
     freshness: "frozen",
     batches: [
-      { id: "batch-29a", productionDate: addDays(now, -12).toISOString(), expiryDate: addDays(now, 20).toISOString(), availableQuantity: "2kg" }
+      { id: "batch-29a", productionDate: addDays(now, -12).toISOString(), expiryDate: addDays(now, 20).toISOString(), availableQuantity: "2kg" },
+      { id: "batch-29b", productionDate: addDays(now, -15).toISOString(), expiryDate: addDays(now, 15).toISOString(), availableQuantity: "1.2kg" },
+      { id: "batch-29c", productionDate: addDays(now, -20).toISOString(), expiryDate: addDays(now, 10).toISOString(), availableQuantity: "3kg" }
     ]
   },
   {
@@ -412,7 +440,10 @@ export const mockProducts: Product[] = [
     harvestOnDemand: false,
     deliveryTimeInDays: 1,
     freshness: "fresh",
-    batches: []
+    batches: [
+      { id: "batch-30a", productionDate: addDays(now, -7).toISOString(), expiryDate: addDays(now, -5).toISOString(), availableQuantity: "1kg" },
+      { id: "batch-30b", productionDate: addDays(now, -6).toISOString(), expiryDate: addDays(now, -4).toISOString(), availableQuantity: "2kg" }
+    ]
   },
   {
     id: "31",
@@ -434,7 +465,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 4,
     freshness: "canned",
     batches: [
-      { id: "batch-31a", productionDate: addDays(now, -50).toISOString(), expiryDate: addDays(now, 1045).toISOString(), availableQuantity: "3kg" }
+      { id: "batch-31a", productionDate: addDays(now, -50).toISOString(), expiryDate: addDays(now, 1045).toISOString(), availableQuantity: "3kg" },
+      { id: "batch-31b", productionDate: addDays(now, -60).toISOString(), expiryDate: addDays(now, 1035).toISOString(), availableQuantity: "5kg" },
+      { id: "batch-31c", productionDate: addDays(now, -70).toISOString(), expiryDate: addDays(now, 1025).toISOString(), availableQuantity: "2kg" }
     ]
   },
 ];
