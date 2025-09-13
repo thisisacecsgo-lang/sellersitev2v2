@@ -64,9 +64,9 @@ const ProductDetail = () => {
   const unit = product.batches.length > 0 ? (product.batches[0].availableQuantity.replace(/[0-9.,]/g, '').trim()) : '';
 
   const deliveryText = () => {
-    if (product.deliveryTimeInDays === 0) return "Available today";
-    if (product.deliveryTimeInDays === 1) return "Available in 1 day";
-    return `Available in ${product.deliveryTimeInDays} days`;
+    if (product.deliveryTimeInDays === 0) return "Ready to ship today";
+    if (product.deliveryTimeInDays === 1) return "Ready to ship in 1 day";
+    return `Ready to ship in ${product.deliveryTimeInDays} days`;
   };
 
   return (
