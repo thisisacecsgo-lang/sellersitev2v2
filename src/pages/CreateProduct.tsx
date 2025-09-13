@@ -46,7 +46,6 @@ const productSchema = z.object({
   isVegetarian: z.boolean().default(false),
   harvestOnDemand: z.boolean().default(false),
   deliveryTimeInDays: z.coerce.number().int().min(0, { message: "Must be a positive number." }).default(1),
-  productionDate: z.string().optional(),
   expiryDate: z.string().optional(),
 });
 
@@ -67,7 +66,6 @@ const CreateProduct = () => {
       isVegetarian: false,
       harvestOnDemand: false,
       deliveryTimeInDays: 1,
-      productionDate: undefined,
       expiryDate: undefined,
     },
   });
@@ -87,14 +85,12 @@ const CreateProduct = () => {
       batches: [
         {
           id: `batch-${newProductId}-1`,
-          productionDate: values.productionDate || new Date().toISOString(),
+          productionDate: new Date().toISOString(),
           expiryDate: values.expiryDate || new Date().toISOString(),
           availableQuantity: values.availableQuantity,
         },
       ],
     };
-    // @ts-ignore
-    delete newProduct.productionDate;
     // @ts-ignore
     delete newProduct.expiryDate;
     // @ts-ignore
@@ -251,51 +247,10 @@ const CreateProduct = () => {
               />
               <FormField
                 control={form.control}
-                name="productionDate"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>Production Date (Optional)</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(new Date(field.value), "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value ? new Date(field.value) : undefined}
-                          onSelect={(date) => field.onChange(date ? date.toISOString() : undefined)}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormDescription>
-                      The date the product was produced or harvested.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
                 name="expiryDate"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Expiry Date (Optional)</FormLabel>
+                    <FormLabel>Shelf Life (Optional)</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
@@ -325,7 +280,7 @@ const CreateProduct = () => {
                       </PopoverContent>
                     </Popover>
                     <FormDescription>
-                      The date the product expires.
+                      The date until which the product is best.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
