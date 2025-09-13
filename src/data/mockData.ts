@@ -74,12 +74,12 @@ export const mockProducts: Product[] = [
     name: "Eggs",
     articleNumber: "20001",
     category: "Animal products",
-    price: 4.5,
-    priceUnit: "dozen",
+    price: 0.38,
+    priceUnit: "piece",
     region: "Flensburg",
     imageUrls: ["/images/eggs.jpg"],
     description:
-      "A dozen large brown eggs from happy, free-roaming chickens. Rich yolks and firm whites.",
+      "Large brown eggs from happy, free-roaming chickens. Rich yolks and firm whites.",
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
@@ -89,7 +89,7 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 1,
     freshness: "fresh",
     batches: [
-      { id: "batch-4a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-15T00:00:00Z", availableQuantity: "2kg" }
+      { id: "batch-4a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-15T00:00:00Z", availableQuantity: "24 piece" }
     ]
   },
   {
@@ -112,7 +112,7 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 2,
     freshness: "frozen",
     batches: [
-      { id: "batch-10a", productionDate: "2025-06-22T00:00:00Z", expiryDate: "2025-08-21T00:00:00Z", availableQuantity: "500g" }
+      { id: "batch-10a", productionDate: "2025-06-22T00:00:00Z", expiryDate: "2025-08-21T00:00:00Z", availableQuantity: "5kg" }
     ]
   },
   {
@@ -144,11 +144,11 @@ export const mockProducts: Product[] = [
     name: "Goat Cheese",
     articleNumber: "40001",
     category: "Dairy products",
-    price: 8.5,
-    priceUnit: "piece",
+    price: 42.5,
+    priceUnit: "kg",
     region: "Flensburg",
     imageUrls: ["/images/ch.jpg"],
-    description: "Creamy and tangy goat cheese, handmade from fresh goat milk.",
+    description: "Creamy and tangy goat cheese, handmade from fresh goat milk. (Sold in 200g pieces)",
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
@@ -158,8 +158,8 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 2,
     freshness: "fresh",
     batches: [
-      { id: "batch-9a", productionDate: "2025-07-12T00:00:00Z", expiryDate: "2025-10-05T00:00:00Z", availableQuantity: "200g" },
-      { id: "batch-9b", productionDate: "2025-07-05T00:00:00Z", expiryDate: "2025-09-28T00:00:00Z", availableQuantity: "150g" }
+      { id: "batch-9a", productionDate: "2025-07-12T00:00:00Z", expiryDate: "2025-10-05T00:00:00Z", availableQuantity: "2kg" },
+      { id: "batch-9b", productionDate: "2025-07-05T00:00:00Z", expiryDate: "2025-09-28T00:00:00Z", availableQuantity: "1.5kg" }
     ]
   },
   {
@@ -168,11 +168,11 @@ export const mockProducts: Product[] = [
     name: "Sourdough Bread",
     articleNumber: "50001",
     category: "Bakery",
-    price: 8.0,
-    priceUnit: "loaf",
+    price: 13.33,
+    priceUnit: "kg",
     region: "Flensburg",
     imageUrls: ["/images/br.jpg"],
-    description: "Crusty, tangy sourdough, baked fresh daily. Perfect for sandwiches or toast.",
+    description: "Crusty, tangy sourdough, baked fresh daily. Perfect for sandwiches or toast. (Sold in 600g loaves)",
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
@@ -182,7 +182,7 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 1,
     freshness: "fresh",
     batches: [
-      { id: "batch-12a", productionDate: "2025-05-20T00:00:00Z", expiryDate: "2025-09-27T00:00:00Z", availableQuantity: "600g" }
+      { id: "batch-12a", productionDate: "2025-05-20T00:00:00Z", expiryDate: "2025-09-27T00:00:00Z", availableQuantity: "6kg" }
     ]
   },
   {
@@ -192,7 +192,7 @@ export const mockProducts: Product[] = [
     articleNumber: "40002",
     category: "Dairy products",
     price: 9.0,
-    priceUnit: "l",
+    priceUnit: "liter",
     region: "Flensburg",
     imageUrls: ["/images/mi.jpg"],
     description: "Fresh, unpasteurized raw milk from Jersey cows. Creamy and delicious.",
@@ -205,7 +205,7 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 2,
     freshness: "fresh",
     batches: [
-      { id: "batch-19a", productionDate: "2025-08-13T00:00:00Z", expiryDate: "2025-08-30T00:00:00Z", availableQuantity: "1l" }
+      { id: "batch-19a", productionDate: "2025-08-13T00:00:00Z", expiryDate: "2025-08-30T00:00:00Z", availableQuantity: "10 liter" }
     ]
   },
   {
@@ -237,12 +237,12 @@ export const mockProducts: Product[] = [
     name: "Homemade Strawberry Jam",
     articleNumber: "10003",
     category: "Fruits and berries",
-    price: 7.0,
-    priceUnit: "jar",
+    price: 28.0,
+    priceUnit: "kg",
     region: "Flensburg",
     imageUrls: ["/images/jam.jpg"],
     description:
-      "Made with love from local strawberries. No artificial preservatives. Spread it on toast or enjoy with scones.",
+      "Made with love from local strawberries. No artificial preservatives. (Sold in 250g jars)",
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
@@ -252,7 +252,7 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 3,
     freshness: "canned",
     batches: [
-      { id: "batch-3a", productionDate: "2025-05-14T00:00:00Z", expiryDate: "2025-12-06T00:00:00Z", availableQuantity: "250g" }
+      { id: "batch-3a", productionDate: "2025-05-14T00:00:00Z", expiryDate: "2025-12-06T00:00:00Z", availableQuantity: "2.5kg" }
     ]
   },
   {
@@ -261,11 +261,11 @@ export const mockProducts: Product[] = [
     name: "Wildflower Honey",
     articleNumber: "20002",
     category: "Animal products",
-    price: 9.0,
-    priceUnit: "jar",
+    price: 30.0,
+    priceUnit: "kg",
     region: "Flensburg",
     imageUrls: ["https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?q=80&w=2500&auto=format&fit=crop", "https://images.unsplash.com/photo-1587049352851-8d4e89133924?q=80&w=2500&auto=format&fit=crop", "https://images.unsplash.com/photo-1571108400537-e6c278735a8a?q=80&w=2500&auto=format&fit=crop"],
-    description: "Raw and unfiltered honey from local wildflowers. A taste of nature.",
+    description: "Raw and unfiltered honey from local wildflowers. A taste of nature. (Sold in 300g jars)",
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
@@ -275,7 +275,7 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 4,
     freshness: "canned",
     batches: [
-      { id: "batch-11a", productionDate: "2025-06-04T00:00:00Z", expiryDate: "2025-10-11T00:00:00Z", availableQuantity: "300g" }
+      { id: "batch-11a", productionDate: "2025-06-04T00:00:00Z", expiryDate: "2025-10-11T00:00:00Z", availableQuantity: "3kg" }
     ]
   },
   {
@@ -284,11 +284,11 @@ export const mockProducts: Product[] = [
     name: "Frozen Blueberries",
     articleNumber: "10004",
     category: "Fruits and berries",
-    price: 10.5,
-    priceUnit: "pack",
+    price: 21.0,
+    priceUnit: "kg",
     region: "Flensburg",
     imageUrls: ["/images/bl.jpg"],
-    description: "Hand-picked blueberries, frozen at peak ripeness to lock in flavor and nutrients.",
+    description: "Hand-picked blueberries, frozen at peak ripeness to lock in flavor and nutrients. (Sold in 500g packs)",
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
@@ -298,7 +298,7 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 3,
     freshness: "frozen",
     batches: [
-      { id: "batch-14a", productionDate: "2025-04-08T00:00:00Z", expiryDate: "2025-09-16T00:00:00Z", availableQuantity: "500g" }
+      { id: "batch-14a", productionDate: "2025-04-08T00:00:00Z", expiryDate: "2025-09-16T00:00:00Z", availableQuantity: "5kg" }
     ]
   },
   {
@@ -307,11 +307,11 @@ export const mockProducts: Product[] = [
     name: "Fresh Raspberries",
     articleNumber: "10005",
     category: "Fruits and berries",
-    price: 6.0,
-    priceUnit: "pack",
+    price: 48.0,
+    priceUnit: "kg",
     region: "Flensburg",
     imageUrls: ["/images/ras.jpg"],
-    description: "Delicate and sweet raspberries, picked this morning.",
+    description: "Delicate and sweet raspberries, picked this morning. (Sold in 125g packs)",
     status: "available",
     visibility: "public",
     createdAt: "2025-04-25T13:00:00Z",
@@ -353,8 +353,8 @@ export const mockProducts: Product[] = [
     name: "Fresh Oysters",
     articleNumber: "60002",
     category: "Seafood",
-    price: 24.00,
-    priceUnit: "dozen",
+    price: 2.00,
+    priceUnit: "piece",
     region: "Flensburg",
     imageUrls: ["/images/ou.jpg"],
     description: "Freshly harvested oysters from the Oregon coast. Perfect for serving on the half shell.",
@@ -367,7 +367,7 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 1,
     freshness: "fresh",
     batches: [
-      { id: "batch-28a", productionDate: addDays(now, -1).toISOString(), expiryDate: addDays(now, 2).toISOString(), availableQuantity: "1kg" }
+      { id: "batch-28a", productionDate: addDays(now, -1).toISOString(), expiryDate: addDays(now, 2).toISOString(), availableQuantity: "36 piece" }
     ]
   },
   {
@@ -376,11 +376,11 @@ export const mockProducts: Product[] = [
     name: "Smoked Salmon",
     articleNumber: "60003",
     category: "Seafood",
-    price: 16.50,
-    priceUnit: "pack",
+    price: 82.5,
+    priceUnit: "kg",
     region: "Flensburg",
     imageUrls: ["/images/sal.jpg"],
-    description: "Locally caught salmon, expertly smoked over alder wood. Rich and savory.",
+    description: "Locally caught salmon, expertly smoked over alder wood. Rich and savory. (Sold in 200g packs)",
     status: "available",
     visibility: "public",
     createdAt: addDays(now, -10).toISOString(),
@@ -390,7 +390,7 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 3,
     freshness: "frozen",
     batches: [
-      { id: "batch-29a", productionDate: addDays(now, -12).toISOString(), expiryDate: addDays(now, 20).toISOString(), availableQuantity: "200g" }
+      { id: "batch-29a", productionDate: addDays(now, -12).toISOString(), expiryDate: addDays(now, 20).toISOString(), availableQuantity: "2kg" }
     ]
   },
   {
@@ -400,7 +400,7 @@ export const mockProducts: Product[] = [
     articleNumber: "60004",
     category: "Seafood",
     price: 28.00,
-    priceUnit: "piece",
+    priceUnit: "kg",
     region: "Flensburg",
     imageUrls: ["https://images.unsplash.com/photo-1601192042869-a8a346349df8?q=80&w=2500&auto=format&fit=crop", "https://images.unsplash.com/photo-1553634440-a396d817152e?q=80&w=2500&auto=format&fit=crop", "https://images.unsplash.com/photo-1562720131-b608a1723a95?q=80&w=2500&auto=format&fit=crop"],
     description: "A large, cooked Dungeness crab, ready to be cracked and enjoyed. Sweet and succulent meat.",
@@ -420,11 +420,11 @@ export const mockProducts: Product[] = [
     name: "Canned Albacore Tuna",
     articleNumber: "60005",
     category: "Seafood",
-    price: 9.50,
-    priceUnit: "can",
+    price: 63.33,
+    priceUnit: "kg",
     region: "Flensburg",
     imageUrls: ["/images/tun.jpg"],
-    description: "High-quality, line-caught albacore tuna canned in its own juices. Perfect for salads and sandwiches.",
+    description: "High-quality, line-caught albacore tuna canned in its own juices. (Sold in 150g cans)",
     status: "available",
     visibility: "public",
     createdAt: addDays(now, -40).toISOString(),
