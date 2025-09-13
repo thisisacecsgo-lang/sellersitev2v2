@@ -234,7 +234,7 @@ const CreateProduct = () => {
                 name="deliveryTimeInDays"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Available in</FormLabel>
+                    <FormLabel>Ready to ship in (days)</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="e.g., 1" {...field} />
                     </FormControl>
