@@ -1,6 +1,6 @@
 import type { Product } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Tag, Info, Package, Eye, Edit } from "lucide-react"; // Import Edit icon
+import { Tag, Info, Package, Eye, Edit, Truck } from "lucide-react"; // Import Truck icon
 import { Link } from "react-router-dom";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import CategoryIcon from "./CategoryIcon";
@@ -11,6 +11,12 @@ interface ProductQuickViewProps {
 
 export const ProductQuickView = ({ product }: ProductQuickViewProps) => {
   const imageUrl = product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls[0] : "/placeholder.svg";
+
+  const shippingText = () => {
+    if (product.deliveryTimeInDays === 0) return "Ready to ship today";
+    if (product.deliveryTimeInDays === 1) return "Ready to ship in 1 day";
+    return `Ready to ship in ${product.deliveryTimeInDays} days`;
+  };
 
   return (
     <>
@@ -40,6 +46,10 @@ export const ProductQuickView = ({ product }: ProductQuickViewProps) => {
           <div className="flex items-center gap-3 text-sm">
             <Package className="h-4 w-4 text-muted-foreground" />
             <p className="text-muted-foreground">Available: {product.batches.reduce((acc, b) => acc + parseFloat(b.availableQuantity), 0)}</p>
+          </div>
+          <div className="flex items-center gap-3 text-sm">
+            <Truck className="h-4 w-4 text-muted-foreground" />
+            <p className="text-muted-foreground">{shippingText()}</p>
           </div>
           <div className="flex items-center gap-3 text-sm">
             <Eye className="h-4 w-4 text-muted-foreground" />

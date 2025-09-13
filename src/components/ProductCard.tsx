@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/types";
-import { Tag, Eye, Calendar, Package, Edit, MoreVertical, EyeOff, Trash2, Hash, Truck } from "lucide-react";
+import { Tag, Info, Package, Eye, Edit, MoreVertical, EyeOff, Trash2, Hash, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -63,10 +63,10 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
   }, 0);
   const unit = product.batches.length > 0 ? (product.batches[0].availableQuantity.replace(/[0-9.,]/g, '').trim()) : '';
 
-  const deliveryText = () => {
-    if (product.deliveryTimeInDays === 0) return "Available today";
-    if (product.deliveryTimeInDays === 1) return "Available in 1 day";
-    return `Available in ${product.deliveryTimeInDays} days`;
+  const shippingText = () => {
+    if (product.deliveryTimeInDays === 0) return "Ready to ship today";
+    if (product.deliveryTimeInDays === 1) return "Ready to ship in 1 day";
+    return `Ready to ship in ${product.deliveryTimeInDays} days`;
   };
 
   return (
@@ -150,7 +150,7 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
             <Truck className="h-4 w-4" />
-            <span>{deliveryText()}</span>
+            <span>{shippingText()}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
             <Eye className="h-4 w-4" />
