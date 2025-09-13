@@ -93,7 +93,7 @@ const Orders = () => {
                 <TableCell className="py-2 px-2 text-xs">{order.quantity}</TableCell>
                 <TableCell className="py-2 px-2">{getStatusBadge(order.status)}</TableCell>
                 <TableCell className="text-right py-2 px-2 text-xs">
-                  {format(parseISO(order.pickupWindowStart), "HH:mm")} - {format(parseISO(order.pickupWindowEnd), "HH:mm")}
+                  {format(parseISO(order.pickupWindowStart), "HH:mm")}
                 </TableCell>
               </TableRow>
             ))
