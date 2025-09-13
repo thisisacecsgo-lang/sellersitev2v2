@@ -63,6 +63,12 @@ const ProductDetail = () => {
 
   const unit = product.batches.length > 0 ? (product.batches[0].availableQuantity.replace(/[0-9.,]/g, '').trim()) : '';
 
+  const deliveryText = () => {
+    if (product.deliveryTimeInDays === 0) return "Available today";
+    if (product.deliveryTimeInDays === 1) return "Available in 1 day";
+    return `Available in ${product.deliveryTimeInDays} days`;
+  };
+
   return (
     <div className="container mx-auto p-4 md:p-8">
       <BackButton />
@@ -141,7 +147,7 @@ const ProductDetail = () => {
             </div>
             <div className="flex items-center gap-3">
               <Truck className="h-5 w-5 text-muted-foreground" />
-              <span>Delivery: {product.deliveryTimeInDays} day(s)</span>
+              <span>{deliveryText()}</span>
             </div>
             {product.description && (
               <div className="flex items-start gap-3">
