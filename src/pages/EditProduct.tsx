@@ -35,7 +35,7 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger, // Added AlertDialogTrigger here
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import {
   Dialog,
@@ -208,7 +208,28 @@ const EditProduct = () => {
               <FormField control={productForm.control} name="articleNumber" render={({ field }) => (<FormItem><FormLabel>Article Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={productForm.control} name="category" render={({ field }) => (<FormItem><FormLabel>Category</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent><SelectItem value="Fruits and berries">Fruits and berries</SelectItem><SelectItem value="Vegetables">Vegetables</SelectItem><SelectItem value="Bakery">Bakery</SelectItem><SelectItem value="Dairy products">Dairy products</SelectItem><SelectItem value="Meat and poultry">Meat and poultry</SelectItem><SelectItem value="Seafood">Seafood</SelectItem><SelectItem value="Animal products">Animal products</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
               <FormField control={productForm.control} name="price" render={({ field }) => (<FormItem><FormLabel>Price (€)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={productForm.control} name="priceUnit" render={({ field }) => (<FormItem><FormLabel>Price Unit</FormLabel><FormControl><Input placeholder="e.g., kg, piece, liter" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField
+                control={productForm.control}
+                name="priceUnit"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Price Unit</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a unit" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="kg">kg</SelectItem>
+                        <SelectItem value="liter">liter</SelectItem>
+                        <SelectItem value="piece">piece</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField control={productForm.control} name="deliveryTimeInDays" render={({ field }) => (<FormItem><FormLabel>Ready to ship in (days)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
             </CardContent>
           </Card>

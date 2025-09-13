@@ -209,9 +209,18 @@ const CreateProduct = () => {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Price Unit</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., kg, piece, liter" {...field} />
-                    </FormControl>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a unit" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="kg">kg</SelectItem>
+                        <SelectItem value="liter">liter</SelectItem>
+                        <SelectItem value="piece">piece</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
