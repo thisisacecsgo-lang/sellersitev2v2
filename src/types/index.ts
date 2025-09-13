@@ -41,6 +41,7 @@ export interface Product {
   articleNumber: string;
   category: string;
   price: number | "free";
+  priceUnit: string;
   region: string;
   imageUrls: string[];
   description?: string;

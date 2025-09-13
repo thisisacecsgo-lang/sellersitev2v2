@@ -40,6 +40,7 @@ const productSchema = z.object({
   category: z.string().min(1, { message: "Please select a category." }),
   availableQuantity: z.string().min(1, { message: "Quantity is required." }),
   price: z.coerce.number().min(0, { message: "Price must be a positive number." }),
+  priceUnit: z.string().min(1, { message: "Price unit is required." }),
   description: z.string().optional(),
   isVegan: z.boolean().default(false),
   isVegetarian: z.boolean().default(false),
@@ -60,6 +61,7 @@ const CreateProduct = () => {
       category: "",
       availableQuantity: "",
       price: 0,
+      priceUnit: "",
       description: "",
       isVegan: false,
       isVegetarian: false,
@@ -200,6 +202,19 @@ const CreateProduct = () => {
                     <FormLabel>Price (€)</FormLabel>
                     <FormControl>
                       <Input type="number" placeholder="e.g., 5.99" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="priceUnit"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Price Unit</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., kg, piece, liter" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

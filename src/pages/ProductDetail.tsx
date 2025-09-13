@@ -104,7 +104,7 @@ const ProductDetail = () => {
             <Tag className="h-6 w-6 text-primary" />
             <p className="text-3xl font-semibold text-primary">
               {typeof product.price === "number"
-                ? `€${product.price.toFixed(2)}`
+                ? `€${product.price.toFixed(2)} / ${product.priceUnit}`
                 : "Free"}
             </p>
           </div>

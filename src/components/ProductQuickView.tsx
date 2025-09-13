@@ -33,13 +33,13 @@ export const ProductQuickView = ({ product }: ProductQuickViewProps) => {
             <Tag className="h-5 w-5 text-primary" />
             <p className="text-2xl font-semibold text-primary">
               {typeof product.price === "number"
-                ? `€${product.price.toFixed(2)}`
+                ? `€${product.price.toFixed(2)} / ${product.priceUnit}`
                 : "Free"}
             </p>
           </div>
           <div className="flex items-center gap-3 text-sm">
             <Package className="h-4 w-4 text-muted-foreground" />
-            <p className="text-muted-foreground">Available: {product.availableQuantity}</p>
+            <p className="text-muted-foreground">Available: {product.batches.reduce((acc, b) => acc + parseFloat(b.availableQuantity), 0)}</p>
           </div>
           <div className="flex items-center gap-3 text-sm">
             <Eye className="h-4 w-4 text-muted-foreground" />

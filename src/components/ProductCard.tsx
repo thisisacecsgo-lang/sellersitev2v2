@@ -134,7 +134,7 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
             <Tag className="h-4 w-4 text-primary" />
             <p className="text-base font-semibold text-primary">
               {typeof product.price === "number"
-                ? `€${product.price.toFixed(2)}`
+                ? `€${product.price.toFixed(2)} / ${product.priceUnit}`
                 : "Free"}
             </p>
           </div>

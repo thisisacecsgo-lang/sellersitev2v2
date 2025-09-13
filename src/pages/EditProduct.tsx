@@ -63,6 +63,7 @@ const productSchema = z.object({
   articleNumber: z.string().length(5, { message: "Must be a 5-digit number." }).regex(/^\d+$/, { message: "Must contain only digits." }),
   category: z.string().min(1, { message: "Please select a category." }),
   price: z.coerce.number().min(0, { message: "Price must be a positive number." }),
+  priceUnit: z.string().min(1, { message: "Price unit is required." }),
   description: z.string().optional(),
   isVegan: z.boolean(),
   isVegetarian: z.boolean(),
@@ -93,6 +94,7 @@ const EditProduct = () => {
       articleNumber: product?.articleNumber || "",
       category: product?.category || "",
       price: typeof product?.price === 'number' ? product.price : 0,
+      priceUnit: product?.priceUnit || "",
       description: product?.description || "",
       isVegan: product?.isVegan || false,
       isVegetarian: product?.isVegetarian || false,
@@ -206,6 +208,7 @@ const EditProduct = () => {
               <FormField control={productForm.control} name="articleNumber" render={({ field }) => (<FormItem><FormLabel>Article Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={productForm.control} name="category" render={({ field }) => (<FormItem><FormLabel>Category</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent><SelectItem value="Fruits and berries">Fruits and berries</SelectItem><SelectItem value="Vegetables">Vegetables</SelectItem><SelectItem value="Bakery">Bakery</SelectItem><SelectItem value="Dairy products">Dairy products</SelectItem><SelectItem value="Meat and poultry">Meat and poultry</SelectItem><SelectItem value="Seafood">Seafood</SelectItem><SelectItem value="Animal products">Animal products</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
               <FormField control={productForm.control} name="price" render={({ field }) => (<FormItem><FormLabel>Price (€)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={productForm.control} name="priceUnit" render={({ field }) => (<FormItem><FormLabel>Price Unit</FormLabel><FormControl><Input placeholder="e.g., kg, piece, liter" {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={productForm.control} name="deliveryTimeInDays" render={({ field }) => (<FormItem><FormLabel>Available in (days)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
             </CardContent>
           </Card>
