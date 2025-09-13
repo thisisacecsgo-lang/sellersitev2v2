@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/types";
-import { Tag, Eye, Calendar, Package, Edit, MoreVertical, EyeOff, Trash2, Hash } from "lucide-react";
+import { Tag, Eye, Calendar, Package, Edit, MoreVertical, EyeOff, Trash2, Hash, Truck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -62,6 +62,12 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
     return acc + quantity;
   }, 0);
   const unit = product.batches.length > 0 ? (product.batches[0].availableQuantity.replace(/[0-9.,]/g, '').trim()) : '';
+
+  const deliveryText = () => {
+    if (product.deliveryTimeInDays === 0) return "Available today";
+    if (product.deliveryTimeInDays === 1) return "Available in 1 day";
+    return `Available in ${product.deliveryTimeInDays} days`;
+  };
 
   return (
     <Dialog open={isQuickViewOpen} onOpenChange={setIsQuickViewOpen}>
@@ -141,6 +147,10 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
           <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
             <Package className="h-4 w-4" />
             <span>{totalAvailableQuantity} {unit}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+            <Truck className="h-4 w-4" />
+            <span>{deliveryText()}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
             <Eye className="h-4 w-4" />
