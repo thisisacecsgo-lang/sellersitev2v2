@@ -16,7 +16,9 @@ import {
   MessageSquareHeart,
   ShieldAlert,
   UserCircle,
+  Phone, // Import Phone icon
 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Import Card components
 
 const faqs = [
   {
@@ -165,6 +167,24 @@ const FAQ = () => {
         <p className="text-muted-foreground text-center mb-8">
           Your guide to managing your seller profile, products, and sales.
         </p>
+
+        {/* New Card for Support Number */}
+        <Card className="mb-8">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-lg font-semibold">Need More Help?</CardTitle>
+            <Phone className="h-5 w-5 text-primary" />
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground text-sm mb-2">
+              If you can't find what you're looking for, feel free to call our support team.
+            </p>
+            <a href="tel:+49123456789" className="text-2xl font-bold text-primary hover:underline">
+              +49 123 456789
+            </a>
+            <p className="text-xs text-muted-foreground mt-1">Available Mon-Fri, 9 AM - 5 PM CET</p>
+          </CardContent>
+        </Card>
+
         <Accordion type="single" collapsible className="w-full">
           {faqs.map((faq, index) => (
             <AccordionItem value={`item-${index}`} key={index}>
