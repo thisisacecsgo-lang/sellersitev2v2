@@ -21,13 +21,14 @@ import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import { showSuccess, showError } from "@/utils/toast";
 import { Separator } from "@/components/ui/separator";
 import { mockSellers } from "@/data/mockData";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"; // Import RadioGroup components
 
 const sellerProfileSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters." }),
   region: z.string().min(2, { message: "Region is required." }),
   description: z.string().optional(),
   logoUrl: z.string().url({ message: "Must be a valid URL." }).optional().or(z.literal("")),
-  verified: z.boolean(),
+  type: z.enum(["private", "commercial"], { message: "Please select a seller type." }), // Updated to use enum for type
 });
 
 const EditSellerProfile = () => {
@@ -44,7 +45,7 @@ const EditSellerProfile = () => {
       region: sellerToEdit?.region || "",
       description: sellerToEdit?.description || "",
       logoUrl: sellerToEdit?.logoUrl || "",
-      verified: sellerToEdit?.verified || false,
+      type: sellerToEdit?.type || "private", // Set default based on existing type or 'private'
     },
   });
 
@@ -152,26 +153,40 @@ const EditSellerProfile = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle>Status</CardTitle>
+              <CardTitle>Seller Type</CardTitle>
             </CardHeader>
             <CardContent>
               <FormField
                 control={form.control}
-                name="verified"
+                name="type"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                    <div className="space-y-0.5">
-                      <FormLabel>Verified Status</FormLabel>
-                      <FormDescription>
-                        Indicates if your profile is officially verified.
-                      </FormDescription>
-                    </div>
+                  <FormItem className="space-y-3">
+                    <FormLabel>Select your seller type</FormLabel>
                     <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
+                      <RadioGroup
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        className="flex flex-col space-y-1"
+                      >
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="private" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            Private (Individual seller)
+                          </FormLabel>
+                        </FormItem>
+                        <FormItem className="flex items-center space-x-3 space-y-0">
+                          <FormControl>
+                            <RadioGroupItem value="commercial" />
+                          </FormControl>
+                          <FormLabel className="font-normal">
+                            Commercial (Business, farm, etc.)
+                          </FormLabel>
+                        </FormItem>
+                      </RadioGroup>
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
