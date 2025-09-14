@@ -25,6 +25,7 @@ export interface Seller {
     lon: number;
   };
   description?: string; // New field for seller description
+  type: "private" | "commercial"; // New field for seller type
 }
 
 export interface ProductBatch {

@@ -20,6 +20,7 @@ import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import BackButton from "@/components/BackButton";
 import { showSuccess, showError } from "@/utils/toast";
 import { StarRating } from "@/components/StarRating";
+import { Badge } from "@/components/ui/badge"; // Import Badge component
 
 const SellerProfile = () => {
   const { id: routeId } = useParams<{ id: string }>();
@@ -123,7 +124,14 @@ const SellerProfile = () => {
           </Avatar>
           <div className="flex-grow">
             <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold">{seller.name}</h1>
+              <div className="flex items-center gap-2"> {/* Flex container for name and badge */}
+                <h1 className="text-3xl font-bold">{seller.name}</h1>
+                {seller.type === "private" && (
+                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100 rounded-full px-3 py-1 text-sm font-medium">
+                    Private
+                  </Badge>
+                )}
+              </div>
               <Button variant="outline" size="sm" asChild>
                 <Link to={`/seller/${seller.id}/edit`}>
                   <Edit className="h-4 w-4 mr-2" />

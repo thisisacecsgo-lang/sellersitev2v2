@@ -39,6 +39,7 @@ export const mockSellers: Seller[] = [
     totalAds: 17,
     totalSold: 1,
     profileViews: 72,
+    type: "private", // Set seller type to private
   }
 ];
 
@@ -238,7 +239,7 @@ export const mockProducts: Product[] = [
     isVegetarian: false,
     harvestOnDemand: false,
     deliveryTimeInDays: 2,
-    freshness: "fresh",
+    freshness: "frozen",
     batches: [
       { id: "batch-20a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-23T00:00:00Z", availableQuantity: "1.5kg" },
       { id: "batch-20b", productionDate: "2025-03-22T00:00:00Z", expiryDate: "2025-11-20T00:00:00Z", availableQuantity: "3kg" },
