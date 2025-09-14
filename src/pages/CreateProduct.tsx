@@ -54,6 +54,7 @@ const productSchema = z.object({
   price: z.coerce.number().min(0, { message: "Price must be a positive number." }),
   priceUnit: z.string().min(1, { message: "Price unit is required." }),
   description: z.string().optional(),
+  imageUrls: z.string().optional(), // New field for image URLs
   isVegan: z.boolean().default(false),
   isVegetarian: z.boolean().default(false),
   harvestOnDemand: z.boolean().default(false),
@@ -73,6 +74,7 @@ const CreateProduct = () => {
       price: 0,
       priceUnit: "",
       description: "",
+      imageUrls: "", // Default empty string for image URLs
       isVegan: false,
       isVegetarian: false,
       harvestOnDemand: false,
@@ -86,11 +88,16 @@ const CreateProduct = () => {
     
     const maxId = mockProducts.reduce((max, p) => Math.max(max, parseInt(p.id, 10)), 0);
     const newProductId = (maxId + 1).toString();
+
+    const parsedImageUrls = values.imageUrls
+      ? values.imageUrls.split('\n').map(url => url.trim()).filter(url => url !== '')
+      : [];
+
     const newProduct = {
       id: newProductId,
       sellerId: "seller-5",
       articleNumber: newArticleNumber, // Automatically generated
-      imageUrls: ["/placeholder.svg"],
+      imageUrls: parsedImageUrls.length > 0 ? parsedImageUrls : ["/placeholder.svg"], // Use placeholder if no URLs provided
       status: "available",
       visibility: "public",
       createdAt: new Date().toISOString(),
@@ -109,6 +116,8 @@ const CreateProduct = () => {
     delete newProduct.expiryDate;
     // @ts-ignore
     delete newProduct.availableQuantity;
+    // @ts-ignore
+    delete newProduct.imageUrls; // Remove the string field, use the array
 
     mockProducts.push(newProduct);
     showSuccess("Product created successfully!");
@@ -157,6 +166,26 @@ const CreateProduct = () => {
                   </FormItem>
                 )}
               />
+              <FormField
+                control={form.control}
+                name="imageUrls"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image URLs</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Enter image URLs, one per line"
+                        className="resize-none min-h-[100px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Provide direct links to product images. Enter one URL per line.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </CardContent>
           </Card>
 
@@ -165,7 +194,6 @@ const CreateProduct = () => {
               <CardTitle>Details & Pricing</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Article Number field removed */}
               <FormField
                 control={form.control}
                 name="category"

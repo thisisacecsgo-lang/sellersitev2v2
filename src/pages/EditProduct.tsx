@@ -59,11 +59,11 @@ import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react";
 // Schema for the main product details
 const productSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters." }),
-  // articleNumber field removed
   category: z.string().min(1, { message: "Please select a category." }),
   price: z.coerce.number().min(0, { message: "Price must be a positive number." }),
   priceUnit: z.string().min(1, { message: "Price unit is required." }),
   description: z.string().optional(),
+  imageUrls: z.string().optional(), // New field for image URLs
   isVegan: z.boolean(),
   isVegetarian: z.boolean(),
   harvestOnDemand: z.boolean(),
@@ -90,11 +90,11 @@ const EditProduct = () => {
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: product?.name || "",
-      // articleNumber: product?.articleNumber || "", // Removed from default values
       category: product?.category || "",
       price: typeof product?.price === 'number' ? product.price : 0,
       priceUnit: product?.priceUnit || "",
       description: product?.description || "",
+      imageUrls: product?.imageUrls ? product.imageUrls.join('\n') : "", // Join array to string for textarea
       isVegan: product?.isVegan || false,
       isVegetarian: product?.isVegetarian || false,
       harvestOnDemand: product?.harvestOnDemand || false,
@@ -121,8 +121,15 @@ const EditProduct = () => {
   }
 
   const onProductSubmit = (values: z.infer<typeof productSchema>) => {
-    // Removed article number uniqueness check as it's no longer user-input
-    const updatedProduct = { ...product, ...values };
+    const parsedImageUrls = values.imageUrls
+      ? values.imageUrls.split('\n').map(url => url.trim()).filter(url => url !== '')
+      : [];
+
+    const updatedProduct = { 
+      ...product, 
+      ...values,
+      imageUrls: parsedImageUrls.length > 0 ? parsedImageUrls : ["/placeholder.svg"], // Use placeholder if no URLs provided
+    };
     setProduct(updatedProduct);
     const productIndex = mockProducts.findIndex(p => p.id === product.id);
     if (productIndex > -1) {
@@ -198,6 +205,26 @@ const EditProduct = () => {
             <CardContent className="space-y-4">
               <FormField control={productForm.control} name="name" render={({ field }) => (<FormItem><FormLabel>Product Name</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormField control={productForm.control} name="description" render={({ field }) => (<FormItem><FormLabel>Description</FormLabel><FormControl><Textarea {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField
+                control={productForm.control}
+                name="imageUrls"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Image URLs</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Enter image URLs, one per line"
+                        className="resize-none min-h-[100px]"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Provide direct links to product images. Enter one URL per line.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </CardContent>
           </Card>
           <Card>
@@ -205,7 +232,6 @@ const EditProduct = () => {
               <CardTitle>Details & Pricing</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Article Number field removed */}
               <FormItem>
                 <FormLabel>Article Number</FormLabel>
                 <Input value={product.articleNumber} disabled className="font-mono" />
