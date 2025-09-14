@@ -33,10 +33,22 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
+import type { Product } from "@/types"; // Import Product type for generateUniqueArticleNumber
+
+// Helper function to generate a unique 5-digit article number
+const generateUniqueArticleNumber = (existingProducts: Product[]): string => {
+  let newArticleNumber: string;
+  let isUnique = false;
+  do {
+    // Generate a random 5-digit number (10000 to 99999)
+    newArticleNumber = String(Math.floor(10000 + Math.random() * 90000));
+    isUnique = !existingProducts.some(p => p.articleNumber === newArticleNumber);
+  } while (!isUnique);
+  return newArticleNumber;
+};
 
 const productSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters." }),
-  articleNumber: z.string().length(5, { message: "Must be a 5-digit number." }).regex(/^\d+$/, { message: "Must contain only digits." }),
   category: z.string().min(1, { message: "Please select a category." }),
   availableQuantity: z.string().min(1, { message: "Quantity is required." }),
   price: z.coerce.number().min(0, { message: "Price must be a positive number." }),
@@ -47,9 +59,6 @@ const productSchema = z.object({
   harvestOnDemand: z.boolean().default(false),
   deliveryTimeInDays: z.coerce.number().int().min(0, { message: "Must be a positive number." }).default(1),
   expiryDate: z.string().optional(),
-}).refine((data) => !mockProducts.some(p => p.articleNumber === data.articleNumber), {
-  message: "This article number is already in use. Please choose another.",
-  path: ["articleNumber"],
 });
 
 const CreateProduct = () => {
@@ -59,7 +68,6 @@ const CreateProduct = () => {
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: "",
-      articleNumber: "",
       category: "",
       availableQuantity: "",
       price: 0,
@@ -74,12 +82,14 @@ const CreateProduct = () => {
   });
 
   const onSubmit = (values: z.infer<typeof productSchema>) => {
-    console.log("New product created:", values);
+    const newArticleNumber = generateUniqueArticleNumber(mockProducts);
+    
     const maxId = mockProducts.reduce((max, p) => Math.max(max, parseInt(p.id, 10)), 0);
     const newProductId = (maxId + 1).toString();
     const newProduct = {
       id: newProductId,
       sellerId: "seller-5",
+      articleNumber: newArticleNumber, // Automatically generated
       imageUrls: ["/placeholder.svg"],
       status: "available",
       visibility: "public",
@@ -155,19 +165,7 @@ const CreateProduct = () => {
               <CardTitle>Details & Pricing</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="articleNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Article Number</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., 12345" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/* Article Number field removed */}
               <FormField
                 control={form.control}
                 name="category"

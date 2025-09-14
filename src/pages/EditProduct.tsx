@@ -59,7 +59,7 @@ import { CalendarIcon, PlusCircle, Trash2 } from "lucide-react";
 // Schema for the main product details
 const productSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters." }),
-  articleNumber: z.string().length(5, { message: "Must be a 5-digit number." }).regex(/^\d+$/, { message: "Must contain only digits." }),
+  // articleNumber field removed
   category: z.string().min(1, { message: "Please select a category." }),
   price: z.coerce.number().min(0, { message: "Price must be a positive number." }),
   priceUnit: z.string().min(1, { message: "Price unit is required." }),
@@ -90,7 +90,7 @@ const EditProduct = () => {
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: product?.name || "",
-      articleNumber: product?.articleNumber || "",
+      // articleNumber: product?.articleNumber || "", // Removed from default values
       category: product?.category || "",
       price: typeof product?.price === 'number' ? product.price : 0,
       priceUnit: product?.priceUnit || "",
@@ -121,15 +121,7 @@ const EditProduct = () => {
   }
 
   const onProductSubmit = (values: z.infer<typeof productSchema>) => {
-    const isDuplicate = mockProducts.some(p => p.id !== product.id && p.articleNumber === values.articleNumber);
-    if (isDuplicate) {
-      productForm.setError("articleNumber", {
-        type: "manual",
-        message: "This article number is already in use. Please choose another.",
-      });
-      return;
-    }
-
+    // Removed article number uniqueness check as it's no longer user-input
     const updatedProduct = { ...product, ...values };
     setProduct(updatedProduct);
     const productIndex = mockProducts.findIndex(p => p.id === product.id);
@@ -213,7 +205,14 @@ const EditProduct = () => {
               <CardTitle>Details & Pricing</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField control={productForm.control} name="articleNumber" render={({ field }) => (<FormItem><FormLabel>Article Number</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>)} />
+              {/* Article Number field removed */}
+              <FormItem>
+                <FormLabel>Article Number</FormLabel>
+                <Input value={product.articleNumber} disabled className="font-mono" />
+                <FormDescription>
+                  Article number is automatically generated.
+                </FormDescription>
+              </FormItem>
               <FormField control={productForm.control} name="category" render={({ field }) => (<FormItem><FormLabel>Category</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue /></SelectTrigger></FormControl><SelectContent><SelectItem value="Fruits and berries">Fruits and berries</SelectItem><SelectItem value="Vegetables">Vegetables</SelectItem><SelectItem value="Bakery">Bakery</SelectItem><SelectItem value="Dairy products">Dairy products</SelectItem><SelectItem value="Meat and poultry">Meat and poultry</SelectItem><SelectItem value="Seafood">Seafood</SelectItem><SelectItem value="Animal products">Animal products</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
               <FormField control={productForm.control} name="price" render={({ field }) => (<FormItem><FormLabel>Price (€)</FormLabel><FormControl><Input type="number" {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormField
