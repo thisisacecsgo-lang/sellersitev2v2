@@ -26,10 +26,7 @@ const BatchListMobile = ({ batches, productUnit, onOpenDialog, noBatchesMessage 
       {batches.map((batch, index) => (
         <Card key={batch.id}>
           <CardContent className="p-4 space-y-3 text-sm">
-            <div className="flex justify-between items-center">
-              <span className="text-muted-foreground">Batch ID:</span>
-              <span className="font-medium">{batch.id}</span>
-            </div>
+            {/* Удалена строка с Batch ID */}
             <div className="flex justify-between items-center">
               <span className="text-muted-foreground">Production Date:</span>
               <span className="font-medium">{format(parseISO(batch.productionDate), "PPP")}</span>
