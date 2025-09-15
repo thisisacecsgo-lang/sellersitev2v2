@@ -68,7 +68,7 @@ const Revenue = () => {
         <h2 className="text-2xl font-bold mt-8">Payment History</h2>
         <Card>
           <CardContent className="p-0">
-            <div className="overflow-x-auto">
+            <div className="overflow-x-auto"> {/* Added overflow-x-auto here */}
               <Table>
                 <TableHeader>
                   <TableRow>
