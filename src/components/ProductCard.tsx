@@ -119,11 +119,11 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
           </div>
 
           <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
-            <div className="flex items-center gap-1.5 truncate"><Hash className="h-3 w-3 flex-shrink-0" /><span>{product.articleNumber}</span></div>
-            <div className="flex items-center gap-1.5 truncate"><MapPin className="h-3 w-3 flex-shrink-0" /><span>{product.region}</span></div>
-            <div className="flex items-center gap-1.5 truncate"><Truck className="h-3 w-3 flex-shrink-0" /><span>Ships: {shippingText()}</span></div>
-            <div className="flex items-center gap-1.5 truncate"><Package className="h-3 w-3 flex-shrink-0" /><span>{totalAvailableQuantity} {unit}</span></div>
-            <div className="flex items-center gap-1.5 col-span-2 truncate"><Eye className="h-3 w-3 flex-shrink-0" /><span>Status: {product.visibility === 'public' ? 'Public' : 'Hidden'}</span></div>
+            <div className="flex items-center gap-1.5"><Hash className="h-3 w-3 flex-shrink-0" /><span>{product.articleNumber}</span></div>
+            <div className="flex items-center gap-1.5"><MapPin className="h-3 w-3 flex-shrink-0" /><span>{product.region}</span></div>
+            <div className="flex items-center gap-1.5"><Truck className="h-3 w-3 flex-shrink-0" /><span>Ships: {shippingText()}</span></div>
+            <div className="flex items-center gap-1.5"><Package className="h-3 w-3 flex-shrink-0" /><span>{totalAvailableQuantity} {unit}</span></div>
+            <div className="flex items-center gap-1.5 col-span-2"><Eye className="h-3 w-3 flex-shrink-0" /><span>Status: {product.visibility === 'public' ? 'Public' : 'Hidden'}</span></div>
           </div>
 
           <div className="flex flex-wrap gap-1 pt-1">
