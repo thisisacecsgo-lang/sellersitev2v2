@@ -170,7 +170,7 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-      <DialogContent className="sm:max-w-lg rounded-lg">
+      <DialogContent className="w-full sm:max-w-[511px] sm:h-[655px] rounded-lg flex flex-col">
         <ProductQuickView product={product} />
       </DialogContent>
     </Dialog>
