@@ -379,7 +379,7 @@ export const mockProducts: Product[] = [
     articleNumber: "60002",
     category: "Seafood",
     price: 2.00,
-    priceUnit: "kg", // Изменено с "piece" на "kg"
+    priceUnit: "kg", 
     region: "Flensburg",
     imageUrls: ["/images/ou.jpg"],
     description: "Freshly harvested oysters from the Oregon coast. Perfect for serving on the half shell.",
@@ -392,9 +392,9 @@ export const mockProducts: Product[] = [
     deliveryTimeInDays: 1,
     freshness: "fresh",
     batches: [
-      { id: "batch-28a", productionDate: addDays(now, -1).toISOString(), expiryDate: addDays(now, 2).toISOString(), availableQuantity: "36 piece" },
-      { id: "batch-28b", productionDate: addDays(now, -2).toISOString(), expiryDate: addDays(now, 1).toISOString(), availableQuantity: "24 piece" },
-      { id: "batch-28c", productionDate: addDays(now, 0).toISOString(), expiryDate: addDays(now, 3).toISOString(), availableQuantity: "48 piece" }
+      { id: "batch-28a", productionDate: addDays(now, -1).toISOString(), expiryDate: addDays(now, 2).toISOString(), availableQuantity: "36kg" }, // Изменено на "kg"
+      { id: "batch-28b", productionDate: addDays(now, -2).toISOString(), expiryDate: addDays(now, 1).toISOString(), availableQuantity: "24kg" }, // Изменено на "kg"
+      { id: "batch-28c", productionDate: addDays(now, 0).toISOString(), expiryDate: addDays(now, 3).toISOString(), availableQuantity: "48kg" }  // Изменено на "kg"
     ]
   },
   {
