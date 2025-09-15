@@ -52,12 +52,6 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
   }, 0);
   const unit = product.priceUnit;
 
-  const shippingText = () => {
-    if (product.deliveryTimeInDays === 0) return "Today";
-    if (product.deliveryTimeInDays === 1) return "in 1 day";
-    return `in ${product.deliveryTimeInDays} days`;
-  };
-
   return (
     <Dialog open={isQuickViewOpen} onOpenChange={setIsQuickViewOpen}>
       <Card className={cn("w-full overflow-hidden flex flex-col group transition-all duration-300 hover:shadow-xl hover:-translate-y-1", className)}>
@@ -120,7 +114,6 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
 
           <div className="flex flex-wrap gap-1.5">
             <Badge variant="secondary" className="font-normal text-xs"><Hash className="h-3 w-3 mr-1" />{product.articleNumber}</Badge>
-            <Badge variant="secondary" className="font-normal text-xs"><Truck className="h-3 w-3 mr-1" />{shippingText()}</Badge>
             <Badge variant="secondary" className="font-normal text-xs"><Package className="h-3 w-3 mr-1" />{totalAvailableQuantity} {unit}</Badge>
             <Badge variant="secondary" className="font-normal text-xs"><Eye className="h-3 w-3 mr-1" />{product.visibility === 'public' ? 'Public' : 'Hidden'}</Badge>
             {product.isVegan && <Badge variant="outline" className="font-normal text-xs"><Vegan className="h-3 w-3 mr-1" />Vegan</Badge>}

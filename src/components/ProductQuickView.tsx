@@ -18,12 +18,6 @@ interface ProductQuickViewProps {
 export const ProductQuickView = ({ product }: ProductQuickViewProps) => {
   const imageUrl = product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls[0] : "/placeholder.svg";
 
-  const shippingText = () => {
-    if (product.deliveryTimeInDays === 0) return "Today";
-    if (product.deliveryTimeInDays === 1) return "in 1 day";
-    return `in ${product.deliveryTimeInDays} days`;
-  };
-
   const totalAvailableQuantity = product.batches.reduce((acc, b) => acc + parseFloat(b.availableQuantity), 0);
 
   return (
@@ -59,7 +53,6 @@ export const ProductQuickView = ({ product }: ProductQuickViewProps) => {
 
             <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="secondary"><Hash className="h-3 w-3 mr-1" />{product.articleNumber}</Badge>
-                <Badge variant="secondary"><Truck className="h-3 w-3 mr-1" />{shippingText()}</Badge>
                 
                 {product.isVegan && (
                     <Tooltip>

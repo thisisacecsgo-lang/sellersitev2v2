@@ -63,12 +63,6 @@ const ProductDetail = () => {
 
   const unit = product.batches.length > 0 ? (product.batches[0].availableQuantity.replace(/[0-9.,]/g, '').trim()) : '';
 
-  const deliveryText = () => {
-    if (product.deliveryTimeInDays === 0) return "Ships today";
-    if (product.deliveryTimeInDays === 1) return "Ships in 1 day(s)";
-    return `Ships in ${product.deliveryTimeInDays} day(s)`;
-  };
-
   return (
     <div className="container mx-auto p-4 md:p-8">
       <BackButton />
@@ -126,10 +120,6 @@ const ProductDetail = () => {
           <Badge variant="secondary" className="text-sm font-medium">
             <MapPin className="h-3 w-3 mr-1" />
             {product.region}
-          </Badge>
-          <Badge variant="secondary" className="text-sm font-medium">
-            <Truck className="h-3 w-3 mr-1" />
-            {deliveryText()}
           </Badge>
         </div>
 
