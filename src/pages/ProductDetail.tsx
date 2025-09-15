@@ -18,7 +18,7 @@ import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import { format, differenceInDays } from "date-fns";
 import BackButton from "@/components/BackButton";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import CategoryIcon from "@/components/CategoryIcon";
+import CategoryIcon from "./CategoryIcon";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -173,7 +173,15 @@ const ProductDetail = () => {
       </div>
 
       <div className="mt-12">
-        <h2 className="text-2xl font-bold mb-4">Available Batches</h2>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-2xl font-bold">Available Batches</h2>
+          <Button asChild>
+            <Link to={`/product/${product.id}/edit`}>
+              <Wrench className="mr-2 h-4 w-4" />
+              Manage Batches
+            </Link>
+          </Button>
+        </div>
         <Card>
           <Table>
             <TableHeader>
@@ -182,7 +190,6 @@ const ProductDetail = () => {
                 <TableHead>Best Before</TableHead>
                 <TableHead>Days Left</TableHead>
                 <TableHead>Available</TableHead>
-                <TableHead className="text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -200,15 +207,12 @@ const ProductDetail = () => {
                         </Badge>
                       </TableCell>
                       <TableCell>{batch.availableQuantity}</TableCell>
-                      <TableCell className="text-right">
-                        <Button size="sm" disabled>Add to Cart</Button>
-                      </TableCell>
                     </TableRow>
                   );
                 })
               ) : (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center h-24">
+                  <TableCell colSpan={4} className="text-center h-24">
                     No available batches for this product.
                   </TableCell>
                 </TableRow>
