@@ -68,6 +68,7 @@ export interface Order {
   status: "Pending" | "Ready for Pickup" | "Completed";
   pickupWindowStart: string; // ISO date string
   pickupWindowEnd: string; // ISO date string
+  batchId: string; // NEW: Added batchId to link orders to specific product batches
 }
 
 export type PaymentStatus = "Waiting" | "Paid";

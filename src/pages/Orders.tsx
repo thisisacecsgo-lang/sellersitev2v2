@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { format, isSameDay, parseISO, isAfter, addDays } from "date-fns";
+import { format, isSameDay, parseISO, isAfter, addDays, differenceInDays } from "date-fns";
 import { Calendar as CalendarIcon, Clock, ClipboardList, FileDown } from "lucide-react";
 import { showSuccess, showError } from "@/utils/toast";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import type { Order } from "@/types"; // Import Order type
 import { formatOrderQuantity } from "@/utils/orderFormatting"; // Import the new utility
+import { mockProducts } from "@/data/mockData"; // Import mockProducts to get batch details
 
 const Orders = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -103,43 +104,62 @@ const Orders = () => {
           <TableRow>
             <TableHead className="min-w-[90px] text-xs p-2">Product</TableHead>
             <TableHead className="text-xs p-2">Qty</TableHead>
+            <TableHead className="text-xs p-2">Batch ID</TableHead> {/* New column */}
+            <TableHead className="text-xs p-2">Prod. Date</TableHead> {/* New column */}
+            <TableHead className="text-xs p-2">Exp. Date</TableHead> {/* New column */}
             <TableHead className="text-xs p-2">Status</TableHead>
             <TableHead className="text-right text-xs p-2">pick-up ready from</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {orders.length > 0 ? (
-            orders.map((order) => (
-              <TableRow key={order.id}>
-                <TableCell className="py-2 px-2">
-                  <Link to={`/product/${order.productId}`} className="flex items-center gap-2 group">
-                    <div className="w-8 h-8 rounded-md overflow-hidden flex-shrink-0 border bg-muted">
-                      <img src={order.productImageUrl} alt={order.productName} className="w-full h-full object-cover" />
-                    </div>
-                    <span className="font-medium text-xs group-hover:text-primary group-hover:underline">{order.productName}</span>
-                  </Link>
-                </TableCell>
-                <TableCell className="py-2 px-2 text-xs">{formatOrderQuantity(order)}</TableCell>
-                <TableCell className="py-2 px-2">
-                  <Select value={order.status} onValueChange={(newStatus: Order['status']) => onStatusChange(order.id, newStatus)}>
-                    <SelectTrigger className={cn("w-[100px] h-6 text-xs", getStatusClasses(order.status))}>
-                      <SelectValue placeholder="Status" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Pending">Pending</SelectItem>
-                      <SelectItem value="Ready for Pickup">Ready</SelectItem>
-                      <SelectItem value="Completed">Done</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </TableCell>
-                <TableCell className="text-right py-2 px-2 text-xs">
-                  {format(parseISO(order.pickupWindowStart), "HH:mm")}
-                </TableCell>
-              </TableRow>
-            ))
+            orders.map((order) => {
+              const product = mockProducts.find(p => p.id === order.productId);
+              const batch = product?.batches.find(b => b.id === order.batchId);
+              const expiryDate = batch ? parseISO(batch.expiryDate) : null;
+              const daysLeft = expiryDate ? differenceInDays(expiryDate, new Date()) : null;
+
+              return (
+                <TableRow key={order.id}>
+                  <TableCell className="py-2 px-2">
+                    <Link to={`/product/${order.productId}`} className="flex items-center gap-2 group">
+                      <div className="w-8 h-8 rounded-md overflow-hidden flex-shrink-0 border bg-muted">
+                        <img src={order.productImageUrl} alt={order.productName} className="w-full h-full object-cover" />
+                      </div>
+                      <span className="font-medium text-xs group-hover:text-primary group-hover:underline">{order.productName}</span>
+                    </Link>
+                  </TableCell>
+                  <TableCell className="py-2 px-2 text-xs">{formatOrderQuantity(order)}</TableCell>
+                  <TableCell className="py-2 px-2 text-xs">{batch?.id || 'N/A'}</TableCell> {/* Display Batch ID */}
+                  <TableCell className="py-2 px-2 text-xs">{batch ? format(parseISO(batch.productionDate), "MMM d, yy") : 'N/A'}</TableCell> {/* Display Production Date */}
+                  <TableCell className="py-2 px-2 text-xs"> {/* Display Expiry Date with Badge */}
+                    {expiryDate ? (
+                      <Badge variant={daysLeft !== null && daysLeft < 7 && daysLeft >= 0 ? "destructive" : "secondary"}>
+                        {format(expiryDate, "MMM d, yy")} ({daysLeft !== null && daysLeft >= 0 ? `${daysLeft} days` : 'Expired'})
+                      </Badge>
+                    ) : 'N/A'}
+                  </TableCell>
+                  <TableCell className="py-2 px-2">
+                    <Select value={order.status} onValueChange={(newStatus: Order['status']) => onStatusChange(order.id, newStatus)}>
+                      <SelectTrigger className={cn("w-[100px] h-6 text-xs", getStatusClasses(order.status))}>
+                        <SelectValue placeholder="Status" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Pending">Pending</SelectItem>
+                        <SelectItem value="Ready for Pickup">Ready</SelectItem>
+                        <SelectItem value="Completed">Done</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell className="text-right py-2 px-2 text-xs">
+                    {format(parseISO(order.pickupWindowStart), "HH:mm")}
+                  </TableCell>
+                </TableRow>
+              );
+            })
           ) : (
             <TableRow>
-              <TableCell colSpan={4} className="h-24 text-center text-sm">
+              <TableCell colSpan={7} className="h-24 text-center text-sm"> {/* Updated colspan */}
                 {noOrdersMessage}
               </TableCell>
             </TableRow>

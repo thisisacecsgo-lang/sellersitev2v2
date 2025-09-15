@@ -1,7 +1,14 @@
 import type { Order } from "@/types";
 import { set, addDays, subDays } from "date-fns";
+import { mockProducts } from "./mockData"; // Import mockProducts to get batch IDs
 
 const today = new Date();
+
+// Helper to get a batch ID for a product
+const getBatchIdForProduct = (productId: string): string => {
+  const product = mockProducts.find(p => p.id === productId);
+  return product && product.batches.length > 0 ? product.batches[0].id : "unknown-batch";
+};
 
 export const mockOrders: Order[] = [
   // Today's Orders
@@ -16,6 +23,7 @@ export const mockOrders: Order[] = [
     status: "Ready for Pickup",
     pickupWindowStart: set(today, { hours: 14, minutes: 0, seconds: 0 }).toISOString(),
     pickupWindowEnd: set(today, { hours: 16, minutes: 0, seconds: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("1"),
   },
   {
     id: "order-2",
@@ -28,6 +36,7 @@ export const mockOrders: Order[] = [
     status: "Pending",
     pickupWindowStart: set(today, { hours: 16, minutes: 30, seconds: 0 }).toISOString(),
     pickupWindowEnd: set(today, { hours: 17, minutes: 0, seconds: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("12"),
   },
   {
     id: "order-3",
@@ -40,6 +49,7 @@ export const mockOrders: Order[] = [
     status: "Completed",
     pickupWindowStart: set(today, { hours: 9, minutes: 0, seconds: 0 }).toISOString(),
     pickupWindowEnd: set(today, { hours: 10, minutes: 0, seconds: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("4"),
   },
   // Yesterday's order
   {
@@ -53,6 +63,7 @@ export const mockOrders: Order[] = [
     status: "Completed",
     pickupWindowStart: set(subDays(today, 1), { hours: 11, minutes: 0, seconds: 0 }).toISOString(),
     pickupWindowEnd: set(subDays(today, 1), { hours: 12, minutes: 0, seconds: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("19"),
   },
   // Tomorrow's order
   {
@@ -66,6 +77,7 @@ export const mockOrders: Order[] = [
     status: "Pending",
     pickupWindowStart: set(addDays(today, 1), { hours: 10, minutes: 0, seconds: 0 }).toISOString(),
     pickupWindowEnd: set(addDays(today, 1), { hours: 11, minutes: 0, seconds: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("13"),
   },
   // Historical Orders for Statistics
   {
@@ -79,6 +91,7 @@ export const mockOrders: Order[] = [
     status: "Completed",
     pickupWindowStart: set(subDays(today, 5), { hours: 15, minutes: 0 }).toISOString(),
     pickupWindowEnd: set(subDays(today, 5), { hours: 16, minutes: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("10"),
   },
   {
     id: "order-hist-2",
@@ -91,6 +104,7 @@ export const mockOrders: Order[] = [
     status: "Completed",
     pickupWindowStart: set(subDays(today, 5), { hours: 17, minutes: 0 }).toISOString(),
     pickupWindowEnd: set(subDays(today, 5), { hours: 18, minutes: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("1"),
   },
   {
     id: "order-hist-3",
@@ -103,6 +117,7 @@ export const mockOrders: Order[] = [
     status: "Completed",
     pickupWindowStart: set(subDays(today, 12), { hours: 10, minutes: 0 }).toISOString(),
     pickupWindowEnd: set(subDays(today, 12), { hours: 11, minutes: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("29"),
   },
   {
     id: "order-hist-4",
@@ -115,6 +130,7 @@ export const mockOrders: Order[] = [
     status: "Completed",
     pickupWindowStart: set(subDays(today, 25), { hours: 12, minutes: 0 }).toISOString(),
     pickupWindowEnd: set(subDays(today, 25), { hours: 13, minutes: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("9"),
   },
   {
     id: "order-hist-5",
@@ -127,6 +143,7 @@ export const mockOrders: Order[] = [
     status: "Completed",
     pickupWindowStart: set(subDays(today, 28), { hours: 9, minutes: 0 }).toISOString(),
     pickupWindowEnd: set(subDays(today, 28), { hours: 10, minutes: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("12"),
   },
   {
     id: "order-hist-6",
@@ -139,6 +156,7 @@ export const mockOrders: Order[] = [
     status: "Completed",
     pickupWindowStart: set(subDays(today, 15), { hours: 14, minutes: 0 }).toISOString(),
     pickupWindowEnd: set(subDays(today, 15), { hours: 15, minutes: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("13"),
   },
   {
     id: "order-hist-7",
@@ -151,6 +169,7 @@ export const mockOrders: Order[] = [
     status: "Completed",
     pickupWindowStart: set(subDays(today, 20), { hours: 11, minutes: 0 }).toISOString(),
     pickupWindowEnd: set(subDays(today, 20), { hours: 12, minutes: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("1"),
   },
   {
     id: "order-hist-8",
@@ -163,6 +182,7 @@ export const mockOrders: Order[] = [
     status: "Completed",
     pickupWindowStart: set(subDays(today, 40), { hours: 10, minutes: 0 }).toISOString(),
     pickupWindowEnd: set(subDays(today, 40), { hours: 11, minutes: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("1"),
   },
   {
     id: "order-hist-9",
@@ -175,5 +195,6 @@ export const mockOrders: Order[] = [
     status: "Completed",
     pickupWindowStart: set(subDays(today, 35), { hours: 13, minutes: 0 }).toISOString(),
     pickupWindowEnd: set(subDays(today, 35), { hours: 14, minutes: 0 }).toISOString(),
+    batchId: getBatchIdForProduct("12"),
   },
 ];
