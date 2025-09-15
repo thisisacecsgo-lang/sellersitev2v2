@@ -34,34 +34,25 @@ const OrderListMobile = ({ orders, noOrdersMessage }: OrderListMobileProps) => {
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3"> {/* Reduced space-y */}
       {orders.map((order) => (
         <Card key={order.id}>
-          <CardContent className="p-4 space-y-2">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-md overflow-hidden flex-shrink-0 border bg-muted">
+          <CardContent className="p-3 space-y-2"> {/* Reduced padding and space-y */}
+            <div className="flex items-center gap-2"> {/* Reduced gap */}
+              <div className="w-10 h-10 rounded-md overflow-hidden flex-shrink-0 border bg-muted"> {/* Smaller image */}
                 <img src={order.productImageUrl} alt={order.productName} className="w-full h-full object-cover" />
               </div>
               <div className="flex-grow">
-                <Link to={`/product/${order.productId}`} className="font-semibold text-base hover:text-primary hover:underline">
+                <Link to={`/product/${order.productId}`} className="font-semibold text-sm hover:text-primary hover:underline"> {/* Smaller font */}
                   {order.productName}
                 </Link>
-                <p className="text-sm text-muted-foreground">Client: {order.clientName}</p>
+                <p className="text-xs text-muted-foreground">{order.clientName} - {order.quantity}</p> {/* Combined client and quantity */}
               </div>
+              {getStatusBadge(order.status)} {/* Status badge moved here for better alignment */}
             </div>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div>
-                <span className="text-muted-foreground">Quantity:</span>{" "}
-                <span className="font-medium">{order.quantity}</span>
-              </div>
-              <div>
-                <span className="text-muted-foreground">Status:</span>{" "}
-                {getStatusBadge(order.status)}
-              </div>
-              <div className="col-span-2">
-                <span className="text-muted-foreground">Pickup Ready From:</span>{" "}
-                <span className="font-medium">{format(parseISO(order.pickupWindowStart), "PPP HH:mm")}</span>
-              </div>
+            <div className="flex justify-between items-center text-xs text-muted-foreground"> {/* New line for pickup time */}
+              <span>Pickup Ready From:</span>{" "}
+              <span className="font-medium text-foreground">{format(parseISO(order.pickupWindowStart), "PPP HH:mm")}</span>
             </div>
           </CardContent>
         </Card>

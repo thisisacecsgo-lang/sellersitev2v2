@@ -116,7 +116,7 @@ const Orders = () => {
     <div className="container mx-auto p-4 md:p-8">
       <h1 className="text-3xl font-bold mb-6">Orders & Reports</h1>
       
-      <div className="grid gap-4 md:grid-cols-2 mb-8">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-2 mb-8"> {/* Adjusted grid-cols */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Orders Today</CardTitle>
