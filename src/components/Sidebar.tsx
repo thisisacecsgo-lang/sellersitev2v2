@@ -73,8 +73,8 @@ const Sidebar = () => {
             <Link to="/product/new" className="flex items-center gap-3 rounded-lg px-3 py-2 text-primary transition-all hover:bg-secondary">
               <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
                 <PlusCircle className="h-5 w-5" />
+                <span className="font-semibold ml-2">Add New Product</span> {/* Moved span inside Button */}
               </Button>
-              <span className="font-semibold">Add New Product</span>
             </Link>
           </div>
         </div>
