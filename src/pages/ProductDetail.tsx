@@ -75,7 +75,7 @@ const ProductDetail = () => {
       <AppBreadcrumb />
       <div className="max-w-2xl mx-auto space-y-6"> {/* Centralized content, single column flow */}
         {/* Image Carousel */}
-        <Carousel className="w-full relative">
+        <Carousel className="w-full max-w-sm mx-auto relative"> {/* Added max-w-sm mx-auto here */}
           <CarouselContent>
             {product.imageUrls.map((img, index) => (
               <CarouselItem key={index}>
