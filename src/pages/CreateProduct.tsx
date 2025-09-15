@@ -32,7 +32,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, Upload } from "lucide-react"; // Import Upload icon
 import type { Product } from "@/types"; // Import Product type for generateUniqueArticleNumber
 
 // Helper function to generate a unique 5-digit article number
@@ -54,7 +54,7 @@ const productSchema = z.object({
   price: z.coerce.number().min(0, { message: "Price must be a positive number." }),
   priceUnit: z.string().min(1, { message: "Price unit is required." }),
   description: z.string().optional(),
-  imageUrls: z.string().optional(), // New field for image URLs
+  // imageUrls: z.string().optional(), // This field is no longer directly collected via input
   isVegan: z.boolean().default(false),
   isVegetarian: z.boolean().default(false),
   harvestOnDemand: z.boolean().default(false),
@@ -74,7 +74,7 @@ const CreateProduct = () => {
       price: 0,
       priceUnit: "",
       description: "",
-      imageUrls: "", // Default empty string for image URLs
+      // imageUrls: "", // No longer needed as a form field
       isVegan: false,
       isVegetarian: false,
       harvestOnDemand: false,
@@ -89,15 +89,14 @@ const CreateProduct = () => {
     const maxId = mockProducts.reduce((max, p) => Math.max(max, parseInt(p.id, 10)), 0);
     const newProductId = (maxId + 1).toString();
 
-    const parsedImageUrls = values.imageUrls
-      ? values.imageUrls.split('\n').map(url => url.trim()).filter(url => url !== '')
-      : [];
+    // For dummy upload, always use a placeholder image
+    const imageUrls = ["/placeholder.svg"];
 
     const newProduct = {
       id: newProductId,
       sellerId: "seller-5",
       articleNumber: newArticleNumber, // Automatically generated
-      imageUrls: parsedImageUrls.length > 0 ? parsedImageUrls : ["/placeholder.svg"], // Use placeholder if no URLs provided
+      imageUrls: imageUrls,
       status: "available",
       visibility: "public",
       createdAt: new Date().toISOString(),
@@ -117,7 +116,7 @@ const CreateProduct = () => {
     // @ts-ignore
     delete newProduct.availableQuantity;
     // @ts-ignore
-    delete newProduct.imageUrls; // Remove the string field, use the array
+    // delete newProduct.imageUrls; // No longer needed as it's explicitly set above
 
     mockProducts.push(newProduct);
     showSuccess("Product created successfully!");
@@ -166,26 +165,18 @@ const CreateProduct = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="imageUrls"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Image URLs</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Enter image URLs, one per line"
-                        className="resize-none min-h-[100px]"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Provide direct links to product images. Enter one URL per line.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <FormItem>
+                <FormLabel>Product Images</FormLabel>
+                <FormControl>
+                  <Button type="button" variant="outline" className="w-full" onClick={() => showSuccess("Simulating photo upload...")}>
+                    <Upload className="mr-2 h-4 w-4" />
+                    Upload Photo
+                  </Button>
+                </FormControl>
+                <FormDescription>
+                  Click to simulate uploading a product image. (Currently uses a placeholder)
+                </FormDescription>
+              </FormItem>
             </CardContent>
           </Card>
 
