@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/types";
-import { Tag, Package, Eye, Edit, MoreVertical, EyeOff, Trash2, Hash, Truck, MapPin, Leaf, Vegan, Wrench, ShoppingCart } from "lucide-react";
+import { Tag, Package, Eye, Edit, MoreVertical, EyeOff, Trash2, Hash, Truck, MapPin, Leaf, Vegan, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -112,31 +112,31 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
             </div>
           )}
         </CardHeader>
-        <CardContent className="p-4 flex-grow flex flex-col space-y-3">
+        <CardContent className="p-4 flex-grow flex flex-col space-y-2">
           <div className="flex items-start gap-2 min-h-12">
             <CategoryIcon category={product.category} className="h-6 w-6 text-muted-foreground mt-0.5 flex-shrink-0" />
             <h3 className="text-lg font-bold leading-tight">{product.name}</h3>
           </div>
 
-          <div className="space-y-1 text-sm text-muted-foreground">
-            <div className="flex items-center gap-2"><Hash className="h-4 w-4" /><span>{product.articleNumber}</span></div>
-            <div className="flex items-center gap-2"><MapPin className="h-4 w-4" /><span>{product.region}</span></div>
-            <div className="flex items-center gap-2"><Truck className="h-4 w-4" /><span>Earliest shipping: {shippingText()}</span></div>
-            <div className="flex items-center gap-2"><Package className="h-4 w-4" /><span>{totalAvailableQuantity} {unit} available</span></div>
-            <div className="flex items-center gap-2"><Eye className="h-4 w-4" /><span>Status: {product.visibility === 'public' ? 'Public' : 'Hidden'}</span></div>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
+            <div className="flex items-center gap-1.5 truncate"><Hash className="h-3 w-3 flex-shrink-0" /><span>{product.articleNumber}</span></div>
+            <div className="flex items-center gap-1.5 truncate"><MapPin className="h-3 w-3 flex-shrink-0" /><span>{product.region}</span></div>
+            <div className="flex items-center gap-1.5 truncate"><Truck className="h-3 w-3 flex-shrink-0" /><span>Ships: {shippingText()}</span></div>
+            <div className="flex items-center gap-1.5 truncate"><Package className="h-3 w-3 flex-shrink-0" /><span>{totalAvailableQuantity} {unit}</span></div>
+            <div className="flex items-center gap-1.5 col-span-2 truncate"><Eye className="h-3 w-3 flex-shrink-0" /><span>Status: {product.visibility === 'public' ? 'Public' : 'Hidden'}</span></div>
           </div>
 
-          <div className="flex flex-wrap gap-2 pt-1">
-            {product.isVegan && <Badge variant="outline" className="font-normal"><Vegan className="h-3 w-3 mr-1.5" />Vegan</Badge>}
-            {product.isVegetarian && !product.isVegan && <Badge variant="outline" className="font-normal"><Leaf className="h-3 w-3 mr-1.5" />Vegetarian</Badge>}
-            {product.harvestOnDemand && <Badge variant="outline" className="font-normal"><Wrench className="h-3 w-3 mr-1.5" />Harvest on Demand</Badge>}
+          <div className="flex flex-wrap gap-1 pt-1">
+            {product.isVegan && <Badge variant="outline" className="font-normal text-xs px-1.5 py-0.5"><Vegan className="h-3 w-3 mr-1" />Vegan</Badge>}
+            {product.isVegetarian && !product.isVegan && <Badge variant="outline" className="font-normal text-xs px-1.5 py-0.5"><Leaf className="h-3 w-3 mr-1" />Vegetarian</Badge>}
+            {product.harvestOnDemand && <Badge variant="outline" className="font-normal text-xs px-1.5 py-0.5"><Wrench className="h-3 w-3 mr-1" />Harvest on Demand</Badge>}
           </div>
 
           <div className="flex-grow"></div>
 
-          <div className="flex items-center gap-2 pt-2">
-            <Tag className="h-5 w-5 text-primary" />
-            <p className="text-xl font-bold text-primary">
+          <div className="flex items-center gap-2 pt-1">
+            <Tag className="h-4 w-4 text-primary" />
+            <p className="text-lg font-bold text-primary">
               {typeof product.price === "number"
                 ? `€${product.price.toFixed(2)} / ${product.priceUnit}`
                 : "Free"}
