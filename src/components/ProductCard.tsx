@@ -113,7 +113,7 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
           )}
         </CardHeader>
         <CardContent className="p-4 flex-grow flex flex-col space-y-3">
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-2 min-h-12">
             <CategoryIcon category={product.category} className="h-6 w-6 text-muted-foreground mt-0.5 flex-shrink-0" />
             <h3 className="text-lg font-bold leading-tight">{product.name}</h3>
           </div>
@@ -143,14 +143,11 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
             </p>
           </div>
         </CardContent>
-        <CardFooter className="p-3 grid grid-cols-2 gap-2">
-          <Button variant="outline" className="w-full" asChild>
+        <CardFooter className="p-4 pt-0">
+          <Button className="w-full" asChild>
             <Link to={`/product/${product.id}`}>
-              <Eye className="mr-2 h-4 w-4" /> View
+              <Eye className="mr-2 h-4 w-4" /> View Details
             </Link>
-          </Button>
-          <Button className="w-full" disabled>
-            <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
           </Button>
         </CardFooter>
       </Card>
