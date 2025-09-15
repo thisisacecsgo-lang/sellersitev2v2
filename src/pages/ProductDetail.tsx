@@ -73,9 +73,9 @@ const ProductDetail = () => {
     <div className="container mx-auto p-4 md:p-8">
       <BackButton />
       <AppBreadcrumb />
-      <div className="space-y-6"> {/* Removed max-w-2xl mx-auto */}
+      <div className="space-y-6">
         {/* Image Carousel */}
-        <Carousel className="w-full max-w-md mx-auto relative sm:max-w-lg md:max-w-xl lg:max-w-2xl"> {/* Adjusted max-w for carousel */}
+        <Carousel className="w-full max-w-md mx-auto relative sm:max-w-lg md:max-w-xl lg:max-w-2xl">
           <CarouselContent>
             {product.imageUrls.map((img, index) => (
               <CarouselItem key={index}>
@@ -93,11 +93,11 @@ const ProductDetail = () => {
 
         {/* Product Name and Edit Button */}
         <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <CategoryIcon category={product.category} className="h-6 w-6 text-muted-foreground" />
-            <h1 className="text-3xl font-bold">{product.name}</h1>
+          <div className="flex items-center gap-3 flex-1 min-w-0"> {/* Added flex-1 min-w-0 */}
+            <CategoryIcon category={product.category} className="h-6 w-6 text-muted-foreground flex-shrink-0" />
+            <h1 className="text-2xl sm:text-3xl font-bold truncate">{product.name}</h1> {/* Adjusted font size and added truncate */}
           </div>
-          <Button asChild variant="outline" size="sm">
+          <Button asChild variant="outline" size="sm" className="flex-shrink-0"> {/* Added flex-shrink-0 */}
             <Link to={`/product/${product.id}/edit`}>
               <span className="flex items-center gap-1">
                 <Edit className="h-4 w-4" />
@@ -185,7 +185,7 @@ const ProductDetail = () => {
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">Available Batches</h2>
         <Card>
-          <div className="overflow-x-auto"> {/* Added overflow-x-auto here */}
+          <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
