@@ -18,9 +18,12 @@ import { cn } from "@/lib/utils";
 import { format, isSameDay, parseISO, isAfter, addDays } from "date-fns";
 import { Calendar as CalendarIcon, Clock, ClipboardList, FileDown } from "lucide-react";
 import { showSuccess } from "@/utils/toast";
+import { useIsMobile } from "@/hooks/use-mobile"; // Import the hook
+import OrderListMobile from "@/components/OrderListMobile"; // Import the new component
 
 const Orders = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
+  const isMobile = useIsMobile(); // Use the hook
 
   const filteredOrders = useMemo(() => {
     if (!date) return [];
@@ -136,9 +139,9 @@ const Orders = () => {
 
       <Card>
         <CardHeader>
-          <div className="flex flex-col gap-4"> {/* Changed to flex-col for stacking */}
+          <div className="flex flex-col gap-4">
             <CardTitle>Orders for {date ? format(date, "PPP") : "..."}</CardTitle>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2"> {/* Adjusted for responsiveness */}
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -161,7 +164,7 @@ const Orders = () => {
                   />
                 </PopoverContent>
               </Popover>
-              <div className="flex gap-2 w-full sm:w-auto"> {/* Group export buttons */}
+              <div className="flex gap-2 w-full sm:w-auto">
                 <Button variant="outline" size="sm" onClick={() => handleExport('CSV')} className="flex-1 sm:flex-none">
                   <FileDown className="mr-2 h-4 w-4" />
                   CSV
@@ -175,7 +178,11 @@ const Orders = () => {
           </div>
         </CardHeader>
         <CardContent>
-          <OrderTable orders={filteredOrders} noOrdersMessage="No orders for this date." />
+          {isMobile ? (
+            <OrderListMobile orders={filteredOrders} noOrdersMessage="No orders for this date." />
+          ) : (
+            <OrderTable orders={filteredOrders} noOrdersMessage="No orders for this date." />
+          )}
         </CardContent>
       </Card>
 
@@ -184,7 +191,11 @@ const Orders = () => {
           <CardTitle>Orders for Tomorrow ({format(addDays(new Date(), 1), "PPP")})</CardTitle>
         </CardHeader>
         <CardContent>
-          <OrderTable orders={tomorrowsOrders} noOrdersMessage="No orders for tomorrow." />
+          {isMobile ? (
+            <OrderListMobile orders={tomorrowsOrders} noOrdersMessage="No orders for tomorrow." />
+          ) : (
+            <OrderTable orders={tomorrowsOrders} noOrdersMessage="No orders for tomorrow." />
+          )}
         </CardContent>
       </Card>
     </div>
