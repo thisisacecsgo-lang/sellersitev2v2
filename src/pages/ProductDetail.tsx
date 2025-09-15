@@ -18,7 +18,7 @@ import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import { format, differenceInDays } from "date-fns";
 import BackButton from "@/components/BackButton";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-import CategoryIcon from "./CategoryIcon";
+import CategoryIcon from "@/components/CategoryIcon";
 import { Card } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
