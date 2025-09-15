@@ -123,8 +123,8 @@ const SellerProfile = () => {
             <AvatarFallback>{seller.name.charAt(0)}</AvatarFallback>
           </Avatar>
           <div className="flex-grow">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2"> {/* Flex container for name and badge */}
+            <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-wrap items-center gap-2"> {/* Flex container for name and badge */}
                 <h1 className="text-3xl font-bold">{seller.name}</h1>
                 {seller.type === "private" && (
                   <Badge variant="secondary" className="rounded-full px-3 py-1 text-sm font-medium">
