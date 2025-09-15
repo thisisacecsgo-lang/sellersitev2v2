@@ -85,6 +85,7 @@ const EditProduct = () => {
   );
   const [isBatchDialogOpen, setIsBatchDialogOpen] = useState(false);
   const [editingBatch, setEditingBatch] = useState<ProductBatch | null>(null);
+  const [currentBatchUnit, setCurrentBatchUnit] = useState<string>(""); // State to hold the unit
 
   const productForm = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
@@ -140,9 +141,13 @@ const EditProduct = () => {
 
   const handleOpenBatchDialog = (batch: ProductBatch | null) => {
     setEditingBatch(batch);
+    const unit = product?.priceUnit || ""; // Get the unit from the main product
+    setCurrentBatchUnit(unit); // Store it
+
     if (batch) {
+      const numericQuantity = parseFloat(batch.availableQuantity) || 0;
       batchForm.reset({
-        availableQuantity: batch.availableQuantity,
+        availableQuantity: String(numericQuantity), // Set only the number
         productionDate: batch.productionDate,
         expiryDate: batch.expiryDate,
       });
@@ -157,13 +162,17 @@ const EditProduct = () => {
   };
 
   const onBatchSubmit = (values: z.infer<typeof batchSchema>) => {
+    const unit = product?.priceUnit || ""; // Get the unit from the main product
+    const numericQuantity = parseFloat(values.availableQuantity);
+    const finalAvailableQuantity = isNaN(numericQuantity) || numericQuantity === 0 ? "" : `${numericQuantity}${unit}`; // Reconstruct with unit, handle 0 or NaN
+
     if (editingBatch) { // Editing existing batch
       const updatedBatches = product.batches.map(b =>
-        b.id === editingBatch.id ? { ...b, ...values } : b
+        b.id === editingBatch.id ? { ...b, ...values, availableQuantity: finalAvailableQuantity } : b
       );
       setProduct({ ...product, batches: updatedBatches });
     } else { // Adding new batch
-      const newBatch = { id: `batch-${Date.now()}`, ...values };
+      const newBatch = { id: `batch-${Date.now()}`, ...values, availableQuantity: finalAvailableQuantity };
       const updatedBatches = [...product.batches, newBatch];
       setProduct({ ...product, batches: updatedBatches });
     }
@@ -386,7 +395,23 @@ const EditProduct = () => {
           </DialogHeader>
           <Form {...batchForm}>
             <form onSubmit={batchForm.handleSubmit(onBatchSubmit)} className="space-y-4 py-4">
-              <FormField control={batchForm.control} name="availableQuantity" render={({ field }) => (<FormItem><FormLabel>Available Quantity</FormLabel><FormControl><Input placeholder="e.g., 1kg or 1 dozen" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={batchForm.control} name="availableQuantity" render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Available Quantity</FormLabel>
+                  <FormControl>
+                    <div className="flex items-center gap-2">
+                      <Input
+                        type="number" // Changed to number type
+                        placeholder="e.g., 10"
+                        {...field}
+                        value={field.value === "" ? "" : Number(field.value)} // Ensure number type for input
+                      />
+                      {currentBatchUnit && <span className="text-muted-foreground">{currentBatchUnit}</span>}
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
               <FormField control={batchForm.control} name="productionDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Production Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>{field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value ? new Date(field.value) : undefined} onSelect={(date) => field.onChange(date?.toISOString())} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)} />
               <FormField control={batchForm.control} name="expiryDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Expiry Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>{field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value ? new Date(field.value) : undefined} onSelect={(date) => field.onChange(date?.toISOString())} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)} />
               <DialogFooter>
