@@ -113,7 +113,7 @@ const Orders = () => {
     <div className="container mx-auto p-4 md:p-8">
       <h1 className="text-3xl font-bold mb-6">Orders & Reports</h1>
       
-      <div className="grid gap-4 md:grid-cols-2 mb-8">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 mb-8"> {/* Changed md:grid-cols-2 to grid-cols-1 sm:grid-cols-2 */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Orders Today</CardTitle>
@@ -138,13 +138,13 @@ const Orders = () => {
         <CardHeader>
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <CardTitle>Orders for {date ? format(date, "PPP") : "..."}</CardTitle>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto"> {/* Adjusted for mobile stacking */}
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant={"outline"}
                     className={cn(
-                      "w-full sm:w-[240px] justify-start text-left font-normal", // Changed w-[240px] to w-full sm:w-[240px]
+                      "w-full sm:w-[240px] justify-start text-left font-normal",
                       !date && "text-muted-foreground"
                     )}
                   >
@@ -161,14 +161,16 @@ const Orders = () => {
                   />
                 </PopoverContent>
               </Popover>
-              <Button variant="outline" size="sm" onClick={() => handleExport('CSV')}>
-                <FileDown className="mr-2 h-4 w-4" />
-                CSV
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => handleExport('PDF')}>
-                <FileDown className="mr-2 h-4 w-4" />
-                PDF
-              </Button>
+              <div className="flex gap-2 w-full sm:w-auto"> {/* Group export buttons */}
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => handleExport('CSV')}> {/* Added flex-1 */}
+                  <FileDown className="mr-2 h-4 w-4" />
+                  CSV
+                </Button>
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => handleExport('PDF')}> {/* Added flex-1 */}
+                  <FileDown className="mr-2 h-4 w-4" />
+                  PDF
+                </Button>
+              </div>
             </div>
           </div>
         </CardHeader>

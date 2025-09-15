@@ -193,7 +193,7 @@ const CreateProduct = () => {
             <CardHeader>
               <CardTitle>Details & Pricing</CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CardContent className="grid grid-cols-1 gap-6"> {/* Changed md:grid-cols-2 to grid-cols-1 */}
               <FormField
                 control={form.control}
                 name="category"

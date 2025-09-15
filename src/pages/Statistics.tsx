@@ -158,13 +158,13 @@ const Statistics = () => {
           <TabsTrigger value="products">Products</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="space-y-8 mt-6">
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2"> {/* Changed md:grid-cols-2 lg:grid-cols-4 to grid-cols-1 sm:grid-cols-2 */}
             <StatCard title="Total Revenue" value={summaryStats.totalRevenue.value} change={summaryStats.totalRevenue.change} icon={DollarSign} formatValue={(v) => `€${v.toFixed(2)}`} />
             <StatCard title="Total Orders" value={summaryStats.totalOrders.value} change={summaryStats.totalOrders.change} icon={ShoppingCart} formatValue={(v) => v.toFixed(0)} />
             <StatCard title="Avg. Order Value" value={summaryStats.avgOrderValue.value} icon={TrendingUp} formatValue={(v) => `€${v.toFixed(2)}`} />
             <StatCard title="Returning Customers" value={summaryStats.returningCustomers.value} icon={Users} formatValue={(v) => `${v.toFixed(1)}%`} />
           </div>
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8"> {/* Changed lg:grid-cols-3 to grid-cols-1 */}
             <Card className="lg:col-span-2">
               <CardHeader><CardTitle>Sales Over Time</CardTitle></CardHeader>
               <CardContent>
@@ -199,9 +199,9 @@ const Statistics = () => {
             <CardHeader>
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <CardTitle>Product Performance</CardTitle>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" onClick={() => handleExport('CSV')}><FileDown className="mr-2 h-4 w-4" />CSV</Button>
-                  <Button variant="outline" size="sm" onClick={() => handleExport('PDF')}><FileDown className="mr-2 h-4 w-4" />PDF</Button>
+                <div className="flex gap-2 w-full sm:w-auto"> {/* Group export buttons */}
+                  <Button variant="outline" size="sm" className="flex-1" onClick={() => handleExport('CSV')}><FileDown className="mr-2 h-4 w-4" />CSV</Button> {/* Added flex-1 */}
+                  <Button variant="outline" size="sm" className="flex-1" onClick={() => handleExport('PDF')}><FileDown className="mr-2 h-4 w-4" />PDF</Button> {/* Added flex-1 */}
                 </div>
               </div>
             </CardHeader>

@@ -231,7 +231,7 @@ const EditProduct = () => {
             <CardHeader>
               <CardTitle>Details & Pricing</CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <CardContent className="grid grid-cols-1 gap-6"> {/* Changed md:grid-cols-2 to grid-cols-1 */}
               <FormItem>
                 <FormLabel>Article Number</FormLabel>
                 <Input value={product.articleNumber} disabled className="font-mono" />
@@ -328,13 +328,13 @@ const EditProduct = () => {
 
           <Separator />
 
-          <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
-            <div className="flex gap-4">
-              <Button type="submit">Save Product Details</Button>
-              <Button type="button" variant="secondary" onClick={handleToggleVisibility}>{product.visibility === "public" ? "Hide" : "Show"}</Button>
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-4"> {/* Adjusted for mobile stacking */}
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"> {/* Group buttons */}
+              <Button type="submit" className="w-full sm:w-auto">Save Product Details</Button>
+              <Button type="button" variant="secondary" onClick={handleToggleVisibility} className="w-full sm:w-auto">{product.visibility === "public" ? "Hide" : "Show"}</Button>
             </div>
             <AlertDialog>
-              <AlertDialogTrigger asChild><Button type="button" variant="destructive">Delete Product</Button></AlertDialogTrigger>
+              <AlertDialogTrigger asChild><Button type="button" variant="destructive" className="w-full sm:w-auto">Delete Product</Button></AlertDialogTrigger> {/* Adjusted for mobile */}
               <AlertDialogContent>
                 <AlertDialogHeader><AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle><AlertDialogDescription>This action cannot be undone. This will permanently delete your product listing and all its batches.</AlertDialogDescription></AlertDialogHeader>
                 <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleDeleteProduct}>Continue</AlertDialogAction></AlertDialogFooter>
