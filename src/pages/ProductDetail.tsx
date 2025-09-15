@@ -11,6 +11,7 @@ import {
   Edit,
   Wrench,
   Hash,
+  Eye, // Добавлена иконка Eye
 } from "lucide-react";
 import { mockProducts, mockSellers } from "@/data/mockData";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
@@ -163,6 +164,22 @@ const ProductDetail = () => {
             </p>
           </div>
         )}
+
+        {/* Available Quantity */}
+        <div className="flex items-center gap-2">
+          <Package className="h-5 w-5 text-muted-foreground" />
+          <p className="text-muted-foreground text-base">
+            Available: {totalAvailableQuantity} {unit}
+          </p>
+        </div>
+
+        {/* Product Visibility Status */}
+        <div className="flex items-center gap-2">
+          <Eye className="h-5 w-5 text-muted-foreground" />
+          <p className="text-muted-foreground text-base">
+            Status: {product.visibility === 'public' ? 'Public' : 'Hidden'}
+          </p>
+        </div>
       </div>
 
       <div className="mt-12">
