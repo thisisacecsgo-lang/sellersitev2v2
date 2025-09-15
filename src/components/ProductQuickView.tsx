@@ -5,6 +5,11 @@ import { Link } from "react-router-dom";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import CategoryIcon from "./CategoryIcon";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ProductQuickViewProps {
   product: Product;
@@ -14,9 +19,9 @@ export const ProductQuickView = ({ product }: ProductQuickViewProps) => {
   const imageUrl = product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls[0] : "/placeholder.svg";
 
   const shippingText = () => {
-    if (product.deliveryTimeInDays === 0) return "Ready to ship today";
-    if (product.deliveryTimeInDays === 1) return "Ready to ship in 1 day";
-    return `Ready to ship in ${product.deliveryTimeInDays} days`;
+    if (product.deliveryTimeInDays === 0) return "Today";
+    if (product.deliveryTimeInDays === 1) return "in 1 day";
+    return `in ${product.deliveryTimeInDays} days`;
   };
 
   const totalAvailableQuantity = product.batches.reduce((acc, b) => acc + parseFloat(b.availableQuantity), 0);
@@ -52,12 +57,34 @@ export const ProductQuickView = ({ product }: ProductQuickViewProps) => {
                 </p>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="secondary"><Hash className="h-3 w-3 mr-1" />{product.articleNumber}</Badge>
                 <Badge variant="secondary"><Truck className="h-3 w-3 mr-1" />{shippingText()}</Badge>
-                {product.isVegan && <Badge variant="outline"><Vegan className="h-3 w-3 mr-1" />Vegan</Badge>}
-                {product.isVegetarian && !product.isVegan && <Badge variant="outline"><Leaf className="h-3 w-3 mr-1" />Vegetarian</Badge>}
-                {product.harvestOnDemand && <Badge variant="outline"><Wrench className="h-3 w-3 mr-1" />Harvest on Demand</Badge>}
+                
+                {product.isVegan && (
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Badge variant="outline" className="p-2"><Vegan className="h-4 w-4" /></Badge>
+                        </TooltipTrigger>
+                        <TooltipContent><p>Vegan</p></TooltipContent>
+                    </Tooltip>
+                )}
+                {product.isVegetarian && !product.isVegan && (
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Badge variant="outline" className="p-2"><Leaf className="h-4 w-4" /></Badge>
+                        </TooltipTrigger>
+                        <TooltipContent><p>Vegetarian</p></TooltipContent>
+                    </Tooltip>
+                )}
+                {product.harvestOnDemand && (
+                    <Tooltip>
+                        <TooltipTrigger asChild>
+                            <Badge variant="outline" className="p-2"><Wrench className="h-4 w-4" /></Badge>
+                        </TooltipTrigger>
+                        <TooltipContent><p>Harvest on Demand</p></TooltipContent>
+                    </Tooltip>
+                )}
             </div>
 
             {product.description && (
