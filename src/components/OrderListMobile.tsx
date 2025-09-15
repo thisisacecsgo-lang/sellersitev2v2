@@ -19,6 +19,19 @@ interface OrderListMobileProps {
 }
 
 const OrderListMobile = ({ orders, noOrdersMessage, onStatusChange }: OrderListMobileProps) => {
+  const getStatusClasses = (status: Order['status']) => {
+    switch (status) {
+      case "Pending":
+        return "bg-yellow-500 text-white hover:bg-yellow-600";
+      case "Ready for Pickup":
+        return "bg-blue-500 text-white hover:bg-blue-600";
+      case "Completed":
+        return "bg-primary text-primary-foreground hover:bg-primary/90";
+      default:
+        return "";
+    }
+  };
+
   if (orders.length === 0) {
     return (
       <div className="text-center py-12 text-sm text-muted-foreground">
@@ -50,7 +63,7 @@ const OrderListMobile = ({ orders, noOrdersMessage, onStatusChange }: OrderListM
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Status:</span>
                 <Select value={order.status} onValueChange={(newStatus: Order['status']) => onStatusChange(order.id, newStatus)}>
-                  <SelectTrigger className="w-[100px] h-6 text-xs">
+                  <SelectTrigger className={cn("w-[100px] h-6 text-xs", getStatusClasses(order.status))}>
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>

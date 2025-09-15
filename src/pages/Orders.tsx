@@ -82,6 +82,19 @@ const Orders = () => {
     console.log(`Exporting ${filteredOrders.length} orders as ${format}`);
   };
 
+  const getStatusClasses = (status: Order['status']) => {
+    switch (status) {
+      case "Pending":
+        return "bg-yellow-500 text-white hover:bg-yellow-600";
+      case "Ready for Pickup":
+        return "bg-blue-500 text-white hover:bg-blue-600";
+      case "Completed":
+        return "bg-primary text-primary-foreground hover:bg-primary/90";
+      default:
+        return "";
+    }
+  };
+
   const OrderTable = ({ orders, noOrdersMessage, onStatusChange }: { orders: Order[], noOrdersMessage: string, onStatusChange: (orderId: string, newStatus: Order['status']) => void }) => (
     <div className="overflow-x-auto">
       <Table>
@@ -108,7 +121,7 @@ const Orders = () => {
                 <TableCell className="py-2 px-2 text-xs">{order.quantity}</TableCell>
                 <TableCell className="py-2 px-2">
                   <Select value={order.status} onValueChange={(newStatus: Order['status']) => onStatusChange(order.id, newStatus)}>
-                    <SelectTrigger className="w-[100px] h-6 text-xs">
+                    <SelectTrigger className={cn("w-[100px] h-6 text-xs", getStatusClasses(order.status))}>
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent>
