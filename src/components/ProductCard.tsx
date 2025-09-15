@@ -120,7 +120,6 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
 
           <div className="flex flex-wrap gap-1.5">
             <Badge variant="secondary" className="font-normal text-xs"><Hash className="h-3 w-3 mr-1" />{product.articleNumber}</Badge>
-            <Badge variant="secondary" className="font-normal text-xs"><MapPin className="h-3 w-3 mr-1" />{product.region}</Badge>
             <Badge variant="secondary" className="font-normal text-xs"><Truck className="h-3 w-3 mr-1" />{shippingText()}</Badge>
             <Badge variant="secondary" className="font-normal text-xs"><Package className="h-3 w-3 mr-1" />{totalAvailableQuantity} {unit}</Badge>
             <Badge variant="secondary" className="font-normal text-xs"><Eye className="h-3 w-3 mr-1" />{product.visibility === 'public' ? 'Public' : 'Hidden'}</Badge>
