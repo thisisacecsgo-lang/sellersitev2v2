@@ -28,6 +28,7 @@ const UpdateQuantity = () => {
   const [editingBatch, setEditingBatch] = useState<ProductBatch | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newQuantityInput, setNewQuantityInput] = useState("");
+  const [productUnit, setProductUnit] = useState<string>(""); // New state for product unit
 
   const parseQuantity = (quantityStr: string): { value: number, unit: string } => {
     const value = parseFloat(quantityStr) || 0;
@@ -36,20 +37,25 @@ const UpdateQuantity = () => {
   };
 
   useEffect(() => {
-    if (editingBatch) {
+    if (editingBatch && scannedProduct) {
       const { value } = parseQuantity(editingBatch.availableQuantity);
       setNewQuantityInput(String(value));
+      setProductUnit(scannedProduct.priceUnit); // Set the unit from the scanned product
+    } else {
+      setProductUnit(""); // Clear unit if no batch/product is being edited
     }
-  }, [editingBatch]);
+  }, [editingBatch, scannedProduct]);
 
   const handleArticleLookup = (articleNumber: string) => {
     if (!articleNumber.trim()) return;
     const product = mockProducts.find(p => p.articleNumber === articleNumber);
     if (product) {
       setScannedProduct(product);
+      setProductUnit(product.priceUnit); // Set the unit here
       showSuccess(`Product "${product.name}" found.`);
     } else {
       setScannedProduct(null);
+      setProductUnit(""); // Clear unit if product not found
       showError("Product not found for this article number.");
     }
   };
@@ -62,6 +68,7 @@ const UpdateQuantity = () => {
     }
     const randomProduct = sellerProducts[Math.floor(Math.random() * sellerProducts.length)];
     setScannedProduct(randomProduct);
+    setProductUnit(randomProduct.priceUnit); // Set the unit here
     showSuccess(`Simulated scan: Found "${randomProduct.name}".`);
   };
 
@@ -76,7 +83,8 @@ const UpdateQuantity = () => {
     const targetBatch = scannedProduct.batches.find(b => b.id === batchId);
     if (!targetBatch) return;
 
-    const { unit } = parseQuantity(targetBatch.availableQuantity);
+    // Use the product's priceUnit for consistency
+    const unit = scannedProduct.priceUnit; 
     const finalQuantity = Math.max(0, newQuantity);
 
     const updatedBatches = scannedProduct.batches.map(b =>
@@ -101,7 +109,7 @@ const UpdateQuantity = () => {
     const { value: currentValue } = parseQuantity(editingBatch.availableQuantity);
     const newValue = currentValue + amount;
     updateBatchQuantity(editingBatch.id, newValue);
-    showSuccess(`Quantity updated to ${newValue}.`);
+    showSuccess(`Quantity updated to ${newValue}${productUnit}.`);
   };
 
   const handleSetQuantity = () => {
@@ -112,7 +120,7 @@ const UpdateQuantity = () => {
       return;
     }
     updateBatchQuantity(editingBatch.id, newValue);
-    showSuccess("Batch quantity has been set.");
+    showSuccess(`Batch quantity has been set to ${newValue}${productUnit}.`);
     setIsDialogOpen(false);
   };
 
@@ -223,7 +231,9 @@ const UpdateQuantity = () => {
             <div className="space-y-6 py-4">
               <div className="text-center p-4 rounded-lg bg-secondary/30 border">
                 <p className="text-sm text-muted-foreground">Current Quantity</p>
-                <p className="text-4xl font-bold blitz-effect" key={editingBatch.availableQuantity}>{editingBatch.availableQuantity}</p>
+                <p className="text-4xl font-bold blitz-effect" key={editingBatch.availableQuantity}>
+                  {parseQuantity(editingBatch.availableQuantity).value} {productUnit}
+                </p>
               </div>
               
               <div className="space-y-2">
@@ -251,6 +261,7 @@ const UpdateQuantity = () => {
                     onChange={(e) => setNewQuantityInput(e.target.value)}
                     onKeyDown={(e) => { if (e.key === 'Enter') handleSetQuantity(); }}
                   />
+                  {productUnit && <span className="text-lg font-bold text-muted-foreground">{productUnit}</span>}
                   <Button variant="ghost" size="icon" onClick={() => setNewQuantityInput(String(parseInt(newQuantityInput, 10) + 1 || 1))}><Plus className="h-4 w-4" /></Button>
                 </div>
               </div>
