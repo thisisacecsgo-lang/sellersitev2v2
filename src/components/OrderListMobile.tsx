@@ -46,21 +46,21 @@ const OrderListMobile = ({ orders, noOrdersMessage }: OrderListMobileProps) => {
                 <Link to={`/product/${order.productId}`} className="font-semibold text-base hover:text-primary hover:underline">
                   {order.productName}
                 </Link>
-                <p className="text-sm text-muted-foreground">Client: {order.clientName}</p>
+                {/* Removed client name for better mobile readability */}
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <div>
-                <span className="text-muted-foreground">Quantity:</span>{" "}
+            <div className="space-y-2 text-sm pt-2 border-t mt-2"> {/* Added border-t and pt-2 for separation */}
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Quantity:</span>
                 <span className="font-medium">{order.quantity}</span>
               </div>
-              <div>
-                <span className="text-muted-foreground">Status:</span>{" "}
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Status:</span>
                 {getStatusBadge(order.status)}
               </div>
-              <div className="col-span-2">
-                <span className="text-muted-foreground">Pickup Ready From:</span>{" "}
-                <span className="font-medium">{format(parseISO(order.pickupWindowStart), "PPP HH:mm")}</span>
+              <div className="flex justify-between items-center">
+                <span className="text-muted-foreground">Pickup:</span> {/* Shortened label */}
+                <span className="font-medium">{format(parseISO(order.pickupWindowStart), "MMM d, HH:mm")}</span>
               </div>
             </div>
           </CardContent>
