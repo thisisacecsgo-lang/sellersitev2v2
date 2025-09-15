@@ -180,32 +180,30 @@ const UpdateQuantity = () => {
                   <CardDescription>Select a batch to update its quantity.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="overflow-x-auto"> {/* Added overflow-x-auto here */}
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Production Date</TableHead>
-                          <TableHead>Expiry Date</TableHead>
-                          <TableHead>Current Quantity</TableHead>
-                          <TableHead className="text-right">Actions</TableHead>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Production Date</TableHead>
+                        <TableHead>Expiry Date</TableHead>
+                        <TableHead>Current Quantity</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {scannedProduct.batches.map((batch) => (
+                        <TableRow key={batch.id}>
+                          <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
+                          <TableCell>{format(new Date(batch.expiryDate), "PPP")}</TableCell>
+                          <TableCell>
+                            <Badge variant="secondary">{batch.availableQuantity}</Badge>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <Button size="sm" onClick={() => handleOpenDialog(batch)}>Update</Button>
+                          </TableCell>
                         </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {scannedProduct.batches.map((batch) => (
-                          <TableRow key={batch.id}>
-                            <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
-                            <TableCell>{format(new Date(batch.expiryDate), "PPP")}</TableCell>
-                            <TableCell>
-                              <Badge variant="secondary">{batch.availableQuantity}</Badge>
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <Button size="sm" onClick={() => handleOpenDialog(batch)}>Update</Button>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </CardContent>
               </Card>
             </div>

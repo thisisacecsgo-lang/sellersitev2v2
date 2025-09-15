@@ -42,7 +42,7 @@ const Revenue = () => {
       <h1 className="text-3xl font-bold mb-6">Revenue Report</h1>
       <div className="space-y-8">
         <h2 className="text-2xl font-bold">Current Financial Overview</h2>
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2"> {/* Changed md:grid-cols-2 to grid-cols-1 sm:grid-cols-2 */}
+        <div className="grid gap-4 md:grid-cols-2">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
@@ -68,7 +68,7 @@ const Revenue = () => {
         <h2 className="text-2xl font-bold mt-8">Payment History</h2>
         <Card>
           <CardContent className="p-0">
-            <div className="overflow-x-auto"> {/* Added overflow-x-auto here */}
+            <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
                   <TableRow>

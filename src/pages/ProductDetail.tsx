@@ -11,7 +11,7 @@ import {
   Edit,
   Wrench,
   Hash,
-  Eye,
+  Eye, // Добавлена иконка Eye
 } from "lucide-react";
 import { mockProducts, mockSellers } from "@/data/mockData";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
@@ -73,9 +73,9 @@ const ProductDetail = () => {
     <div className="container mx-auto p-4 md:p-8">
       <BackButton />
       <AppBreadcrumb />
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="max-w-2xl mx-auto space-y-6"> {/* Centralized content, single column flow */}
         {/* Image Carousel */}
-        <Carousel className="w-full max-w-sm mx-auto relative">
+        <Carousel className="w-full relative">
           <CarouselContent>
             {product.imageUrls.map((img, index) => (
               <CarouselItem key={index}>
@@ -92,7 +92,7 @@ const ProductDetail = () => {
         </Carousel>
 
         {/* Product Name and Edit Button */}
-        <div className="flex flex-wrap items-center justify-between gap-3"> {/* Добавлен flex-wrap */}
+        <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <CategoryIcon category={product.category} className="h-6 w-6 text-muted-foreground" />
             <h1 className="text-3xl font-bold">{product.name}</h1>
@@ -185,48 +185,46 @@ const ProductDetail = () => {
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">Available Batches</h2>
         <Card>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Production Date</TableHead>
+                <TableHead>Best Before</TableHead>
+                <TableHead>Days Left</TableHead>
+                <TableHead>Available</TableHead>
+                <TableHead className="text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {product.batches.length > 0 ? (
+                product.batches.map(batch => {
+                  const expiry = new Date(batch.expiryDate);
+                  const daysLeft = differenceInDays(expiry, new Date());
+                  return (
+                    <TableRow key={batch.id}>
+                      <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
+                      <TableCell>{format(expiry, "PPP")}</TableCell>
+                      <TableCell>
+                        <Badge variant={daysLeft < 7 ? "destructive" : "secondary"}>
+                          {daysLeft > 0 ? `${daysLeft} days` : "Expired"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>{batch.availableQuantity}</TableCell>
+                      <TableCell className="text-right">
+                        <Button size="sm" disabled>Add to Cart</Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              ) : (
                 <TableRow>
-                  <TableHead>Production Date</TableHead>
-                  <TableHead>Best Before</TableHead>
-                  <TableHead>Days Left</TableHead>
-                  <TableHead>Available</TableHead>
-                  <TableHead className="text-right">Action</TableHead>
+                  <TableCell colSpan={5} className="text-center h-24">
+                    No available batches for this product.
+                  </TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {product.batches.length > 0 ? (
-                  product.batches.map(batch => {
-                    const expiry = new Date(batch.expiryDate);
-                    const daysLeft = differenceInDays(expiry, new Date());
-                    return (
-                      <TableRow key={batch.id}>
-                        <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
-                        <TableCell>{format(expiry, "PPP")}</TableCell>
-                        <TableCell>
-                          <Badge variant={daysLeft < 7 ? "destructive" : "secondary"}>
-                            {daysLeft > 0 ? `${daysLeft} days` : "Expired"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{batch.availableQuantity}</TableCell>
-                        <TableCell className="text-right">
-                          <Button size="sm" disabled>Add to Cart</Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center h-24">
-                      No available batches for this product.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
+              )}
+            </TableBody>
+          </Table>
         </Card>
       </div>
     </div>

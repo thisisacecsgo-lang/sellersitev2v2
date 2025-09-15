@@ -163,12 +163,7 @@ const EditProduct = () => {
       );
       setProduct({ ...product, batches: updatedBatches });
     } else { // Adding new batch
-      const newBatch: ProductBatch = { // Явно указываем тип ProductBatch
-        id: `batch-${Date.now()}`,
-        availableQuantity: values.availableQuantity,
-        productionDate: values.productionDate,
-        expiryDate: values.expiryDate,
-      };
+      const newBatch = { id: `batch-${Date.now()}`, ...values };
       const updatedBatches = [...product.batches, newBatch];
       setProduct({ ...product, batches: updatedBatches });
     }
@@ -236,7 +231,7 @@ const EditProduct = () => {
             <CardHeader>
               <CardTitle>Details & Pricing</CardTitle>
             </CardHeader>
-            <CardContent className="grid grid-cols-1 gap-6"> {/* Changed md:grid-cols-2 to grid-cols-1 */}
+            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormItem>
                 <FormLabel>Article Number</FormLabel>
                 <Input value={product.articleNumber} disabled className="font-mono" />
@@ -286,39 +281,37 @@ const EditProduct = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto"> {/* Added overflow-x-auto here */}
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Production Date</TableHead>
-                      <TableHead>Expiry Date</TableHead>
-                      <TableHead>Quantity</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Production Date</TableHead>
+                    <TableHead>Expiry Date</TableHead>
+                    <TableHead>Quantity</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {product.batches.map((batch) => (
+                    <TableRow key={batch.id}>
+                      <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
+                      <TableCell>{format(new Date(batch.expiryDate), "PPP")}</TableCell>
+                      <TableCell>{batch.availableQuantity}</TableCell>
+                      <TableCell className="text-right">
+                        <Button variant="ghost" size="sm" onClick={() => handleOpenBatchDialog(batch)}>Edit</Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader><AlertDialogTitle>Delete Batch?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this batch. This action cannot be undone.</AlertDialogDescription></AlertDialogHeader>
+                            <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDeleteBatch(batch.id)}>Delete</AlertDialogAction></AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {product.batches.map((batch) => (
-                      <TableRow key={batch.id}>
-                        <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
-                        <TableCell>{format(new Date(batch.expiryDate), "PPP")}</TableCell>
-                        <TableCell>{batch.availableQuantity}</TableCell>
-                        <TableCell className="text-right">
-                          <Button variant="ghost" size="sm" onClick={() => handleOpenBatchDialog(batch)}>Edit</Button>
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader><AlertDialogTitle>Delete Batch?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this batch. This action cannot be undone.</AlertDialogDescription></AlertDialogHeader>
-                              <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={() => handleDeleteBatch(batch.id)}>Delete</AlertDialogAction></AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
 
@@ -333,13 +326,13 @@ const EditProduct = () => {
 
           <Separator />
 
-          <div className="flex flex-col sm:flex-row sm:justify-between gap-4"> {/* Adjusted for mobile stacking */}
-            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"> {/* Group buttons */}
-              <Button type="submit" className="w-full sm:w-auto">Save Product Details</Button>
-              <Button type="button" variant="secondary" onClick={handleToggleVisibility} className="w-full sm:w-auto">{product.visibility === "public" ? "Hide" : "Show"}</Button>
+          <div className="flex flex-col sm:flex-row sm:justify-between gap-4">
+            <div className="flex gap-4">
+              <Button type="submit">Save Product Details</Button>
+              <Button type="button" variant="secondary" onClick={handleToggleVisibility}>{product.visibility === "public" ? "Hide" : "Show"}</Button>
             </div>
             <AlertDialog>
-              <AlertDialogTrigger asChild><Button type="button" variant="destructive" className="w-full sm:w-auto">Delete Product</Button></AlertDialogTrigger> {/* Adjusted for mobile */}
+              <AlertDialogTrigger asChild><Button type="button" variant="destructive">Delete Product</Button></AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader><AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle><AlertDialogDescription>This action cannot be undone. This will permanently delete your product listing and all its batches.</AlertDialogDescription></AlertDialogHeader>
                 <AlertDialogFooter><AlertDialogCancel>Cancel</AlertDialogCancel><AlertDialogAction onClick={handleDeleteProduct}>Continue</AlertDialogAction></AlertDialogFooter>
@@ -359,8 +352,8 @@ const EditProduct = () => {
           <Form {...batchForm}>
             <form onSubmit={batchForm.handleSubmit(onBatchSubmit)} className="space-y-4 py-4">
               <FormField control={batchForm.control} name="availableQuantity" render={({ field }) => (<FormItem><FormLabel>Available Quantity</FormLabel><FormControl><Input placeholder="e.g., 1kg or 1 dozen" {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={batchForm.control} name="productionDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Production Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>{field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value ? new Date(field.value) : undefined} onSelect={(date) => field.onChange(date?.toISOString() || '')} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)} />
-              <FormField control={batchForm.control} name="expiryDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Expiry Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>{field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value ? new Date(field.value) : undefined} onSelect={(date) => field.onChange(date?.toISOString() || '')} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)} />
+              <FormField control={batchForm.control} name="productionDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Production Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>{field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value ? new Date(field.value) : undefined} onSelect={(date) => field.onChange(date?.toISOString())} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)} />
+              <FormField control={batchForm.control} name="expiryDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Expiry Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>{field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value ? new Date(field.value) : undefined} onSelect={(date) => field.onChange(date?.toISOString())} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)} />
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setIsBatchDialogOpen(false)}>Cancel</Button>
                 <Button type="submit">Save Batch</Button>

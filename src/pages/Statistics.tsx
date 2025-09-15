@@ -38,15 +38,7 @@ import { Badge } from "@/components/ui/badge";
 
 const COLORS = ["#6B8E23", "#8B5E3C", "#D4E9D2", "#E9D8A6", "#A0522D", "#CD853F"];
 
-interface StatCardProps {
-  title: string;
-  value: number;
-  change?: number | null; // Сделано необязательным
-  icon: React.ElementType;
-  formatValue?: (v: number) => string;
-}
-
-const StatCard = ({ title, value, change, icon: Icon, formatValue = (v: number) => v.toString() }: StatCardProps) => (
+const StatCard = ({ title, value, change, icon: Icon, formatValue = (v: number) => v.toString() }) => (
   <Card>
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-sm font-medium">{title}</CardTitle>
@@ -54,7 +46,7 @@ const StatCard = ({ title, value, change, icon: Icon, formatValue = (v: number) 
     </CardHeader>
     <CardContent>
       <div className="text-2xl font-bold">{formatValue(value)}</div>
-      {change !== undefined && change !== null && ( // Проверяем, что change не null
+      {change !== undefined && change !== null && (
         <p className={`text-xs flex items-center ${change >= 0 ? 'text-green-600' : 'text-destructive'}`}>
           {change >= 0 ? <ArrowUp className="h-3 w-3 mr-1" /> : <ArrowDown className="h-3 w-3 mr-1" />}
           {change.toFixed(1)}% from last period
@@ -128,8 +120,8 @@ const Statistics = () => {
       summaryStats: {
         totalRevenue: { value: currentRevenue, change: revenueChange },
         totalOrders: { value: currentOrderCount, change: orderChange },
-        avgOrderValue: { value: currentOrderCount > 0 ? currentRevenue / currentOrderCount : 0, change: null }, // Добавлено change: null
-        returningCustomers: { value: returningCustomerPerc, change: null }, // Добавлено change: null
+        avgOrderValue: { value: currentOrderCount > 0 ? currentRevenue / currentOrderCount : 0 },
+        returningCustomers: { value: returningCustomerPerc },
       },
       salesOverTime: salesData,
       productPerformance: productPerf,
@@ -166,13 +158,13 @@ const Statistics = () => {
           <TabsTrigger value="products">Products</TabsTrigger>
         </TabsList>
         <TabsContent value="overview" className="space-y-8 mt-6">
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <StatCard title="Total Revenue" value={summaryStats.totalRevenue.value} change={summaryStats.totalRevenue.change} icon={DollarSign} formatValue={(v) => `€${v.toFixed(2)}`} />
             <StatCard title="Total Orders" value={summaryStats.totalOrders.value} change={summaryStats.totalOrders.change} icon={ShoppingCart} formatValue={(v) => v.toFixed(0)} />
-            <StatCard title="Avg. Order Value" value={summaryStats.avgOrderValue.value} change={summaryStats.avgOrderValue.change} icon={TrendingUp} formatValue={(v) => `€${v.toFixed(2)}`} />
-            <StatCard title="Returning Customers" value={summaryStats.returningCustomers.value} change={summaryStats.returningCustomers.change} icon={Users} formatValue={(v) => `${v.toFixed(1)}%`} />
+            <StatCard title="Avg. Order Value" value={summaryStats.avgOrderValue.value} icon={TrendingUp} formatValue={(v) => `€${v.toFixed(2)}`} />
+            <StatCard title="Returning Customers" value={summaryStats.returningCustomers.value} icon={Users} formatValue={(v) => `${v.toFixed(1)}%`} />
           </div>
-          <div className="grid grid-cols-1 gap-8">
+          <div className="grid lg:grid-cols-3 gap-8">
             <Card className="lg:col-span-2">
               <CardHeader><CardTitle>Sales Over Time</CardTitle></CardHeader>
               <CardContent>
@@ -207,37 +199,35 @@ const Statistics = () => {
             <CardHeader>
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <CardTitle>Product Performance</CardTitle>
-                <div className="flex gap-2 w-full sm:w-auto">
-                  <Button variant="outline" size="sm" className="flex-1" onClick={() => handleExport('CSV')}><FileDown className="mr-2 h-4 w-4" />CSV</Button>
-                  <Button variant="outline" size="sm" className="flex-1" onClick={() => handleExport('PDF')}><FileDown className="mr-2 h-4 w-4" />PDF</Button>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" onClick={() => handleExport('CSV')}><FileDown className="mr-2 h-4 w-4" />CSV</Button>
+                  <Button variant="outline" size="sm" onClick={() => handleExport('PDF')}><FileDown className="mr-2 h-4 w-4" />PDF</Button>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Rank</TableHead>
-                      <TableHead>Product</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Revenue</TableHead>
-                      <TableHead className="text-right">Units Sold</TableHead>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Rank</TableHead>
+                    <TableHead>Product</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead className="text-right">Revenue</TableHead>
+                    <TableHead className="text-right">Units Sold</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {productPerformance.map((product, index) => (
+                    <TableRow key={product.id}>
+                      <TableCell className="font-medium">{index + 1}</TableCell>
+                      <TableCell>{product.name}</TableCell>
+                      <TableCell><Badge variant={product.visibility === 'public' ? 'default' : 'secondary'}>{product.visibility}</Badge></TableCell>
+                      <TableCell className="text-right">€{product.revenue.toFixed(2)}</TableCell>
+                      <TableCell className="text-right">{product.unitsSold}</TableCell>
                     </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {productPerformance.map((product, index) => (
-                      <TableRow key={product.id}>
-                        <TableCell className="font-medium">{index + 1}</TableCell>
-                        <TableCell>{product.name}</TableCell>
-                        <TableCell><Badge variant={product.visibility === 'public' ? 'default' : 'secondary'}>{product.visibility}</Badge></TableCell>
-                        <TableCell className="text-right">€{product.revenue.toFixed(2)}</TableCell>
-                        <TableCell className="text-right">{product.unitsSold}</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
         </TabsContent>
