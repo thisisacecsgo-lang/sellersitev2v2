@@ -1,15 +1,10 @@
 import type { Product } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Tag, Info, Package, Eye, Edit, Truck, MapPin, Hash, Vegan, Leaf, Wrench } from "lucide-react";
+import { Tag, Info, Package, Eye, Edit, MapPin, Hash, Vegan, Leaf, Wrench } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import CategoryIcon from "./CategoryIcon";
 import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 
 interface ProductQuickViewProps {
   product: Product;
@@ -27,12 +22,8 @@ export const ProductQuickView = ({ product }: ProductQuickViewProps) => {
           <CategoryIcon category={product.category} className="h-6 w-6 text-muted-foreground" />
           <DialogTitle className="text-2xl">{product.name}</DialogTitle>
         </div>
-        <div className="flex items-center gap-2 text-muted-foreground text-sm pl-9">
-            <MapPin className="h-4 w-4" />
-            <span>{product.region}</span>
-        </div>
       </DialogHeader>
-      <div className="py-4 space-y-4 overflow-y-auto flex-1">
+      <div className="py-4 space-y-4 overflow-y-auto flex-1 custom-scrollbar">
         <div>
           <img
             src={imageUrl}
@@ -52,32 +43,13 @@ export const ProductQuickView = ({ product }: ProductQuickViewProps) => {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary"><Hash className="h-3 w-3 mr-1" />{product.articleNumber}</Badge>
-                
-                {product.isVegan && (
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Badge variant="outline" className="p-2"><Vegan className="h-4 w-4" /></Badge>
-                        </TooltipTrigger>
-                        <TooltipContent><p>Vegan</p></TooltipContent>
-                    </Tooltip>
-                )}
-                {product.isVegetarian && !product.isVegan && (
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Badge variant="outline" className="p-2"><Leaf className="h-4 w-4" /></Badge>
-                        </TooltipTrigger>
-                        <TooltipContent><p>Vegetarian</p></TooltipContent>
-                    </Tooltip>
-                )}
-                {product.harvestOnDemand && (
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Badge variant="outline" className="p-2"><Wrench className="h-4 w-4" /></Badge>
-                        </TooltipTrigger>
-                        <TooltipContent><p>Harvest on Demand</p></TooltipContent>
-                    </Tooltip>
-                )}
+                <Badge variant="secondary" className="font-normal text-xs"><Hash className="h-3 w-3 mr-1" />{product.articleNumber}</Badge>
+                <Badge variant="secondary" className="font-normal text-xs"><MapPin className="h-3 w-3 mr-1" />{product.region}</Badge>
+                <Badge variant="secondary" className="font-normal text-xs"><Package className="h-3 w-3 mr-1" />{totalAvailableQuantity} {product.priceUnit}</Badge>
+                <Badge variant="secondary" className="font-normal text-xs"><Eye className="h-3 w-3 mr-1" />{product.visibility === 'public' ? 'Public' : 'Hidden'}</Badge>
+                {product.isVegan && <Badge variant="outline" className="font-normal text-xs"><Vegan className="h-3 w-3 mr-1" />Vegan</Badge>}
+                {product.isVegetarian && !product.isVegan && <Badge variant="outline" className="font-normal text-xs"><Leaf className="h-3 w-3 mr-1" />Vegetarian</Badge>}
+                {product.harvestOnDemand && <Badge variant="outline" className="font-normal text-xs"><Wrench className="h-3 w-3 mr-1" />On Demand</Badge>}
             </div>
 
             {product.description && (
@@ -86,15 +58,6 @@ export const ProductQuickView = ({ product }: ProductQuickViewProps) => {
                 <p className="text-muted-foreground">{product.description}</p>
                 </div>
             )}
-
-            <div className="flex items-center gap-3 text-sm">
-                <Package className="h-4 w-4 text-muted-foreground" />
-                <p className="text-muted-foreground">Available: {totalAvailableQuantity} {product.priceUnit}</p>
-            </div>
-            <div className="flex items-center gap-3 text-sm">
-                <Eye className="h-4 w-4 text-muted-foreground" />
-                <p className="text-muted-foreground">Status: {product.visibility === 'public' ? 'Public' : 'Hidden'}</p>
-            </div>
 
             <div className="space-y-2 pt-4">
                 <Button size="lg" variant="outline" className="w-full" asChild>
