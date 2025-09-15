@@ -17,27 +17,53 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { format, isSameDay, parseISO, isAfter, addDays } from "date-fns";
 import { Calendar as CalendarIcon, Clock, ClipboardList, FileDown } from "lucide-react";
-import { showSuccess } from "@/utils/toast";
-import { useIsMobile } from "@/hooks/use-mobile"; // Import the hook
-import OrderListMobile from "@/components/OrderListMobile"; // Import the new component
+import { showSuccess, showError } from "@/utils/toast";
+import { useIsMobile } from "@/hooks/use-mobile";
+import OrderListMobile from "@/components/OrderListMobile";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import type { Order } from "@/types"; // Import Order type
 
 const Orders = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
-  const isMobile = useIsMobile(); // Use the hook
+  const [ordersData, setOrdersData] = useState<Order[]>(mockOrders); // Local state for orders
+  const isMobile = useIsMobile();
+
+  const handleStatusChange = (orderId: string, newStatus: Order['status']) => {
+    const orderIndex = ordersData.findIndex(o => o.id === orderId);
+    if (orderIndex !== -1) {
+      const updatedOrders = [...ordersData];
+      updatedOrders[orderIndex] = { ...updatedOrders[orderIndex], status: newStatus };
+      setOrdersData(updatedOrders); // Update local state
+      // Also update the global mock data to persist across navigations (for demo purposes)
+      const mockOrderIndex = mockOrders.findIndex(o => o.id === orderId);
+      if (mockOrderIndex !== -1) {
+        mockOrders[mockOrderIndex] = updatedOrders[orderIndex];
+      }
+      showSuccess(`Order ${orderId} status updated to ${newStatus}.`);
+    } else {
+      showError(`Failed to update status for order ${orderId}.`);
+    }
+  };
 
   const filteredOrders = useMemo(() => {
     if (!date) return [];
-    return mockOrders.filter((order) =>
+    return ordersData.filter((order) =>
       isSameDay(parseISO(order.pickupWindowStart), date)
     ).sort((a, b) => parseISO(a.pickupWindowStart).getTime() - parseISO(b.pickupWindowStart).getTime());
-  }, [date]);
+  }, [date, ordersData]);
 
   const tomorrowsOrders = useMemo(() => {
     const tomorrow = addDays(new Date(), 1);
-    return mockOrders.filter((order) =>
+    return ordersData.filter((order) =>
       isSameDay(parseISO(order.pickupWindowStart), tomorrow)
     ).sort((a, b) => parseISO(a.pickupWindowStart).getTime() - parseISO(b.pickupWindowStart).getTime());
-  }, []);
+  }, [ordersData]);
 
   const { totalOrders, nextPickup } = useMemo(() => {
     const now = new Date();
@@ -51,26 +77,12 @@ const Orders = () => {
     };
   }, [filteredOrders]);
 
-  const getStatusBadge = (status: "Pending" | "Ready for Pickup" | "Completed") => {
-    const baseClasses = "w-16 h-5 text-xs flex items-center justify-center";
-    switch (status) {
-      case "Pending":
-        return <Badge variant="secondary" className={baseClasses}>Pending</Badge>;
-      case "Ready for Pickup":
-        return <Badge className={cn("bg-blue-500 text-white hover:bg-blue-600", baseClasses)}>Ready</Badge>;
-      case "Completed":
-        return <Badge className={cn("bg-primary text-primary-foreground hover:bg-primary/90", baseClasses)}>Done</Badge>;
-      default:
-        return <Badge className={baseClasses}>{status}</Badge>;
-    }
-  };
-
   const handleExport = (format: 'CSV' | 'PDF') => {
     showSuccess(`Exporting orders as ${format}... (demo)`);
     console.log(`Exporting ${filteredOrders.length} orders as ${format}`);
   };
 
-  const OrderTable = ({ orders, noOrdersMessage }: { orders: typeof mockOrders, noOrdersMessage: string }) => (
+  const OrderTable = ({ orders, noOrdersMessage, onStatusChange }: { orders: Order[], noOrdersMessage: string, onStatusChange: (orderId: string, newStatus: Order['status']) => void }) => (
     <div className="overflow-x-auto">
       <Table>
         <TableHeader>
@@ -94,7 +106,18 @@ const Orders = () => {
                   </Link>
                 </TableCell>
                 <TableCell className="py-2 px-2 text-xs">{order.quantity}</TableCell>
-                <TableCell className="py-2 px-2">{getStatusBadge(order.status)}</TableCell>
+                <TableCell className="py-2 px-2">
+                  <Select value={order.status} onValueChange={(newStatus: Order['status']) => onStatusChange(order.id, newStatus)}>
+                    <SelectTrigger className="w-[100px] h-6 text-xs">
+                      <SelectValue placeholder="Status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Pending">Pending</SelectItem>
+                      <SelectItem value="Ready for Pickup">Ready</SelectItem>
+                      <SelectItem value="Completed">Done</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </TableCell>
                 <TableCell className="text-right py-2 px-2 text-xs">
                   {format(parseISO(order.pickupWindowStart), "HH:mm")}
                 </TableCell>
@@ -179,9 +202,9 @@ const Orders = () => {
         </CardHeader>
         <CardContent>
           {isMobile ? (
-            <OrderListMobile orders={filteredOrders} noOrdersMessage="No orders for this date." />
+            <OrderListMobile orders={filteredOrders} noOrdersMessage="No orders for this date." onStatusChange={handleStatusChange} />
           ) : (
-            <OrderTable orders={filteredOrders} noOrdersMessage="No orders for this date." />
+            <OrderTable orders={filteredOrders} noOrdersMessage="No orders for this date." onStatusChange={handleStatusChange} />
           )}
         </CardContent>
       </Card>
@@ -192,9 +215,9 @@ const Orders = () => {
         </CardHeader>
         <CardContent>
           {isMobile ? (
-            <OrderListMobile orders={tomorrowsOrders} noOrdersMessage="No orders for tomorrow." />
+            <OrderListMobile orders={tomorrowsOrders} noOrdersMessage="No orders for tomorrow." onStatusChange={handleStatusChange} />
           ) : (
-            <OrderTable orders={tomorrowsOrders} noOrdersMessage="No orders for tomorrow." />
+            <OrderTable orders={tomorrowsOrders} noOrdersMessage="No orders for tomorrow." onStatusChange={handleStatusChange} />
           )}
         </CardContent>
       </Card>

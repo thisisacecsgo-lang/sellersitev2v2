@@ -4,27 +4,21 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Order } from "@/types";
 import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface OrderListMobileProps {
   orders: Order[];
   noOrdersMessage: string;
+  onStatusChange: (orderId: string, newStatus: Order['status']) => void;
 }
 
-const OrderListMobile = ({ orders, noOrdersMessage }: OrderListMobileProps) => {
-  const getStatusBadge = (status: "Pending" | "Ready for Pickup" | "Completed") => {
-    const baseClasses = "w-16 h-5 text-xs flex items-center justify-center";
-    switch (status) {
-      case "Pending":
-        return <Badge variant="secondary" className={baseClasses}>Pending</Badge>;
-      case "Ready for Pickup":
-        return <Badge className={cn("bg-blue-500 text-white hover:bg-blue-600", baseClasses)}>Ready</Badge>;
-      case "Completed":
-        return <Badge className={cn("bg-primary text-primary-foreground hover:bg-primary/90", baseClasses)}>Done</Badge>;
-      default:
-        return <Badge className={baseClasses}>{status}</Badge>;
-    }
-  };
-
+const OrderListMobile = ({ orders, noOrdersMessage, onStatusChange }: OrderListMobileProps) => {
   if (orders.length === 0) {
     return (
       <div className="text-center py-12 text-sm text-muted-foreground">
@@ -46,20 +40,28 @@ const OrderListMobile = ({ orders, noOrdersMessage }: OrderListMobileProps) => {
                 <Link to={`/product/${order.productId}`} className="font-semibold text-base hover:text-primary hover:underline">
                   {order.productName}
                 </Link>
-                {/* Removed client name for better mobile readability */}
               </div>
             </div>
-            <div className="space-y-2 text-sm pt-2 border-t mt-2"> {/* Added border-t and pt-2 for separation */}
+            <div className="space-y-2 text-sm pt-2 border-t mt-2">
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Quantity:</span>
                 <span className="font-medium">{order.quantity}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Status:</span>
-                {getStatusBadge(order.status)}
+                <Select value={order.status} onValueChange={(newStatus: Order['status']) => onStatusChange(order.id, newStatus)}>
+                  <SelectTrigger className="w-[100px] h-6 text-xs">
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Pending">Pending</SelectItem>
+                    <SelectItem value="Ready for Pickup">Ready</SelectItem>
+                    <SelectItem value="Completed">Done</SelectItem>
+                  </SelectContent>
+                </Select>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-muted-foreground">Pickup:</span> {/* Shortened label */}
+                <span className="text-muted-foreground">Pickup:</span>
                 <span className="font-medium">{format(parseISO(order.pickupWindowStart), "MMM d, HH:mm")}</span>
               </div>
             </div>
