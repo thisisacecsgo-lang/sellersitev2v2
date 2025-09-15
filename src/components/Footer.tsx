@@ -11,7 +11,7 @@ export const Footer = () => {
               <img
                   src="/images/logooo.png"
                   alt="Мой логотип"
-                  className="h-13 w-16"
+                  className="h-10 w-12 sm:h-13 sm:w-16" // Уменьшен размер для мобильных устройств
               />
               {/* Removed: <span className="text-xl font-bold text-foreground">
                 Hiesige Höfe
