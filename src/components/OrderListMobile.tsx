@@ -11,6 +11,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { formatOrderQuantity } from "@/utils/orderFormatting"; // Import the new utility
 
 interface OrderListMobileProps {
   orders: Order[];
@@ -58,7 +59,7 @@ const OrderListMobile = ({ orders, noOrdersMessage, onStatusChange }: OrderListM
             <div className="space-y-2 text-sm pt-2 border-t mt-2">
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Quantity:</span>
-                <span className="font-medium">{order.quantity}</span>
+                <span className="font-medium">{formatOrderQuantity(order)}</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-muted-foreground">Status:</span>

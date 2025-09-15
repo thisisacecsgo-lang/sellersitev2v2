@@ -28,6 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { Order } from "@/types"; // Import Order type
+import { formatOrderQuantity } from "@/utils/orderFormatting"; // Import the new utility
 
 const Orders = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
@@ -118,7 +119,7 @@ const Orders = () => {
                     <span className="font-medium text-xs group-hover:text-primary group-hover:underline">{order.productName}</span>
                   </Link>
                 </TableCell>
-                <TableCell className="py-2 px-2 text-xs">{order.quantity}</TableCell>
+                <TableCell className="py-2 px-2 text-xs">{formatOrderQuantity(order)}</TableCell>
                 <TableCell className="py-2 px-2">
                   <Select value={order.status} onValueChange={(newStatus: Order['status']) => onStatusChange(order.id, newStatus)}>
                     <SelectTrigger className={cn("w-[100px] h-6 text-xs", getStatusClasses(order.status))}>
