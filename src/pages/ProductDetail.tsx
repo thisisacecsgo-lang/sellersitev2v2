@@ -11,7 +11,7 @@ import {
   Edit,
   Wrench,
   Hash,
-  Eye, // Добавлена иконка Eye
+  Eye,
 } from "lucide-react";
 import { mockProducts, mockSellers } from "@/data/mockData";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
@@ -73,9 +73,9 @@ const ProductDetail = () => {
     <div className="container mx-auto p-4 md:p-8">
       <BackButton />
       <AppBreadcrumb />
-      <div className="max-w-2xl mx-auto space-y-6"> {/* Centralized content, single column flow */}
+      <div className="max-w-2xl mx-auto space-y-6">
         {/* Image Carousel */}
-        <Carousel className="w-full max-w-sm mx-auto relative"> {/* Added max-w-sm mx-auto here */}
+        <Carousel className="w-full max-w-sm mx-auto relative">
           <CarouselContent>
             {product.imageUrls.map((img, index) => (
               <CarouselItem key={index}>
@@ -92,7 +92,7 @@ const ProductDetail = () => {
         </Carousel>
 
         {/* Product Name and Edit Button */}
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3"> {/* Добавлен flex-wrap */}
           <div className="flex items-center gap-3">
             <CategoryIcon category={product.category} className="h-6 w-6 text-muted-foreground" />
             <h1 className="text-3xl font-bold">{product.name}</h1>
@@ -185,7 +185,7 @@ const ProductDetail = () => {
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">Available Batches</h2>
         <Card>
-          <div className="overflow-x-auto"> {/* Added overflow-x-auto here */}
+          <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
