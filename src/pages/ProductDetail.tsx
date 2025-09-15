@@ -19,7 +19,7 @@ import { format, differenceInDays } from "date-fns";
 import BackButton from "@/components/BackButton";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import CategoryIcon from "@/components/CategoryIcon";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -183,42 +183,82 @@ const ProductDetail = () => {
           </Button>
         </div>
         <Card>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Production Date</TableHead>
-                <TableHead>Best Before</TableHead>
-                <TableHead>Days Left</TableHead>
-                <TableHead>Available</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {product.batches.length > 0 ? (
-                product.batches.map(batch => {
-                  const expiry = new Date(batch.expiryDate);
-                  const daysLeft = differenceInDays(expiry, new Date());
-                  return (
-                    <TableRow key={batch.id}>
-                      <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
-                      <TableCell>{format(expiry, "PPP")}</TableCell>
-                      <TableCell>
-                        <Badge variant={daysLeft < 7 ? "destructive" : "secondary"}>
-                          {daysLeft > 0 ? `${daysLeft} days` : "Expired"}
-                        </Badge>
+          <CardContent className="p-0">
+            {/* Desktop Table */}
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Production Date</TableHead>
+                    <TableHead>Best Before</TableHead>
+                    <TableHead>Days Left</TableHead>
+                    <TableHead>Available</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {product.batches.length > 0 ? (
+                    product.batches.map(batch => {
+                      const expiry = new Date(batch.expiryDate);
+                      const daysLeft = differenceInDays(expiry, new Date());
+                      return (
+                        <TableRow key={batch.id}>
+                          <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
+                          <TableCell>{format(expiry, "PPP")}</TableCell>
+                          <TableCell>
+                            <Badge variant={daysLeft < 7 ? "destructive" : "secondary"}>
+                              {daysLeft > 0 ? `${daysLeft} days` : "Expired"}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{batch.availableQuantity}</TableCell>
+                        </TableRow>
+                      );
+                    })
+                  ) : (
+                    <TableRow>
+                      <TableCell colSpan={4} className="text-center h-24">
+                        No available batches for this product.
                       </TableCell>
-                      <TableCell>{batch.availableQuantity}</TableCell>
                     </TableRow>
-                  );
-                })
+                  )}
+                </TableBody>
+              </Table>
+            </div>
+            {/* Mobile Card List */}
+            <div className="md:hidden">
+              {product.batches.length > 0 ? (
+                <div className="space-y-4 p-4">
+                  {product.batches.map(batch => {
+                    const expiry = new Date(batch.expiryDate);
+                    const daysLeft = differenceInDays(expiry, new Date());
+                    return (
+                      <div key={batch.id} className="border rounded-lg p-4 space-y-2 text-sm">
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Production Date</span>
+                          <span className="font-medium">{format(new Date(batch.productionDate), "PPP")}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Best Before</span>
+                          <span className="font-medium">{format(expiry, "PPP")}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Days Left</span>
+                          <Badge variant={daysLeft < 7 ? "destructive" : "secondary"}>
+                            {daysLeft > 0 ? `${daysLeft} days` : "Expired"}
+                          </Badge>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-muted-foreground">Available</span>
+                          <span className="font-medium">{batch.availableQuantity}</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               ) : (
-                <TableRow>
-                  <TableCell colSpan={4} className="text-center h-24">
-                    No available batches for this product.
-                  </TableCell>
-                </TableRow>
+                <p className="text-center text-muted-foreground p-12">No available batches for this product.</p>
               )}
-            </TableBody>
-          </Table>
+            </div>
+          </CardContent>
         </Card>
       </div>
     </div>
