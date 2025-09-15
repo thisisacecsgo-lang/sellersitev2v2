@@ -144,7 +144,7 @@ const Orders = () => {
                   <Button
                     variant={"outline"}
                     className={cn(
-                      "w-[240px] justify-start text-left font-normal",
+                      "w-full sm:w-[240px] justify-start text-left font-normal", // Changed w-[240px] to w-full sm:w-[240px]
                       !date && "text-muted-foreground"
                     )}
                   >
