@@ -23,29 +23,31 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <Toaster /> {/* Перемещено сюда */}
-    <Sonner /> {/* Перемещено сюда */}
+    <Toaster />
+    <Sonner />
     <TooltipProvider>
       <BrowserRouter>
-        <ScrollToTop />
-        <Routes>
-          <Route element={<Layout />}>
-            <Route path="/" element={<SellerProfile />} />
-            <Route path="/product/new" element={<CreateProduct />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-            <Route path="/product/:id/edit" element={<EditProduct />} />
-            <Route path="/seller/:id" element={<SellerProfile />} />
-            <Route path="/seller/:id/edit" element={<EditSellerProfile />} />
-            <Route path="/update-quantity" element={<UpdateQuantity />} />
-            <Route path="/orders" element={<Orders />} />
-            <Route path="/revenue" element={<Revenue />} />
-            <Route path="/my-reviews" element={<MyReviews />} />
-            <Route path="/faq" element={<FAQ />} />
-            <Route path="/statistics" element={<Statistics />} />
-            <Route path="/generate-qrcodes" element={<GenerateQrCodes />} />
-            <Route path="*" element={<NotFound />} />
-          </Route>
-        </Routes>
+        <> {/* Обертываем ScrollToTop и Routes в один фрагмент */}
+          <ScrollToTop />
+          <Routes>
+            <Route element={<Layout />}>
+              <Route path="/" element={<SellerProfile />} />
+              <Route path="/product/new" element={<CreateProduct />} />
+              <Route path="/product/:id" element={<ProductDetail />} />
+              <Route path="/product/:id/edit" element={<EditProduct />} />
+              <Route path="/seller/:id" element={<SellerProfile />} />
+              <Route path="/seller/:id/edit" element={<EditSellerProfile />} />
+              <Route path="/update-quantity" element={<UpdateQuantity />} />
+              <Route path="/orders" element={<Orders />} />
+              <Route path="/revenue" element={<Revenue />} />
+              <Route path="/my-reviews" element={<MyReviews />} />
+              <Route path="/faq" element={<FAQ />} />
+              <Route path="/statistics" element={<Statistics />} />
+              <Route path="/generate-qrcodes" element={<GenerateQrCodes />} />
+              <Route path="*" element={<NotFound />} />
+            </Route>
+          </Routes>
+        </>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
