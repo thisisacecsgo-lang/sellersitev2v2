@@ -112,24 +112,21 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
             </div>
           )}
         </CardHeader>
-        <CardContent className="p-4 flex-grow flex flex-col space-y-2">
+        <CardContent className="p-4 flex-grow flex flex-col space-y-3">
           <div className="flex items-start gap-2 min-h-12">
             <CategoryIcon category={product.category} className="h-6 w-6 text-muted-foreground mt-0.5 flex-shrink-0" />
             <h3 className="text-lg font-bold leading-tight">{product.name}</h3>
           </div>
 
-          <div className="grid grid-cols-2 gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
-            <div className="flex items-center gap-1.5"><Hash className="h-3 w-3 flex-shrink-0" /><span>{product.articleNumber}</span></div>
-            <div className="flex items-center gap-1.5"><MapPin className="h-3 w-3 flex-shrink-0" /><span>{product.region}</span></div>
-            <div className="flex items-center gap-1.5"><Truck className="h-3 w-3 flex-shrink-0" /><span>Ships: {shippingText()}</span></div>
-            <div className="flex items-center gap-1.5"><Package className="h-3 w-3 flex-shrink-0" /><span>{totalAvailableQuantity} {unit}</span></div>
-            <div className="flex items-center gap-1.5 col-span-2"><Eye className="h-3 w-3 flex-shrink-0" /><span>Status: {product.visibility === 'public' ? 'Public' : 'Hidden'}</span></div>
-          </div>
-
-          <div className="flex flex-wrap gap-1 pt-1">
-            {product.isVegan && <Badge variant="outline" className="font-normal text-xs px-1.5 py-0.5"><Vegan className="h-3 w-3 mr-1" />Vegan</Badge>}
-            {product.isVegetarian && !product.isVegan && <Badge variant="outline" className="font-normal text-xs px-1.5 py-0.5"><Leaf className="h-3 w-3 mr-1" />Vegetarian</Badge>}
-            {product.harvestOnDemand && <Badge variant="outline" className="font-normal text-xs px-1.5 py-0.5"><Wrench className="h-3 w-3 mr-1" />Harvest on Demand</Badge>}
+          <div className="flex flex-wrap gap-1.5">
+            <Badge variant="secondary" className="font-normal text-xs"><Hash className="h-3 w-3 mr-1" />{product.articleNumber}</Badge>
+            <Badge variant="secondary" className="font-normal text-xs"><MapPin className="h-3 w-3 mr-1" />{product.region}</Badge>
+            <Badge variant="secondary" className="font-normal text-xs"><Truck className="h-3 w-3 mr-1" />{shippingText()}</Badge>
+            <Badge variant="secondary" className="font-normal text-xs"><Package className="h-3 w-3 mr-1" />{totalAvailableQuantity} {unit}</Badge>
+            <Badge variant="secondary" className="font-normal text-xs"><Eye className="h-3 w-3 mr-1" />{product.visibility === 'public' ? 'Public' : 'Hidden'}</Badge>
+            {product.isVegan && <Badge variant="outline" className="font-normal text-xs"><Vegan className="h-3 w-3 mr-1" />Vegan</Badge>}
+            {product.isVegetarian && !product.isVegan && <Badge variant="outline" className="font-normal text-xs"><Leaf className="h-3 w-3 mr-1" />Vegetarian</Badge>}
+            {product.harvestOnDemand && <Badge variant="outline" className="font-normal text-xs"><Wrench className="h-3 w-3 mr-1" />On Demand</Badge>}
           </div>
 
           <div className="flex-grow"></div>
