@@ -206,28 +206,30 @@ const Statistics = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Rank</TableHead>
-                    <TableHead>Product</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Revenue</TableHead>
-                    <TableHead className="text-right">Units Sold</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {productPerformance.map((product, index) => (
-                    <TableRow key={product.id}>
-                      <TableCell className="font-medium">{index + 1}</TableCell>
-                      <TableCell>{product.name}</TableCell>
-                      <TableCell><Badge variant={product.visibility === 'public' ? 'default' : 'secondary'}>{product.visibility}</Badge></TableCell>
-                      <TableCell className="text-right">€{product.revenue.toFixed(2)}</TableCell>
-                      <TableCell className="text-right">{product.unitsSold}</TableCell>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Rank</TableHead>
+                      <TableHead>Product</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Revenue</TableHead>
+                      <TableHead className="text-right">Units Sold</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {productPerformance.map((product, index) => (
+                      <TableRow key={product.id}>
+                        <TableCell className="font-medium">{index + 1}</TableCell>
+                        <TableCell>{product.name}</TableCell>
+                        <TableCell><Badge variant={product.visibility === 'public' ? 'default' : 'secondary'}>{product.visibility}</Badge></TableCell>
+                        <TableCell className="text-right">€{product.revenue.toFixed(2)}</TableCell>
+                        <TableCell className="text-right">{product.unitsSold}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
