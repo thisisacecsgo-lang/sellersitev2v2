@@ -4,11 +4,10 @@ import {
   CardContent,
   CardFooter,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/types";
-import { Tag, Info, Package, Eye, Edit, MoreVertical, EyeOff, Trash2, Hash, Truck } from "lucide-react";
+import { Tag, Package, Eye, Edit, MoreVertical, EyeOff, Trash2, Hash, Truck, MapPin, Leaf, Vegan, Wrench, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -31,7 +30,7 @@ import {
 import { ProductQuickView } from "./ProductQuickView";
 import { cn } from "@/lib/utils";
 import CategoryIcon from "./CategoryIcon";
-import { format, formatDistanceToNowStrict, isAfter } from "date-fns";
+import { Badge } from "@/components/ui/badge";
 
 interface ProductCardProps {
   product: Product;
@@ -47,26 +46,16 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
 
   const imageUrl = product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls[0] : "/placeholder.svg";
 
-  const freshestBatch = product.batches.length > 0 ? product.batches.reduce((a, b) => new Date(a.productionDate) > new Date(b.productionDate) ? a : b) : null;
-  const isAvailableInFuture = freshestBatch && isAfter(new Date(freshestBatch.productionDate), new Date());
-
-  const availabilityText = () => {
-    if (!isAvailableInFuture || !freshestBatch) return null;
-    const date = new Date(freshestBatch.productionDate);
-    const distance = formatDistanceToNowStrict(date, { addSuffix: true });
-    return `Available ${distance} (${format(date, "MMM d")})`;
-  };
-
   const totalAvailableQuantity = product.batches.reduce((acc, batch) => {
     const quantity = parseFloat(batch.availableQuantity) || 0;
     return acc + quantity;
   }, 0);
-  const unit = product.batches.length > 0 ? (product.batches[0].availableQuantity.replace(/[0-9.,]/g, '').trim()) : '';
+  const unit = product.priceUnit;
 
   const shippingText = () => {
-    if (product.deliveryTimeInDays === 0) return "Ready to ship today";
-    if (product.deliveryTimeInDays === 1) return "Ready to ship in 1 day";
-    return `Ready to ship in ${product.deliveryTimeInDays} days`;
+    if (product.deliveryTimeInDays === 0) return "Today";
+    if (product.deliveryTimeInDays === 1) return "in 1 day";
+    return `in ${product.deliveryTimeInDays} days`;
   };
 
   return (
@@ -78,7 +67,7 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
               <img
                 src={imageUrl}
                 alt={product.name}
-                className="w-full aspect-square object-cover transition-transform duration-300 group-hover:scale-105"
+                className="w-full aspect-[16/9] object-cover transition-transform duration-300 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                 <div className="bg-secondary text-secondary-foreground p-3 rounded-full">
@@ -123,47 +112,45 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
             </div>
           )}
         </CardHeader>
-        <CardContent className="p-3 flex-grow">
-          <CardTitle className="text-base font-bold mb-1 leading-tight">
-            <Link to={`/product/${product.id}`} className="hover:text-primary transition-colors flex items-start gap-2">
-              <CategoryIcon category={product.category} className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
-              <span>{product.name}</span>
-            </Link>
-          </CardTitle>
-          {isAvailableInFuture && (
-            <div className="flex items-center gap-2 text-sm text-primary font-medium mb-1">
-              <Calendar className="h-4 w-4" />
-              <span>{availabilityText()}</span>
-            </div>
-          )}
-          <div className="flex items-center gap-2">
-            <Tag className="h-4 w-4 text-primary" />
-            <p className="text-base font-semibold text-primary">
+        <CardContent className="p-4 flex-grow flex flex-col space-y-3">
+          <div className="flex items-start gap-2">
+            <CategoryIcon category={product.category} className="h-6 w-6 text-muted-foreground mt-0.5 flex-shrink-0" />
+            <h3 className="text-lg font-bold leading-tight">{product.name}</h3>
+          </div>
+
+          <div className="space-y-1 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2"><Hash className="h-4 w-4" /><span>{product.articleNumber}</span></div>
+            <div className="flex items-center gap-2"><MapPin className="h-4 w-4" /><span>{product.region}</span></div>
+            <div className="flex items-center gap-2"><Truck className="h-4 w-4" /><span>Earliest shipping: {shippingText()}</span></div>
+            <div className="flex items-center gap-2"><Package className="h-4 w-4" /><span>{totalAvailableQuantity} {unit} available</span></div>
+            <div className="flex items-center gap-2"><Eye className="h-4 w-4" /><span>Status: {product.visibility === 'public' ? 'Public' : 'Hidden'}</span></div>
+          </div>
+
+          <div className="flex flex-wrap gap-2 pt-1">
+            {product.isVegan && <Badge variant="outline" className="font-normal"><Vegan className="h-3 w-3 mr-1.5" />Vegan</Badge>}
+            {product.isVegetarian && !product.isVegan && <Badge variant="outline" className="font-normal"><Leaf className="h-3 w-3 mr-1.5" />Vegetarian</Badge>}
+            {product.harvestOnDemand && <Badge variant="outline" className="font-normal"><Wrench className="h-3 w-3 mr-1.5" />Harvest on Demand</Badge>}
+          </div>
+
+          <div className="flex-grow"></div>
+
+          <div className="flex items-center gap-2 pt-2">
+            <Tag className="h-5 w-5 text-primary" />
+            <p className="text-xl font-bold text-primary">
               {typeof product.price === "number"
                 ? `€${product.price.toFixed(2)} / ${product.priceUnit}`
                 : "Free"}
             </p>
           </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-            <Package className="h-4 w-4" />
-            <span>{totalAvailableQuantity} {unit}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-            <Truck className="h-4 w-4" />
-            <span>{shippingText()}</span>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
-            <Eye className="h-4 w-4" />
-            <span>{product.visibility === 'public' ? 'Public' : 'Hidden'}</span>
-          </div>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-            <Hash className="h-3 w-3" />
-            <span>{product.articleNumber}</span>
-          </div>
         </CardContent>
-        <CardFooter className="p-3 pt-0">
-          <Button className="w-full" size="sm" asChild>
-            <Link to={`/product/${product.id}`}>View Details</Link>
+        <CardFooter className="p-3 grid grid-cols-2 gap-2">
+          <Button variant="outline" className="w-full" asChild>
+            <Link to={`/product/${product.id}`}>
+              <Eye className="mr-2 h-4 w-4" /> View
+            </Link>
+          </Button>
+          <Button className="w-full" disabled>
+            <ShoppingCart className="mr-2 h-4 w-4" /> Add to Cart
           </Button>
         </CardFooter>
       </Card>
