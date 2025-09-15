@@ -1,26 +1,31 @@
+import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
+import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import {
   Tag,
   MapPin,
-  Package,
   Info,
+  User,
   Vegan,
   Leaf,
   Truck,
-  Edit,
-  Wrench,
-  Hash,
-  Eye, // Добавлена иконка Eye
+  Sprout,
+  Calendar,
 } from "lucide-react";
 import { mockProducts, mockSellers } from "@/data/mockData";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
-import { format, differenceInDays } from "date-fns";
 import BackButton from "@/components/BackButton";
+import { Footer } from "@/components/Footer";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import ProductCard from "@/components/ProductCard";
 import CategoryIcon from "@/components/CategoryIcon";
-import { Card } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import BatchesTable from "@/components/BatchesTable";
+import { formatPrice } from "@/lib/utils";
+import { StarRating } from "@/components/StarRating"; // Corrected import
+import CopyableBadge from "@/components/CopyableBadge";
 import { Badge } from "@/components/ui/badge";
 import {
   Tooltip,
@@ -28,7 +33,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { showSuccess } from "@/utils/toast";
+import { format } from "date-fns";
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -38,197 +43,230 @@ const ProductDetail = () => {
     ? mockSellers.find((s) => s.id === product.sellerId)
     : undefined;
 
+  const earliestProductionDate = useMemo(() => {
+    if (!product || !product.batches || product.batches.length === 0) {
+      return null;
+    }
+    const futureBatches = product.batches
+      .map((b) => new Date(b.productionDate))
+      .filter((d) => d > new Date());
+
+    if (futureBatches.length === 0) {
+      return null;
+    }
+
+    return new Date(Math.min(...futureBatches.map((d) => d.getTime())));
+  }, [product]);
+
+  const isAvailableInFuture = !!earliestProductionDate;
+
+  const averageRating = useMemo(() => {
+    if (!seller || seller.reviews.length === 0) {
+      return 0;
+    }
+    const totalRating = seller.reviews.reduce((acc, r) => acc + r.rating, 0);
+    return totalRating / seller.reviews.length;
+  }, [seller]);
+
+  const relatedProducts = product
+    ? mockProducts.filter(
+        (p) => p.sellerId === product.sellerId && p.id !== product.id && p.status === 'available'
+      )
+    : [];
+
   if (!product || !seller) {
     return (
-      <div className="container mx-auto p-4 md:p-6 flex items-center justify-center flex-grow">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">Product not found</h2>
-          <Button asChild>
-            <Link to="/">Go back to homepage</Link>
-          </Button>
-        </div>
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <main className="flex-grow container mx-auto p-4 md:p-6 flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold mb-4">Product not found</h2>
+            <Button asChild>
+              <Link to="/">Go back to homepage</Link>
+            </Button>
+          </div>
+        </main>
+        <Footer />
       </div>
     );
   }
 
-  const handleCopy = (text: string) => {
-    navigator.clipboard.writeText(text);
-    showSuccess("Article number copied to clipboard!");
-  };
-
-  const totalAvailableQuantity = product.batches.reduce((acc, batch) => {
-    const quantity = parseFloat(batch.availableQuantity) || 0;
-    return acc + quantity;
-  }, 0);
-
-  const unit = product.batches.length > 0 ? (product.batches[0].availableQuantity.replace(/[0-9.,]/g, '').trim()) : '';
-
-  const deliveryText = () => {
-    if (product.deliveryTimeInDays === 0) return "Ships today";
-    if (product.deliveryTimeInDays === 1) return "Ships in 1 day(s)";
-    return `Ships in ${product.deliveryTimeInDays} day(s)`;
-  };
-
   return (
-    <div className="container mx-auto p-4 md:p-8">
-      <BackButton />
-      <AppBreadcrumb />
-      <div className="max-w-2xl mx-auto space-y-6"> {/* Centralized content, single column flow */}
-        {/* Image Carousel */}
-        <Carousel className="w-full max-w-sm mx-auto relative"> {/* Added max-w-sm mx-auto here */}
-          <CarouselContent>
-            {product.imageUrls.map((img, index) => (
-              <CarouselItem key={index}>
-                <img
-                  src={img}
-                  alt={`${product.name} image ${index + 1}`}
-                  className="w-full h-auto aspect-square object-cover rounded-lg border"
-                />
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 hidden sm:flex" />
-          <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex" />
-        </Carousel>
-
-        {/* Product Name and Edit Button */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <CategoryIcon category={product.category} className="h-6 w-6 text-muted-foreground" />
-            <h1 className="text-3xl font-bold">{product.name}</h1>
+    <div className="flex flex-col min-h-screen">
+      <Header />
+      <main className="flex-grow container mx-auto p-4 md:p-8">
+        <BackButton />
+        <AppBreadcrumb />
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+          <div className="lg:col-span-2">
+            <Carousel className="w-full max-w-md mx-auto lg:max-w-none lg:mx-0">
+              <CarouselContent>
+                {product.imageUrls.map((img, index) => (
+                  <CarouselItem key={index}>
+                    <img
+                      src={img}
+                      alt={`${product.name} image ${index + 1}`}
+                      className="w-full h-auto aspect-square object-cover rounded-lg border"
+                    />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="ml-16" />
+              <CarouselNext className="mr-16" />
+            </Carousel>
           </div>
-          <Button asChild variant="outline" size="sm">
-            <Link to={`/product/${product.id}/edit`}>
-              <span className="flex items-center gap-1">
-                <Edit className="h-4 w-4" />
-                Edit
-              </span>
-            </Link>
-          </Button>
+          <div className="lg:col-span-3 space-y-4">
+            <div className="flex items-center gap-3">
+              <CategoryIcon category={product.category} className="h-7 w-7 text-muted-foreground" />
+              <h1 className="text-3xl font-bold">{product.name}</h1>
+            </div>
+            
+            <div className="flex items-center gap-2">
+              <Tag className="h-5 w-5 text-primary" />
+              <p className="text-2xl font-semibold text-primary">
+                {formatPrice(product)}
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <CopyableBadge textToCopy={product.sku} />
+              <Badge variant="secondary"><MapPin className="mr-1.5 h-3 w-3" /> {product.region}</Badge>
+              <Badge variant="secondary"><Truck className="mr-1.5 h-3 w-3" /> Ships in {product.deliveryTimeInDays} day(s)</Badge>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              {isAvailableInFuture && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger onFocus={(e) => e.preventDefault()}>
+                      <Badge variant="outline" className="text-primary border-primary cursor-default">
+                        <Calendar className="mr-1.5 h-3 w-3" /> Preorder
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>This item is available for preorder.</p>
+                      {earliestProductionDate && (
+                        <p>Expected to be ready on: {format(earliestProductionDate, "PPP")}</p>
+                      )}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+              {product.isVegan && (
+                <Badge variant="outline">
+                  <Vegan className="mr-2 h-4 w-4" />
+                  Vegan
+                </Badge>
+              )}
+              {product.isVegetarian && !product.isVegan && (
+                <Badge variant="outline">
+                  <Leaf className="mr-2 h-4 w-4" />
+                  Vegetarian
+                </Badge>
+              )}
+              {product.harvestOnDemand && (
+                <Badge variant="outline">
+                  <Sprout className="mr-2 h-4 w-4" />
+                  Harvest on Demand
+                </Badge>
+              )}
+            </div>
+
+            {product.description && (
+              <div className="flex items-start gap-3 pt-1">
+                <Info className="h-5 w-5 text-muted-foreground mt-1 flex-shrink-0" />
+                <p className="text-muted-foreground">
+                  {product.description}
+                </p>
+              </div>
+            )}
+            
+            {seller && (
+              <Card>
+                <CardContent className="p-4">
+                  <p className="text-sm text-muted-foreground mb-2">Sold by</p>
+                  <div className="flex items-center gap-3">
+                    <Avatar>
+                      <AvatarImage src={seller.logoUrl} />
+                      <AvatarFallback>
+                        <User />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-grow">
+                      <div className="flex items-center gap-2">
+                        <Link
+                          to={`/seller/${seller.id}`}
+                          state={{ fromProduct: { id: product.id, name: product.name } }}
+                          className="font-semibold text-lg hover:underline"
+                        >
+                          {seller.name}
+                        </Link>
+                        <Badge variant={seller.sellerType === 'commercial' ? 'default' : 'secondary'} className="capitalize text-xs">
+                          {seller.sellerType}
+                        </Badge>
+                      </div>
+                      {seller.reviews.length > 0 && (
+                        <div className="flex items-center gap-2 mt-1">
+                          <StarRating rating={averageRating} />
+                          <span className="text-xs text-muted-foreground">
+                            ({seller.reviews.length} reviews)
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                    <Button variant="secondary" asChild>
+                      <Link to={`/seller/${seller.id}`} state={{ fromProduct: { id: product.id, name: product.name } }}>View Profile</Link>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
         </div>
 
-        {/* Price */}
-        <div className="flex items-center gap-2">
-          <Tag className="h-5 w-5 text-primary" />
-          <p className="text-2xl font-semibold text-primary">
-            {typeof product.price === "number"
-              ? `€${product.price.toFixed(2)} / ${product.priceUnit}`
-              : "Free"}
+        {product.batches && product.batches.length > 0 ? (
+          <BatchesTable product={product} />
+        ) : (
+          <p className="mt-8 text-center text-muted-foreground">
+            No available batches for this product.
           </p>
-        </div>
-
-        {/* Badges Row 1 */}
-        <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary" className="text-sm font-medium">
-            <Hash className="h-3 w-3 mr-1" />
-            {product.articleNumber}
-          </Badge>
-          <Badge variant="secondary" className="text-sm font-medium">
-            <MapPin className="h-3 w-3 mr-1" />
-            {product.region}
-          </Badge>
-          <Badge variant="secondary" className="text-sm font-medium">
-            <Truck className="h-3 w-3 mr-1" />
-            {deliveryText()}
-          </Badge>
-        </div>
-
-        {/* Badges Row 2 */}
-        <div className="flex flex-wrap gap-2">
-          {product.isVegan && (
-            <Badge variant="outline" className="text-sm font-medium">
-              <Vegan className="h-3 w-3 mr-1" />
-              Vegan
-            </Badge>
-          )}
-          {product.isVegetarian && !product.isVegan && (
-            <Badge variant="outline" className="text-sm font-medium">
-              <Leaf className="h-3 w-3 mr-1" />
-              Vegetarian
-            </Badge>
-          )}
-          {product.harvestOnDemand && (
-            <Badge variant="outline" className="text-sm font-medium">
-              <Wrench className="h-3 w-3 mr-1" />
-              Harvest on Demand
-            </Badge>
-          )}
-        </div>
-
-        {/* Description */}
-        {product.description && (
-          <div className="flex items-start gap-2">
-            <Info className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />
-            <p className="text-muted-foreground text-base">
-              {product.description}
-            </p>
-          </div>
         )}
 
-        {/* Available Quantity */}
-        <div className="flex items-center gap-2">
-          <Package className="h-5 w-5 text-muted-foreground" />
-          <p className="text-muted-foreground text-base">
-            Available: {totalAvailableQuantity} {unit}
-          </p>
-        </div>
-
-        {/* Product Visibility Status */}
-        <div className="flex items-center gap-2">
-          <Eye className="h-5 w-5 text-muted-foreground" />
-          <p className="text-muted-foreground text-base">
-            Status: {product.visibility === 'public' ? 'Public' : 'Hidden'}
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold mb-4">Available Batches</h2>
-        <Card>
-          <div className="overflow-x-auto"> {/* Added overflow-x-auto here */}
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Production Date</TableHead>
-                  <TableHead>Best Before</TableHead>
-                  <TableHead>Days Left</TableHead>
-                  <TableHead>Available</TableHead>
-                  <TableHead className="text-right">Action</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {product.batches.length > 0 ? (
-                  product.batches.map(batch => {
-                    const expiry = new Date(batch.expiryDate);
-                    const daysLeft = differenceInDays(expiry, new Date());
-                    return (
-                      <TableRow key={batch.id}>
-                        <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
-                        <TableCell>{format(expiry, "PPP")}</TableCell>
-                        <TableCell>
-                          <Badge variant={daysLeft < 7 ? "destructive" : "secondary"}>
-                            {daysLeft > 0 ? `${daysLeft} days` : "Expired"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>{batch.availableQuantity}</TableCell>
-                        <TableCell className="text-right">
-                          <Button size="sm" disabled>Add to Cart</Button>
-                        </TableCell>
-                      </TableRow>
-                    );
-                  })
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center h-24">
-                      No available batches for this product.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </Card>
-      </div>
+        {relatedProducts.length > 0 && (
+          <section className="mt-16">
+            <h2 className="text-3xl font-bold mb-6">More from {seller.name}</h2>
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full"
+            >
+              <CarouselContent className="-ml-4">
+                {relatedProducts.map((p) => (
+                  <CarouselItem key={p.id} className="pl-4 basis-1/2 md:basis-1/2 lg:basis-1/3">
+                    <ProductCard product={p} />
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              {/* Buttons for screens smaller than lg (1024px), where 2 items are visible */}
+              {relatedProducts.length > 2 && (
+                <>
+                  <CarouselPrevious className="ml-16 lg:hidden" />
+                  <CarouselNext className="mr-16 lg:hidden" />
+                </>
+              )}
+              {/* Buttons for lg screens and larger, where 3 items are visible */}
+              {relatedProducts.length > 3 && (
+                <>
+                  <CarouselPrevious className="ml-16 hidden lg:flex" />
+                  <CarouselNext className="mr-16 hidden lg:flex" />
+                </>
+              )}
+            </Carousel>
+          </section>
+        )}
+      </main>
+      <Footer />
     </div>
   );
 };

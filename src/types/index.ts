@@ -25,7 +25,7 @@ export interface Seller {
     lon: number;
   };
   description?: string; // New field for seller description
-  type: "private" | "commercial"; // New field for seller type
+  sellerType: "private" | "commercial"; // Renamed from 'type' to 'sellerType'
 }
 
 export interface ProductBatch {
@@ -40,6 +40,7 @@ export interface Product {
   sellerId: string;
   name: string;
   articleNumber: string;
+  sku: string; // New field for SKU
   category: string;
   price: number | "free";
   priceUnit: string;

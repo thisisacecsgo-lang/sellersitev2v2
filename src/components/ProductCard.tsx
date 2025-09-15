@@ -31,7 +31,7 @@ import {
 import { ProductQuickView } from "./ProductQuickView";
 import { cn } from "@/lib/utils";
 import CategoryIcon from "./CategoryIcon";
-import { format, formatDistanceToNowStrict, isAfter } from "date-fns";
+import { formatPrice } from "@/lib/utils"; // Import formatPrice
 
 interface ProductCardProps {
   product: Product;
@@ -46,16 +46,6 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 
   const imageUrl = product.imageUrls && product.imageUrls.length > 0 ? product.imageUrls[0] : "/placeholder.svg";
-
-  const freshestBatch = product.batches.length > 0 ? product.batches.reduce((a, b) => new Date(a.productionDate) > new Date(b.productionDate) ? a : b) : null;
-  const isAvailableInFuture = freshestBatch && isAfter(new Date(freshestBatch.productionDate), new Date());
-
-  const availabilityText = () => {
-    if (!isAvailableInFuture || !freshestBatch) return null;
-    const date = new Date(freshestBatch.productionDate);
-    const distance = formatDistanceToNowStrict(date, { addSuffix: true });
-    return `Available ${distance} (${format(date, "MMM d")})`;
-  };
 
   const totalAvailableQuantity = product.batches.reduce((acc, batch) => {
     const quantity = parseFloat(batch.availableQuantity) || 0;
@@ -130,18 +120,10 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
               <span>{product.name}</span>
             </Link>
           </CardTitle>
-          {isAvailableInFuture && (
-            <div className="flex items-center gap-2 text-sm text-primary font-medium mb-1">
-              <Calendar className="h-4 w-4" />
-              <span>{availabilityText()}</span>
-            </div>
-          )}
           <div className="flex items-center gap-2">
             <Tag className="h-4 w-4 text-primary" />
             <p className="text-base font-semibold text-primary">
-              {typeof product.price === "number"
-                ? `€${product.price.toFixed(2)} / ${product.priceUnit}`
-                : "Free"}
+              {formatPrice(product)}
             </p>
           </div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">

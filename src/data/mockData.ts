@@ -39,7 +39,7 @@ export const mockSellers: Seller[] = [
     totalAds: 17,
     totalSold: 1,
     profileViews: 72,
-    type: "private", // Set seller type to private
+    sellerType: "private", // Set seller type to private
   }
 ];
 
@@ -49,6 +49,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Apples",
     articleNumber: "10001",
+    sku: "10001", // Added SKU
     category: "Fruits and berries",
     price: 2.99,
     priceUnit: "kg",
@@ -75,6 +76,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Eggs",
     articleNumber: "20001",
+    sku: "20001", // Added SKU
     category: "Animal products",
     price: 0.38,
     priceUnit: "piece",
@@ -101,6 +103,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Chicken Thighs",
     articleNumber: "30001",
+    sku: "30001", // Added SKU
     category: "Meat and poultry",
     price: 12.0,
     priceUnit: "kg",
@@ -126,6 +129,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Carrots",
     articleNumber: "10002",
+    sku: "10002", // Added SKU
     category: "Vegetables",
     price: 2.49,
     priceUnit: "kg",
@@ -151,6 +155,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Goat Cheese",
     articleNumber: "40001",
+    sku: "40001", // Added SKU
     category: "Dairy products",
     price: 42.5,
     priceUnit: "kg",
@@ -176,6 +181,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Sourdough Bread",
     articleNumber: "50001",
+    sku: "50001", // Added SKU
     category: "Bakery",
     price: 13.33,
     priceUnit: "kg",
@@ -201,6 +207,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Raw Cow's Milk",
     articleNumber: "40002",
+    sku: "40002", // Added SKU
     category: "Dairy products",
     price: 2.50,
     priceUnit: "liter",
@@ -226,6 +233,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "raw Salmon Fillet",
     articleNumber: "60001",
+    sku: "60001", // Added SKU
     category: "Seafood",
     price: 35.0,
     priceUnit: "kg",
@@ -251,6 +259,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Homemade Strawberry Jam",
     articleNumber: "10003",
+    sku: "10003", // Added SKU
     category: "Fruits and berries",
     price: 24.0,
     priceUnit: "kg",
@@ -277,6 +286,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Wildflower Honey",
     articleNumber: "20002",
+    sku: "20002", // Added SKU
     category: "Animal products",
     price: 30.0,
     priceUnit: "kg",
@@ -302,6 +312,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Frozen Blueberries",
     articleNumber: "10004",
+    sku: "10004", // Added SKU
     category: "Fruits and berries",
     price: 11.99,
     priceUnit: "kg",
@@ -327,6 +338,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Fresh Raspberries",
     articleNumber: "10005",
+    sku: "10005", // Added SKU
     category: "Fruits and berries",
     price: 28.0,
     priceUnit: "kg",
@@ -352,6 +364,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Organic Quinoa",
     articleNumber: "50002",
+    sku: "50002", // Added SKU
     category: "Bakery",
     price: 11.50,
     priceUnit: "kg",
@@ -377,6 +390,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Fresh Oysters",
     articleNumber: "60002",
+    sku: "60002", // Added SKU
     category: "Seafood",
     price: 2.00,
     priceUnit: "piece",
@@ -402,6 +416,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Smoked Salmon",
     articleNumber: "60003",
+    sku: "60003", // Added SKU
     category: "Seafood",
     price: 82.5,
     priceUnit: "kg",
@@ -427,6 +442,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Dungeness Crab",
     articleNumber: "60004",
+    sku: "60004", // Added SKU
     category: "Seafood",
     price: 28.00,
     priceUnit: "kg",
@@ -451,6 +467,7 @@ export const mockProducts: Product[] = [
     sellerId: "seller-5",
     name: "Canned Albacore Tuna",
     articleNumber: "60005",
+    sku: "60005", // Added SKU
     category: "Seafood",
     price: 36.0,
     priceUnit: "kg",
