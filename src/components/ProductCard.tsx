@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/types";
-import { Tag, Info, Package, Eye, Edit, MoreVertical, EyeOff, Trash2, Hash, Truck } from "lucide-react";
+import { Tag, Info, Package, Eye, Edit, MoreVertical, EyeOff, Trash2, Hash, Truck, Calendar } from "lucide-react"; // Добавлен Calendar
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {

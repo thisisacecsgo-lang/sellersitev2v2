@@ -60,6 +60,7 @@ const productSchema = z.object({
   harvestOnDemand: z.boolean().default(false),
   deliveryTimeInDays: z.coerce.number().int().min(0, { message: "Must be a positive number." }).default(1),
   expiryDate: z.string().optional(),
+  region: z.string().min(1, { message: "Region is required." }), // Добавлено поле region
 });
 
 const CreateProduct = () => {
@@ -80,6 +81,7 @@ const CreateProduct = () => {
       harvestOnDemand: false,
       deliveryTimeInDays: 1,
       expiryDate: undefined,
+      region: "Flensburg", // Значение по умолчанию для region
     },
   });
 
@@ -93,7 +95,7 @@ const CreateProduct = () => {
       ? values.imageUrls.split('\n').map(url => url.trim()).filter(url => url !== '')
       : [];
 
-    const newProduct = {
+    const newProduct: Product = { // Явно указываем тип Product
       id: newProductId,
       sellerId: "seller-5",
       articleNumber: newArticleNumber, // Automatically generated
@@ -106,11 +108,12 @@ const CreateProduct = () => {
       batches: [
         {
           id: `batch-${newProductId}-1`,
-          productionDate: new Date().toISOString(),
+          productionDate: values.expiryDate || new Date().toISOString(), // Используем expiryDate из формы или текущую дату
           expiryDate: values.expiryDate || new Date().toISOString(),
           availableQuantity: values.availableQuantity,
         },
       ],
+      region: values.region, // Присваиваем значение region из формы
     };
     // @ts-ignore
     delete newProduct.expiryDate;
@@ -321,6 +324,19 @@ const CreateProduct = () => {
                     <FormDescription>
                       The date until which the product is best.
                     </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="region"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Region</FormLabel>
+                    <FormControl>
+                      <Input placeholder="e.g., Flensburg" {...field} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

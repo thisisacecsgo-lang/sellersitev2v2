@@ -163,7 +163,12 @@ const EditProduct = () => {
       );
       setProduct({ ...product, batches: updatedBatches });
     } else { // Adding new batch
-      const newBatch = { id: `batch-${Date.now()}`, ...values };
+      const newBatch: ProductBatch = { // Явно указываем тип ProductBatch
+        id: `batch-${Date.now()}`,
+        availableQuantity: values.availableQuantity,
+        productionDate: values.productionDate,
+        expiryDate: values.expiryDate,
+      };
       const updatedBatches = [...product.batches, newBatch];
       setProduct({ ...product, batches: updatedBatches });
     }
@@ -354,8 +359,8 @@ const EditProduct = () => {
           <Form {...batchForm}>
             <form onSubmit={batchForm.handleSubmit(onBatchSubmit)} className="space-y-4 py-4">
               <FormField control={batchForm.control} name="availableQuantity" render={({ field }) => (<FormItem><FormLabel>Available Quantity</FormLabel><FormControl><Input placeholder="e.g., 1kg or 1 dozen" {...field} /></FormControl><FormMessage /></FormItem>)} />
-              <FormField control={batchForm.control} name="productionDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Production Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>{field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value ? new Date(field.value) : undefined} onSelect={(date) => field.onChange(date?.toISOString())} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)} />
-              <FormField control={batchForm.control} name="expiryDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Expiry Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>{field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value ? new Date(field.value) : undefined} onSelect={(date) => field.onChange(date?.toISOString())} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)} />
+              <FormField control={batchForm.control} name="productionDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Production Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>{field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value ? new Date(field.value) : undefined} onSelect={(date) => field.onChange(date?.toISOString() || '')} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)} />
+              <FormField control={batchForm.control} name="expiryDate" render={({ field }) => (<FormItem className="flex flex-col"><FormLabel>Expiry Date</FormLabel><Popover><PopoverTrigger asChild><FormControl><Button variant={"outline"} className={cn("pl-3 text-left font-normal", !field.value && "text-muted-foreground")}>{field.value ? format(new Date(field.value), "PPP") : <span>Pick a date</span>}<CalendarIcon className="ml-auto h-4 w-4 opacity-50" /></Button></FormControl></PopoverTrigger><PopoverContent className="w-auto p-0" align="start"><Calendar mode="single" selected={field.value ? new Date(field.value) : undefined} onSelect={(date) => field.onChange(date?.toISOString() || '')} initialFocus /></PopoverContent></Popover><FormMessage /></FormItem>)} />
               <DialogFooter>
                 <Button type="button" variant="outline" onClick={() => setIsBatchDialogOpen(false)}>Cancel</Button>
                 <Button type="submit">Save Batch</Button>
