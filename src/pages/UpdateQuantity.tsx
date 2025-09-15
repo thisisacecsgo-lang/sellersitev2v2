@@ -21,6 +21,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { showError, showSuccess } from "@/utils/toast";
 import { format } from "date-fns";
+import { useIsMobile } from "@/hooks/use-mobile"; // Import useIsMobile
+import BatchListMobile from "@/components/BatchListMobile"; // Import BatchListMobile
 
 const UpdateQuantity = () => {
   const [scannedProduct, setScannedProduct] = useState<Product | null>(null);
@@ -29,6 +31,7 @@ const UpdateQuantity = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [newQuantityInput, setNewQuantityInput] = useState("");
   const [productUnit, setProductUnit] = useState<string>(""); // New state for product unit
+  const isMobile = useIsMobile(); // Use the hook
 
   const parseQuantity = (quantityStr: string): { value: number, unit: string } => {
     const value = parseFloat(quantityStr) || 0;
@@ -188,30 +191,39 @@ const UpdateQuantity = () => {
                   <CardDescription>Select a batch to update its quantity.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Production Date</TableHead>
-                        <TableHead>Expiry Date</TableHead>
-                        <TableHead>Current Quantity</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {scannedProduct.batches.map((batch) => (
-                        <TableRow key={batch.id}>
-                          <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
-                          <TableCell>{format(new Date(batch.expiryDate), "PPP")}</TableCell>
-                          <TableCell>
-                            <Badge variant="secondary">{batch.availableQuantity}</Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button size="sm" onClick={() => handleOpenDialog(batch)}>Update</Button>
-                          </TableCell>
+                  {isMobile ? (
+                    <BatchListMobile
+                      batches={scannedProduct.batches}
+                      productUnit={productUnit}
+                      onOpenDialog={handleOpenDialog}
+                      noBatchesMessage="No batches found for this product."
+                    />
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Production Date</TableHead>
+                          <TableHead>Expiry Date</TableHead>
+                          <TableHead>Current Quantity</TableHead>
+                          <TableHead className="text-right">Actions</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {scannedProduct.batches.map((batch) => (
+                          <TableRow key={batch.id}>
+                            <TableCell>{format(new Date(batch.productionDate), "PPP")}</TableCell>
+                            <TableCell>{format(new Date(batch.expiryDate), "PPP")}</TableCell>
+                            <TableCell>
+                              <Badge variant="secondary">{batch.availableQuantity}</Badge>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <Button size="sm" onClick={() => handleOpenDialog(batch)}>Update</Button>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  )}
                 </CardContent>
               </Card>
             </div>
