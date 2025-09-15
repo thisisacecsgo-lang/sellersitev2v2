@@ -379,7 +379,7 @@ export const mockProducts: Product[] = [
     articleNumber: "60002",
     category: "Seafood",
     price: 2.00,
-    priceUnit: "piece",
+    priceUnit: "kg", // Изменено с "piece" на "kg"
     region: "Flensburg",
     imageUrls: ["/images/ou.jpg"],
     description: "Freshly harvested oysters from the Oregon coast. Perfect for serving on the half shell.",
