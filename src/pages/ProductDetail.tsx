@@ -73,7 +73,7 @@ const ProductDetail = () => {
     <div className="container mx-auto p-4 md:p-8">
       <BackButton />
       <AppBreadcrumb />
-      <div className="max-w-2xl mx-auto space-y-6"> {/* Centralized content, single column flow */}
+      <div className="max-w-md mx-auto space-y-6"> {/* Centralized content, single column flow */}
         {/* Image Carousel */}
         <Carousel className="w-full relative">
           <CarouselContent>
