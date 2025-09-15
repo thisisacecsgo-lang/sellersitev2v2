@@ -14,8 +14,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { format, isSameDay, parseISO, isAfter, addDays, differenceInDays } from "date-fns";
+import { cn } "@/lib/utils";
+import { format, isSameDay, parseISO, isAfter, addDays } from "date-fns";
 import { Calendar as CalendarIcon, Clock, ClipboardList, FileDown } from "lucide-react";
 import { showSuccess, showError } from "@/utils/toast";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -104,9 +104,7 @@ const Orders = () => {
           <TableRow>
             <TableHead className="min-w-[90px] text-xs p-2">Product</TableHead>
             <TableHead className="text-xs p-2">Qty</TableHead>
-            <TableHead className="text-xs p-2">Batch ID</TableHead> {/* New column */}
-            <TableHead className="text-xs p-2">Prod. Date</TableHead> {/* New column */}
-            <TableHead className="text-xs p-2">Exp. Date</TableHead> {/* New column */}
+            <TableHead className="text-xs p-2">Batch</TableHead> {/* Simplified Batch column */}
             <TableHead className="text-xs p-2">Status</TableHead>
             <TableHead className="text-right text-xs p-2">pick-up ready from</TableHead>
           </TableRow>
@@ -115,9 +113,8 @@ const Orders = () => {
           {orders.length > 0 ? (
             orders.map((order) => {
               const product = mockProducts.find(p => p.id === order.productId);
-              const batch = product?.batches.find(b => b.id === order.batchId);
-              const expiryDate = batch ? parseISO(batch.expiryDate) : null;
-              const daysLeft = expiryDate ? differenceInDays(expiryDate, new Date()) : null;
+              const batchIndex = product?.batches.findIndex(b => b.id === order.batchId);
+              const batch = batchIndex !== undefined && batchIndex !== -1 ? product?.batches[batchIndex] : null;
 
               return (
                 <TableRow key={order.id}>
@@ -130,14 +127,8 @@ const Orders = () => {
                     </Link>
                   </TableCell>
                   <TableCell className="py-2 px-2 text-xs">{formatOrderQuantity(order)}</TableCell>
-                  <TableCell className="py-2 px-2 text-xs">{batch?.id || 'N/A'}</TableCell> {/* Display Batch ID */}
-                  <TableCell className="py-2 px-2 text-xs">{batch ? format(parseISO(batch.productionDate), "MMM d, yy") : 'N/A'}</TableCell> {/* Display Production Date */}
-                  <TableCell className="py-2 px-2 text-xs"> {/* Display Expiry Date with Badge */}
-                    {expiryDate ? (
-                      <Badge variant={daysLeft !== null && daysLeft < 7 && daysLeft >= 0 ? "destructive" : "secondary"}>
-                        {format(expiryDate, "MMM d, yy")} ({daysLeft !== null && daysLeft >= 0 ? `${daysLeft} days` : 'Expired'})
-                      </Badge>
-                    ) : 'N/A'}
+                  <TableCell className="py-2 px-2 text-xs">
+                    {batch ? `Batch #${batchIndex! + 1} (${batch.availableQuantity})` : 'N/A'}
                   </TableCell>
                   <TableCell className="py-2 px-2">
                     <Select value={order.status} onValueChange={(newStatus: Order['status']) => onStatusChange(order.id, newStatus)}>
@@ -159,7 +150,7 @@ const Orders = () => {
             })
           ) : (
             <TableRow>
-              <TableCell colSpan={7} className="h-24 text-center text-sm"> {/* Updated colspan */}
+              <TableCell colSpan={5} className="h-24 text-center text-sm"> {/* Updated colspan to 5 */}
                 {noOrdersMessage}
               </TableCell>
             </TableRow>

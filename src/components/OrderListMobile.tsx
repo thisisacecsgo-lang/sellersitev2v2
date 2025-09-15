@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { format, parseISO, differenceInDays } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import type { Order } from "@/types";
@@ -46,9 +46,8 @@ const OrderListMobile = ({ orders, noOrdersMessage, onStatusChange }: OrderListM
     <div className="space-y-4">
       {orders.map((order) => {
         const product = mockProducts.find(p => p.id === order.productId);
-        const batch = product?.batches.find(b => b.id === order.batchId);
-        const expiryDate = batch ? parseISO(batch.expiryDate) : null;
-        const daysLeft = expiryDate ? differenceInDays(expiryDate, new Date()) : null;
+        const batchIndex = product?.batches.findIndex(b => b.id === order.batchId);
+        const batch = batchIndex !== undefined && batchIndex !== -1 ? product?.batches[batchIndex] : null;
 
         return (
           <Card key={order.id}>
@@ -69,20 +68,8 @@ const OrderListMobile = ({ orders, noOrdersMessage, onStatusChange }: OrderListM
                   <span className="font-medium">{formatOrderQuantity(order)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Batch ID:</span>
-                  <span className="font-medium">{batch?.id || 'N/A'}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Prod. Date:</span>
-                  <span className="font-medium">{batch ? format(parseISO(batch.productionDate), "MMM d, yy") : 'N/A'}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-muted-foreground">Exp. Date:</span>
-                  {expiryDate ? (
-                    <Badge variant={daysLeft !== null && daysLeft < 7 && daysLeft >= 0 ? "destructive" : "secondary"}>
-                      {format(expiryDate, "MMM d, yy")} ({daysLeft !== null && daysLeft >= 0 ? `${daysLeft} days` : 'Expired'})
-                    </Badge>
-                  ) : <span className="font-medium">N/A</span>}
+                  <span className="text-muted-foreground">Batch:</span>
+                  <span className="font-medium">{batch ? `Batch #${batchIndex! + 1} (${batch.availableQuantity})` : 'N/A'}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Status:</span>
