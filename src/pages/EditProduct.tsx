@@ -299,10 +299,10 @@ const EditProduct = () => {
                         <TableCell>{format(new Date(batch.expiryDate), "PPP")}</TableCell>
                         <TableCell>{batch.availableQuantity}</TableCell>
                         <TableCell className="text-right">
-                          <Button variant="ghost" size="sm" onClick={() => handleOpenBatchDialog(batch)}>Edit</Button>
+                          <Button type="button" variant="ghost" size="sm" onClick={() => handleOpenBatchDialog(batch)}>Edit</Button>
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
-                              <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
+                              <Button type="button" variant="ghost" size="sm" className="text-destructive hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
                               <AlertDialogHeader><AlertDialogTitle>Delete Batch?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this batch. This action cannot be undone.</AlertDialogDescription></AlertDialogHeader>
@@ -333,10 +333,10 @@ const EditProduct = () => {
                     </div>
                     <Separator />
                     <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="sm" onClick={() => handleOpenBatchDialog(batch)}>Edit</Button>
+                      <Button type="button" variant="ghost" size="sm" onClick={() => handleOpenBatchDialog(batch)}>Edit</Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
+                          <Button type="button" variant="ghost" size="sm" className="text-destructive hover:text-destructive"><Trash2 className="h-4 w-4" /></Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader><AlertDialogTitle>Delete Batch?</AlertDialogTitle><AlertDialogDescription>This will permanently delete this batch. This action cannot be undone.</AlertDialogDescription></AlertDialogHeader>
