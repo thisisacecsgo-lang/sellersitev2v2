@@ -136,15 +136,15 @@ const Orders = () => {
 
       <Card>
         <CardHeader>
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col gap-4"> {/* Changed to flex-col for stacking */}
             <CardTitle>Orders for {date ? format(date, "PPP") : "..."}</CardTitle>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2"> {/* Adjusted for responsiveness */}
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
                     variant={"outline"}
                     className={cn(
-                      "w-[240px] justify-start text-left font-normal",
+                      "w-full sm:w-[240px] justify-start text-left font-normal",
                       !date && "text-muted-foreground"
                     )}
                   >
@@ -161,14 +161,16 @@ const Orders = () => {
                   />
                 </PopoverContent>
               </Popover>
-              <Button variant="outline" size="sm" onClick={() => handleExport('CSV')}>
-                <FileDown className="mr-2 h-4 w-4" />
-                CSV
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => handleExport('PDF')}>
-                <FileDown className="mr-2 h-4 w-4" />
-                PDF
-              </Button>
+              <div className="flex gap-2 w-full sm:w-auto"> {/* Group export buttons */}
+                <Button variant="outline" size="sm" onClick={() => handleExport('CSV')} className="flex-1 sm:flex-none">
+                  <FileDown className="mr-2 h-4 w-4" />
+                  CSV
+                </Button>
+                <Button variant="outline" size="sm" onClick={() => handleExport('PDF')} className="flex-1 sm:flex-none">
+                  <FileDown className="mr-2 h-4 w-4" />
+                  PDF
+                </Button>
+              </div>
             </div>
           </div>
         </CardHeader>
