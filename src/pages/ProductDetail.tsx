@@ -176,7 +176,7 @@ const ProductDetail = () => {
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-2xl font-bold">Available Batches</h2>
           <Button asChild>
-            <Link to={`/product/${product.id}/edit`}>
+            <Link to={`/product/${product.id}/edit#batches`}>
               <Wrench className="mr-2 h-4 w-4" />
               Manage Batches
             </Link>

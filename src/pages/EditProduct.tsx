@@ -268,7 +268,7 @@ const EditProduct = () => {
           </Card>
 
           {/* Batch Management Card */}
-          <Card>
+          <Card id="batches">
             <CardHeader>
               <div className="flex justify-between items-center">
                 <div>
