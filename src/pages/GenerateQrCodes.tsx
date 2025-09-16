@@ -7,7 +7,7 @@ import BackButton from "@/components/BackButton";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Printer, QrCode as QrCodeIcon, Hash, Search } from "lucide-react"; // Добавлен Search
+import { Printer, QrCode as QrCodeIcon, Hash, Search } from "lucide-react";
 import { showSuccess } from "@/utils/toast";
 import { format } from "date-fns";
 import {
@@ -19,13 +19,13 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input"; // Добавлен Input
+import { Input } from "@/components/ui/input";
 
 const GenerateQrCodes = () => {
   const [selectedProductId, setSelectedProductId] = useState<string | undefined>(undefined);
   const [selectedBatch, setSelectedBatch] = useState<ProductBatch | null>(null);
   const [isQrDialogOpen, setIsQrDialogOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(''); // Состояние для поискового запроса
+  const [searchTerm, setSearchTerm] = useState('');
   const qrCodeRef = useRef<HTMLDivElement>(null);
 
   const sellerProducts = useMemo(() => {
@@ -36,7 +36,6 @@ const GenerateQrCodes = () => {
     return sellerProducts.find(p => p.id === selectedProductId);
   }, [selectedProductId, sellerProducts]);
 
-  // Фильтрация продуктов по поисковому запросу
   const filteredProducts = useMemo(() => {
     if (!searchTerm) {
       return sellerProducts;
@@ -98,20 +97,22 @@ const GenerateQrCodes = () => {
           <CardDescription>Choose a product to see its batches and generate their unique QR codes.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          {/* Search Input - Moved outside Select */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by article or name..."
+              className="pl-9"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
           <Select onValueChange={setSelectedProductId} value={selectedProductId}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a product" />
             </SelectTrigger>
-            <SelectContent className="max-h-[300px] overflow-y-auto"> {/* Добавлены max-height и overflow-y-auto */}
-              <div className="relative px-2 py-1"> {/* Обертка для поля поиска */}
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search by article or name..."
-                  className="pl-8"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
+            <SelectContent className="max-h-[300px] overflow-y-auto">
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (
                   <SelectItem key={product.id} value={product.id}>
