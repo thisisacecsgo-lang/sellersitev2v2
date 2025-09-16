@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { mockOrders } from "@/data/mockOrders";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,7 +35,12 @@ const Orders = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [ordersData, setOrdersData] = useState<Order[]>(mockOrders); // Local state for orders
   const [sortBy, setSortBy] = useState<'pickupTime' | 'productName'>('pickupTime');
+  const [productFilter, setProductFilter] = useState<string>('all');
   const isMobile = useIsMobile();
+
+  useEffect(() => {
+    setProductFilter('all');
+  }, [date]);
 
   const handleStatusChange = (orderId: string, newStatus: Order['status']) => {
     const orderIndex = ordersData.findIndex(o => o.id === orderId);
@@ -67,13 +72,27 @@ const Orders = () => {
     });
   };
 
-  const filteredOrders = useMemo(() => {
+  const productsOnSelectedDate = useMemo(() => {
     if (!date) return [];
     const dailyOrders = ordersData.filter((order) =>
       isSameDay(parseISO(order.pickupWindowStart), date)
     );
+    const productNames = [...new Set(dailyOrders.map(order => order.productName))];
+    return productNames.sort();
+  }, [date, ordersData]);
+
+  const filteredOrders = useMemo(() => {
+    if (!date) return [];
+    let dailyOrders = ordersData.filter((order) =>
+      isSameDay(parseISO(order.pickupWindowStart), date)
+    );
+
+    if (productFilter !== 'all') {
+      dailyOrders = dailyOrders.filter(order => order.productName === productFilter);
+    }
+
     return sortOrders(dailyOrders, sortBy);
-  }, [date, ordersData, sortBy]);
+  }, [date, ordersData, sortBy, productFilter]);
 
   const tomorrowsOrders = useMemo(() => {
     const tomorrow = addDays(new Date(), 1);
@@ -228,6 +247,19 @@ const Orders = () => {
                   />
                 </PopoverContent>
               </Popover>
+              <Select value={productFilter} onValueChange={setProductFilter}>
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Filter by product..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Products</SelectItem>
+                  {productsOnSelectedDate.map(productName => (
+                    <SelectItem key={productName} value={productName}>
+                      {productName}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <Select value={sortBy} onValueChange={(value: 'pickupTime' | 'productName') => setSortBy(value)}>
                 <SelectTrigger className="w-full sm:w-[200px]">
                   <SelectValue placeholder="Sort by..." />
