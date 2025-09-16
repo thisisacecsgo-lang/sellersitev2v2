@@ -173,7 +173,7 @@ const ProductDetail = () => {
       </div>
 
       <div className="mt-12">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-4 gap-4"> {/* Добавлен gap-4 */}
           <h2 className="text-2xl font-bold">Available Batches</h2>
           <Button asChild>
             <Link to={`/product/${product.id}/edit#batches`}>
