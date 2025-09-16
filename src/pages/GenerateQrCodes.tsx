@@ -7,7 +7,7 @@ import BackButton from "@/components/BackButton";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Printer, QrCode as QrCodeIcon } from "lucide-react";
+import { Printer, QrCode as QrCodeIcon, Hash } from "lucide-react";
 import { showSuccess } from "@/utils/toast";
 import { format } from "date-fns";
 import {
@@ -18,6 +18,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 
 const GenerateQrCodes = () => {
   const [selectedProductId, setSelectedProductId] = useState<string | undefined>(undefined);
@@ -91,7 +92,13 @@ const GenerateQrCodes = () => {
               {sellerProducts.length > 0 ? (
                 sellerProducts.map((product) => (
                   <SelectItem key={product.id} value={product.id}>
-                    {product.name} (Art. No: {product.articleNumber})
+                    <div className="flex items-center justify-between w-full">
+                      <span>{product.name}</span>
+                      <Badge variant="secondary" className="font-normal text-xs ml-4">
+                        <Hash className="h-3 w-3 mr-1" />
+                        {product.articleNumber}
+                      </Badge>
+                    </div>
                   </SelectItem>
                 ))
               ) : (
