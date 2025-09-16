@@ -34,6 +34,7 @@ import { mockProducts } from "@/data/mockData"; // Import mockProducts to get ba
 const Orders = () => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [ordersData, setOrdersData] = useState<Order[]>(mockOrders); // Local state for orders
+  const [sortBy, setSortBy] = useState<'pickupTime' | 'productName'>('pickupTime');
   const isMobile = useIsMobile();
 
   const handleStatusChange = (orderId: string, newStatus: Order['status']) => {
@@ -53,19 +54,34 @@ const Orders = () => {
     }
   };
 
+  const sortOrders = (orders: Order[], sortBy: 'pickupTime' | 'productName') => {
+    return [...orders].sort((a, b) => {
+      if (sortBy === 'productName') {
+        const nameComparison = a.productName.localeCompare(b.productName);
+        if (nameComparison !== 0) {
+          return nameComparison;
+        }
+      }
+      // Default or secondary sort by pickup time
+      return parseISO(a.pickupWindowStart).getTime() - parseISO(b.pickupWindowStart).getTime();
+    });
+  };
+
   const filteredOrders = useMemo(() => {
     if (!date) return [];
-    return ordersData.filter((order) =>
+    const dailyOrders = ordersData.filter((order) =>
       isSameDay(parseISO(order.pickupWindowStart), date)
-    ).sort((a, b) => parseISO(a.pickupWindowStart).getTime() - parseISO(b.pickupWindowStart).getTime());
-  }, [date, ordersData]);
+    );
+    return sortOrders(dailyOrders, sortBy);
+  }, [date, ordersData, sortBy]);
 
   const tomorrowsOrders = useMemo(() => {
     const tomorrow = addDays(new Date(), 1);
-    return ordersData.filter((order) =>
+    const tomorrowDailyOrders = ordersData.filter((order) =>
       isSameDay(parseISO(order.pickupWindowStart), tomorrow)
-    ).sort((a, b) => parseISO(a.pickupWindowStart).getTime() - parseISO(b.pickupWindowStart).getTime());
-  }, [ordersData]);
+    );
+    return sortOrders(tomorrowDailyOrders, sortBy);
+  }, [ordersData, sortBy]);
 
   const { totalOrders, nextPickup } = useMemo(() => {
     const now = new Date();
@@ -212,6 +228,15 @@ const Orders = () => {
                   />
                 </PopoverContent>
               </Popover>
+              <Select value={sortBy} onValueChange={(value: 'pickupTime' | 'productName') => setSortBy(value)}>
+                <SelectTrigger className="w-full sm:w-[200px]">
+                  <SelectValue placeholder="Sort by..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="pickupTime">Sort by Pickup Time</SelectItem>
+                  <SelectItem value="productName">Sort by Product Name</SelectItem>
+                </SelectContent>
+              </Select>
               <div className="flex gap-2 w-full sm:w-auto">
                 <Button variant="outline" size="sm" onClick={() => handleExport('CSV')} className="flex-1 sm:flex-none">
                   <FileDown className="mr-2 h-4 w-4" />
