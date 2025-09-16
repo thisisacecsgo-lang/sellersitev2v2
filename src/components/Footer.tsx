@@ -11,7 +11,7 @@ export const Footer = () => {
               <img
                   src="/images/logooo.png"
                   alt="Мой логотип"
-                  className="h-13 w-16"
+                  className="h-26 w-32"
               />
               {/* Removed: <span className="text-xl font-bold text-foreground">
                 Hiesige Höfe

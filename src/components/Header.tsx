@@ -25,7 +25,7 @@ const Header = () => {
               className="group flex h-10 w-auto shrink-0 items-center justify-center gap-9 text-lg font-semibold text-foreground md:text-base"
               onClick={() => setIsSheetOpen(false)}
             >
-              <img src="/images/logooo.png" alt="MySite Logo" className="h-10 w-10"/>
+              <img src="/images/logooo.png" alt="MySite Logo" className="h-20 w-20"/>
             </Link>
             <Link
               to="/"
