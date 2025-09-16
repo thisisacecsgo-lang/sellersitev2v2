@@ -52,7 +52,7 @@ const productSchema = z.object({
   isVegetarian: z.boolean().default(false),
   harvestOnDemand: z.boolean().default(false),
   deliveryTimeInDays: z.coerce.number().int().min(0, { message: "Must be a positive number." }).default(1),
-  certification: z.enum(["Bio", "Demeter", "Bioland", "None"]).optional(),
+  certification: z.enum(["Bio", "eco-friendly", "preserved produce", "None"]).optional(),
 });
 
 const CreateProduct = () => {
@@ -141,7 +141,7 @@ const CreateProduct = () => {
           <Card>
             <CardHeader><CardTitle>Certification</CardTitle></CardHeader>
             <CardContent>
-              <FormField control={form.control} name="certification" render={({ field }) => (<FormItem className="space-y-3"><FormLabel>Select a certification type (optional)</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1"><FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="None" /></FormControl><FormLabel className="font-normal">None</FormLabel></FormItem><FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="Bio" /></FormControl><FormLabel className="font-normal">Bio</FormLabel></FormItem><FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="Demeter" /></FormControl><FormLabel className="font-normal">Demeter</FormLabel></FormItem><FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="Bioland" /></FormControl><FormLabel className="font-normal">Bioland</FormLabel></FormItem></RadioGroup></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="certification" render={({ field }) => (<FormItem className="space-y-3"><FormLabel>Select a certification type (optional)</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1"><FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="None" /></FormControl><FormLabel className="font-normal">None</FormLabel></FormItem><FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="Bio" /></FormControl><FormLabel className="font-normal">Bio</FormLabel></FormItem><FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="eco-friendly" /></FormControl><FormLabel className="font-normal">eco-friendly</FormLabel></FormItem><FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="preserved produce" /></FormControl><FormLabel className="font-normal">preserved produce</FormLabel></FormItem></RadioGroup></FormControl><FormMessage /></FormItem>)} />
             </CardContent>
           </Card>
 
