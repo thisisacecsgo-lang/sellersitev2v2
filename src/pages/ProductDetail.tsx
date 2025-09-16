@@ -11,7 +11,7 @@ import {
   Edit,
   Wrench,
   Hash,
-  Eye,
+  Eye, // Добавлена иконка Eye
 } from "lucide-react";
 import { mockProducts, mockSellers } from "@/data/mockData";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
@@ -57,13 +57,11 @@ const ProductDetail = () => {
   };
 
   const totalAvailableQuantity = product.batches.reduce((acc, batch) => {
-    // Extract numeric value from availableQuantity string (e.g., "10kg" -> 10)
-    const numericValueMatch = batch.availableQuantity.match(/(\d+(\.\d+)?)/);
-    const quantity = numericValueMatch ? parseFloat(numericValueMatch[1]) : 0;
+    const quantity = parseFloat(batch.availableQuantity) || 0;
     return acc + quantity;
   }, 0);
 
-  const unit = product.priceUnit; // Use the product's priceUnit for consistency
+  const unit = product.batches.length > 0 ? (product.batches[0].availableQuantity.replace(/[0-9.,]/g, '').trim()) : '';
 
   return (
     <div className="container mx-auto p-4 md:p-8">

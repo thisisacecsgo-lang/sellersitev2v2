@@ -27,13 +27,13 @@ import BackButton from "@/components/BackButton";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import { showSuccess } from "@/utils/toast";
 import { Separator } from "@/components/ui/separator";
-import { mockProducts, mockSellers } from "@/data/mockData"; // To simulate adding a product, and get seller info
+import { mockProducts } from "@/data/mockData"; // To simulate adding a product
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { CalendarIcon, Upload } from "lucide-react";
-import type { Product } from "@/types";
+import { CalendarIcon, Upload } from "lucide-react"; // Import Upload icon
+import type { Product } from "@/types"; // Import Product type for generateUniqueArticleNumber
 
 // Helper function to generate a unique 5-digit article number
 const generateUniqueArticleNumber = (existingProducts: Product[]): string => {
@@ -54,20 +54,16 @@ const productSchema = z.object({
   price: z.coerce.number().min(0, { message: "Price must be a positive number." }),
   priceUnit: z.string().min(1, { message: "Price unit is required." }),
   description: z.string().optional(),
+  // imageUrls: z.string().optional(), // This field is no longer directly collected via input
   isVegan: z.boolean().default(false),
   isVegetarian: z.boolean().default(false),
   harvestOnDemand: z.boolean().default(false),
   deliveryTimeInDays: z.coerce.number().int().min(0, { message: "Must be a positive number." }).default(1),
   expiryDate: z.string().optional(),
-  region: z.string().min(1, { message: "Region is required." }), // Added region to schema
 });
 
 const CreateProduct = () => {
   const navigate = useNavigate();
-
-  // Find the current seller's region (assuming 'seller-5' for this demo)
-  const currentSeller = mockSellers.find(s => s.id === "seller-5");
-  const sellerRegion = currentSeller?.region || "";
 
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
@@ -78,12 +74,12 @@ const CreateProduct = () => {
       price: 0,
       priceUnit: "",
       description: "",
+      // imageUrls: "", // No longer needed as a form field
       isVegan: false,
       isVegetarian: false,
       harvestOnDemand: false,
       deliveryTimeInDays: 1,
       expiryDate: undefined,
-      region: sellerRegion, // Set default region from seller
     },
   });
 
@@ -111,7 +107,7 @@ const CreateProduct = () => {
           id: `batch-${newProductId}-1`,
           productionDate: new Date().toISOString(),
           expiryDate: values.expiryDate || new Date().toISOString(),
-          availableQuantity: `${values.availableQuantity}${values.priceUnit}`, // Combine quantity and unit
+          availableQuantity: values.availableQuantity,
         },
       ],
     };
@@ -119,6 +115,8 @@ const CreateProduct = () => {
     delete newProduct.expiryDate;
     // @ts-ignore
     delete newProduct.availableQuantity;
+    // @ts-ignore
+    // delete newProduct.imageUrls; // No longer needed as it's explicitly set above
 
     mockProducts.push(newProduct);
     showSuccess("Product created successfully!");
@@ -255,11 +253,8 @@ const CreateProduct = () => {
                   <FormItem>
                     <FormLabel>Available Quantity</FormLabel>
                     <FormControl>
-                      <Input placeholder="e.g., 10" {...field} /> {/* Input for just the number */}
+                      <Input placeholder="e.g., 1kg or 1 dozen" {...field} />
                     </FormControl>
-                    <FormDescription>
-                      Enter the numerical quantity. The unit will be taken from 'Price Unit'.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -316,22 +311,6 @@ const CreateProduct = () => {
                     </Popover>
                     <FormDescription>
                       The date until which the product is best.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="region"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Region</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Flensburg" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      The region where the product is sourced or produced.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
