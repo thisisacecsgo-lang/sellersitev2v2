@@ -123,12 +123,12 @@ const CreateProduct = () => {
               <FormItem>
                 <FormLabel>Product Images</FormLabel>
                 <FormControl>
-                  <Button type="button" variant="outline" className="w-full" onClick={() => showSuccess("Simulating photo upload...")}>
+                  <Button type="button" variant="outline" className="w-full" onClick={() => showError("Photo upload is not available.")}>
                     <Upload className="mr-2 h-4 w-4" />
                     Upload Photo
                   </Button>
                 </FormControl>
-                <FormDescription>Click to simulate uploading a product image. (Currently uses a placeholder)</FormDescription>
+                <FormDescription>Upload a product image. (Currently uses a placeholder)</FormDescription>
               </FormItem>
             </CardContent>
           </Card>

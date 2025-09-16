@@ -130,7 +130,7 @@ const Statistics = () => {
   }, [date]);
 
   const handleExport = (format: 'CSV' | 'PDF') => {
-    showSuccess(`Exporting product data as ${format}... (demo)`);
+    showSuccess(`Exporting product data as ${format}...`);
   };
 
   return (

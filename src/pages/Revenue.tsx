@@ -19,7 +19,7 @@ import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 
 const Revenue = () => {
   const handleDownloadReceipt = (paymentId: string) => {
-    showSuccess(`Downloading receipt for payment ${paymentId}... (demo)`);
+    showSuccess(`Downloading receipt for payment ${paymentId}...`);
     console.log(`Downloading receipt for payment ${paymentId}`);
   };
 

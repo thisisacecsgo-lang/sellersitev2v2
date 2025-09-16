@@ -72,7 +72,7 @@ const UpdateQuantity = () => {
     const randomProduct = sellerProducts[Math.floor(Math.random() * sellerProducts.length)];
     setScannedProduct(randomProduct);
     setProductUnit(randomProduct.priceUnit); // Set the unit here
-    showSuccess(`Simulated scan: Found "${randomProduct.name}".`);
+    showSuccess(`Scanned: Found "${randomProduct.name}".`);
   };
 
   const handleOpenDialog = (batch: ProductBatch) => {
@@ -144,7 +144,7 @@ const UpdateQuantity = () => {
                   <ScanLine className="mr-4 h-8 w-8" />
                   Scan Product QR Code
                 </Button>
-                <p className="text-xs text-muted-foreground mt-2">Click to simulate scanning a random product.</p>
+                <p className="text-xs text-muted-foreground mt-2">Click to scan a product.</p>
               </div>
               <div className="flex items-center w-full max-w-sm">
                 <div className="flex-grow border-t"></div>

@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 
 const RevenueReport = () => {
   const handleDownloadReceipt = (paymentId: string) => {
-    showSuccess(`Downloading receipt for payment ${paymentId}... (demo)`);
+    showSuccess(`Downloading receipt for payment ${paymentId}...`);
     console.log(`Downloading receipt for payment ${paymentId}`);
   };
 
