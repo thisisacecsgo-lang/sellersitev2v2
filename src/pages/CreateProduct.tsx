@@ -280,7 +280,7 @@ const CreateProduct = () => {
                 name="expiryDate"
                 render={({ field }) => (
                   <FormItem className="flex flex-col">
-                    <FormLabel>Shelf Life (Optional)</FormLabel>
+                    <FormLabel>shelf live</FormLabel>
                     <Popover>
                       <PopoverTrigger asChild>
                         <FormControl>
