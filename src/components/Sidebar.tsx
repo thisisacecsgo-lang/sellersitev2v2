@@ -12,7 +12,7 @@ const Sidebar = () => {
         </Link>
       </div>
       <nav className="flex-1 overflow-auto py-2">
-        <div className="grid items-start px-4 text-sm font-medium">
+        <div className="grid items-start px-4 text-sm font-medium pt-4"> {/* Добавлен pt-4 для увеличения отступа */}
           <Link
             to="/"
             className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
