@@ -116,9 +116,9 @@ const GenerateQrCodes = () => {
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (
                   <SelectItem key={product.id} value={product.id}>
-                    <div className="flex items-center justify-between w-full">
-                      <span className="flex-grow">{product.name}</span>
-                      <Badge variant="secondary" className="font-normal text-xs flex-shrink-0"> {/* Removed ml-4 */}
+                    <div className="flex items-center w-full">
+                      <span className="truncate flex-grow">{product.name}</span>
+                      <Badge variant="secondary" className="font-normal text-xs flex-shrink-0 ml-2">
                         <Hash className="h-3 w-3 mr-1" />
                         {product.articleNumber}
                       </Badge>
