@@ -25,9 +25,9 @@ import {
 } from "@/components/ui/form";
 import BackButton from "@/components/BackButton";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
-import { showSuccess } from "@/utils/toast";
+import { showSuccess, showError } from "@/utils/toast";
 import { Separator } from "@/components/ui/separator";
-import { mockProducts } from "@/data/mockData";
+import { mockProducts, mockSellers } from "@/data/mockData";
 import { Upload } from "lucide-react";
 import type { Product } from "@/types";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -75,6 +75,12 @@ const CreateProduct = () => {
   });
 
   const onSubmit = (values: z.infer<typeof productSchema>) => {
+    const seller = mockSellers.find(s => s.id === 'seller-5');
+    if (!seller) {
+        showError("Could not find the seller to associate the product with.");
+        return;
+    }
+
     const newArticleNumber = generateUniqueArticleNumber(mockProducts);
     const maxId = mockProducts.reduce((max, p) => Math.max(max, parseInt(p.id, 10)), 0);
     const newProductId = (maxId + 1).toString();
@@ -83,6 +89,7 @@ const CreateProduct = () => {
     const newProduct = {
       id: newProductId,
       sellerId: "seller-5",
+      region: seller.region,
       articleNumber: newArticleNumber,
       imageUrls: imageUrls,
       status: "available",
