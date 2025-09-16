@@ -1,4 +1,4 @@
-import { useState, useMemo, useRef } from "react";
+import React, { useState, useMemo, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { mockProducts } from "@/data/mockData";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
