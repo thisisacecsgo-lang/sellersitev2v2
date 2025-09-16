@@ -8,9 +8,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Printer, QrCode as QrCodeIcon } from "lucide-react";
 import { showSuccess } from "@/utils/toast";
+import { format, parseISO } from "date-fns";
 
 const GenerateQrCodes = () => {
   const [selectedProductId, setSelectedProductId] = useState<string | undefined>(undefined);
+  const [selectedBatchId, setSelectedBatchId] = useState<string | undefined>(undefined); // New state for selected batch
   const qrCodeRef = useRef<HTMLDivElement>(null);
 
   // Filter products to only show those from 'seller-5' for this demo
@@ -22,8 +24,15 @@ const GenerateQrCodes = () => {
     return sellerProducts.find(p => p.id === selectedProductId);
   }, [selectedProductId, sellerProducts]);
 
+  const selectedBatch = useMemo(() => {
+    if (selectedProduct && selectedBatchId) {
+      return selectedProduct.batches.find(batch => batch.id === selectedBatchId);
+    }
+    return undefined;
+  }, [selectedProduct, selectedBatchId]);
+
   const handlePrint = () => {
-    if (qrCodeRef.current) {
+    if (qrCodeRef.current && selectedProduct && selectedBatch) {
       const printWindow = window.open('', '_blank');
       if (printWindow) {
         printWindow.document.write('<html><head><title>Print QR Code</title>');
@@ -42,8 +51,11 @@ const GenerateQrCodes = () => {
         printWindow.document.write('</style>');
         printWindow.document.write('</head><body>');
         printWindow.document.write('<div class="qr-container">');
-        printWindow.document.write(`<h1>QR Code for ${selectedProduct?.name}</h1>`);
-        printWindow.document.write(`<p>Product ID: ${selectedProduct?.id}</p>`);
+        printWindow.document.write(`<h1>QR Code for ${selectedProduct.name} - Batch ${selectedBatch.id.split('-').pop()}</h1>`);
+        printWindow.document.write(`<p>Product: ${selectedProduct.name}</p>`);
+        printWindow.document.write(`<p>Batch Quantity: ${selectedBatch.availableQuantity}</p>`);
+        printWindow.document.write(`<p>Production Date: ${format(parseISO(selectedBatch.productionDate), 'PPP')}</p>`);
+        printWindow.document.write(`<p>Expiry Date: ${format(parseISO(selectedBatch.expiryDate), 'PPP')}</p>`);
         printWindow.document.write(qrCodeRef.current.innerHTML);
         printWindow.document.write('</div></body></html>');
         printWindow.document.close();
@@ -62,11 +74,17 @@ const GenerateQrCodes = () => {
 
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
-          <CardTitle>Select a Product</CardTitle>
-          <CardDescription>Choose a product to generate its unique QR code for inventory management.</CardDescription>
+          <CardTitle>Select Product and Batch</CardTitle>
+          <CardDescription>Choose a product and a specific batch to generate its unique QR code for inventory management.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <Select onValueChange={setSelectedProductId} value={selectedProductId}>
+          <Select 
+            onValueChange={(value) => {
+              setSelectedProductId(value);
+              setSelectedBatchId(undefined); // Reset batch selection when product changes
+            }} 
+            value={selectedProductId}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Select a product" />
             </SelectTrigger>
@@ -74,7 +92,7 @@ const GenerateQrCodes = () => {
               {sellerProducts.length > 0 ? (
                 sellerProducts.map((product) => (
                   <SelectItem key={product.id} value={product.id}>
-                    {product.name} (ID: {product.id})
+                    {product.name}
                   </SelectItem>
                 ))
               ) : (
@@ -84,10 +102,33 @@ const GenerateQrCodes = () => {
           </Select>
 
           {selectedProduct && (
+            <Select 
+              onValueChange={setSelectedBatchId} 
+              value={selectedBatchId}
+              disabled={!selectedProduct || selectedProduct.batches.length === 0}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a batch" />
+              </SelectTrigger>
+              <SelectContent>
+                {selectedProduct.batches.length > 0 ? (
+                  selectedProduct.batches.map((batch, index) => (
+                    <SelectItem key={batch.id} value={batch.id}>
+                      Batch #{index + 1} ({batch.availableQuantity}) - Prod: {format(parseISO(batch.productionDate), 'PPP')}
+                    </SelectItem>
+                  ))
+                ) : (
+                  <SelectItem value="no-batches" disabled>No batches available for this product</SelectItem>
+                )}
+              </SelectContent>
+            </Select>
+          )}
+
+          {selectedProduct && selectedBatch && (
             <div className="flex flex-col items-center space-y-6 mt-8">
               <div ref={qrCodeRef} className="p-4 border rounded-lg bg-white shadow-md">
                 <QRCodeSVG
-                  value={selectedProduct.id}
+                  value={`${selectedProduct.id}-${selectedBatch.id}`} {/* QR code value now includes batch ID */}
                   size={256}
                   bgColor="#ffffff"
                   fgColor="#000000"
@@ -95,8 +136,8 @@ const GenerateQrCodes = () => {
                   includeMargin={false}
                 />
               </div>
-              <p className="text-sm text-muted-foreground">
-                Scan this QR code to quickly update the quantity of "{selectedProduct.name}".
+              <p className="text-sm text-muted-foreground text-center">
+                Scan this QR code to quickly update the quantity of "{selectedProduct.name}" (Batch: {selectedBatch.availableQuantity}, Prod: {format(parseISO(selectedBatch.productionDate), 'PPP')}).
               </p>
               <Button onClick={handlePrint} className="w-full max-w-xs">
                 <Printer className="mr-2 h-4 w-4" />
