@@ -1,6 +1,7 @@
 import { useState, useMemo, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import { mockProducts } from "@/data/mockData";
+import type { ProductBatch } from "@/types";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import BackButton from "@/components/BackButton";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -8,12 +9,22 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Printer, QrCode as QrCodeIcon } from "lucide-react";
 import { showSuccess } from "@/utils/toast";
+import { format } from "date-fns";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 const GenerateQrCodes = () => {
   const [selectedProductId, setSelectedProductId] = useState<string | undefined>(undefined);
+  const [selectedBatch, setSelectedBatch] = useState<ProductBatch | null>(null);
+  const [isQrDialogOpen, setIsQrDialogOpen] = useState(false);
   const qrCodeRef = useRef<HTMLDivElement>(null);
 
-  // Filter products to only show those from 'seller-5' for this demo
   const sellerProducts = useMemo(() => {
     return mockProducts.filter(p => p.sellerId === 'seller-5');
   }, []);
@@ -22,18 +33,23 @@ const GenerateQrCodes = () => {
     return sellerProducts.find(p => p.id === selectedProductId);
   }, [selectedProductId, sellerProducts]);
 
+  const handleGenerateClick = (batch: ProductBatch) => {
+    setSelectedBatch(batch);
+    setIsQrDialogOpen(true);
+  };
+
   const handlePrint = () => {
-    if (qrCodeRef.current) {
+    if (qrCodeRef.current && selectedProduct && selectedBatch) {
       const printWindow = window.open('', '_blank');
       if (printWindow) {
-        printWindow.document.write('<html><head><title>Print QR Code</title>');
+        printWindow.document.write('<html><head><title>Print Batch QR Code</title>');
         printWindow.document.write('<style>');
         printWindow.document.write(`
           body { font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 20px; }
           .qr-container { text-align: center; padding: 20px; border: 1px solid #ccc; border-radius: 8px; background-color: #fff; }
-          h1 { font-size: 24px; margin-bottom: 15px; }
-          p { font-size: 16px; margin-bottom: 20px; }
-          svg { display: block; margin: 0 auto; }
+          h1 { font-size: 24px; margin-bottom: 10px; }
+          p { font-size: 16px; margin: 5px 0; color: #555; }
+          svg { display: block; margin: 20px auto; }
           @media print {
             body { background-color: #fff; }
             .qr-container { border: none; box-shadow: none; }
@@ -42,14 +58,15 @@ const GenerateQrCodes = () => {
         printWindow.document.write('</style>');
         printWindow.document.write('</head><body>');
         printWindow.document.write('<div class="qr-container">');
-        printWindow.document.write(`<h1>QR Code for ${selectedProduct?.name}</h1>`);
-        printWindow.document.write(`<p>Product ID: ${selectedProduct?.id}</p>`);
+        printWindow.document.write(`<h1>${selectedProduct.name}</h1>`);
+        printWindow.document.write(`<p>Production Date: ${format(new Date(selectedBatch.productionDate), "PPP")}</p>`);
+        printWindow.document.write(`<p>Expiry Date: ${format(new Date(selectedBatch.expiryDate), "PPP")}</p>`);
         printWindow.document.write(qrCodeRef.current.innerHTML);
         printWindow.document.write('</div></body></html>');
         printWindow.document.close();
         printWindow.print();
         printWindow.close();
-        showSuccess("QR code sent to printer.");
+        showSuccess("Batch QR code sent to printer.");
       }
     }
   };
@@ -58,12 +75,12 @@ const GenerateQrCodes = () => {
     <div className="container mx-auto p-4 md:p-8">
       <BackButton />
       <AppBreadcrumb />
-      <h1 className="text-3xl font-bold mb-6">Generate Product QR Codes</h1>
+      <h1 className="text-3xl font-bold mb-6">Generate Batch QR Codes</h1>
 
       <Card className="max-w-2xl mx-auto">
         <CardHeader>
           <CardTitle>Select a Product</CardTitle>
-          <CardDescription>Choose a product to generate its unique QR code for inventory management.</CardDescription>
+          <CardDescription>Choose a product to see its batches and generate their unique QR codes.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <Select onValueChange={setSelectedProductId} value={selectedProductId}>
@@ -74,7 +91,7 @@ const GenerateQrCodes = () => {
               {sellerProducts.length > 0 ? (
                 sellerProducts.map((product) => (
                   <SelectItem key={product.id} value={product.id}>
-                    {product.name} (ID: {product.id})
+                    {product.name} (Art. No: {product.articleNumber})
                   </SelectItem>
                 ))
               ) : (
@@ -84,28 +101,66 @@ const GenerateQrCodes = () => {
           </Select>
 
           {selectedProduct && (
-            <div className="flex flex-col items-center space-y-6 mt-8">
-              <div ref={qrCodeRef} className="p-4 border rounded-lg bg-white shadow-md">
+            <div>
+              <h3 className="text-lg font-semibold mb-4 mt-6">Available Batches for "{selectedProduct.name}"</h3>
+              {selectedProduct.batches.length > 0 ? (
+                <div className="space-y-3">
+                  {selectedProduct.batches.map((batch) => (
+                    <div key={batch.id} className="border rounded-lg p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                      <div className="space-y-1 text-sm">
+                        <p><span className="font-semibold">Production:</span> {format(new Date(batch.productionDate), "PPP")}</p>
+                        <p><span className="font-semibold">Expiry:</span> {format(new Date(batch.expiryDate), "PPP")}</p>
+                        <p><span className="font-semibold">Quantity:</span> {batch.availableQuantity}</p>
+                      </div>
+                      <Button onClick={() => handleGenerateClick(batch)} className="w-full sm:w-auto">
+                        <QrCodeIcon className="mr-2 h-4 w-4" />
+                        Generate QR Code
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground text-center py-8">No batches found for this product.</p>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {selectedProduct && selectedBatch && (
+        <Dialog open={isQrDialogOpen} onOpenChange={setIsQrDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>{selectedProduct.name}</DialogTitle>
+              <DialogDescription>
+                QR Code for batch produced on {format(new Date(selectedBatch.productionDate), "PPP")}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col items-center space-y-4 py-4">
+              <div ref={qrCodeRef} className="p-4 border rounded-lg bg-white">
                 <QRCodeSVG
-                  value={selectedProduct.id}
-                  size={256}
+                  value={`${selectedProduct.articleNumber}:${selectedBatch.id}`}
+                  size={220}
                   bgColor="#ffffff"
                   fgColor="#000000"
                   level="Q"
                   includeMargin={false}
                 />
               </div>
-              <p className="text-sm text-muted-foreground">
-                Scan this QR code to quickly update the quantity of "{selectedProduct.name}".
+              <p className="text-xs text-muted-foreground text-center max-w-xs">
+                Scan this to quickly manage this specific batch in the "Update Qty" section.
               </p>
-              <Button onClick={handlePrint} className="w-full max-w-xs">
-                <Printer className="mr-2 h-4 w-4" />
-                Print QR Code
-              </Button>
             </div>
-          )}
-        </CardContent>
-      </Card>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsQrDialogOpen(false)}>Close</Button>
+              <Button onClick={handlePrint}>
+                <Printer className="mr-2 h-4 w-4" />
+                Print
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };
