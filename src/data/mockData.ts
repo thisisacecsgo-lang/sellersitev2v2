@@ -64,6 +64,7 @@ export const mockProducts: Product[] = [
     harvestOnDemand: false,
     deliveryTimeInDays: 1,
     freshness: "fresh",
+    certification: "Bio",
     batches: [
       { id: "batch-1a", productionDate: "2025-05-27T00:00:00Z", expiryDate: "2025-08-30T00:00:00Z", availableQuantity: "1kg" },
       { id: "batch-1b", productionDate: "2025-05-20T00:00:00Z", expiryDate: "2025-08-23T00:00:00Z", availableQuantity: "3kg" },
@@ -140,6 +141,7 @@ export const mockProducts: Product[] = [
     harvestOnDemand: true,
     deliveryTimeInDays: 1,
     freshness: "fresh",
+    certification: "Demeter",
     batches: [
       { id: "batch-13a", productionDate: "2025-03-24T00:00:00Z", expiryDate: "2025-11-15T00:00:00Z", availableQuantity: "3kg" },
       { id: "batch-13b", productionDate: "2025-03-20T00:00:00Z", expiryDate: "2025-11-10T00:00:00Z", availableQuantity: "5kg" },

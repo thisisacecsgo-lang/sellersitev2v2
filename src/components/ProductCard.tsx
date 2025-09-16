@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import type { Product } from "@/types";
-import { Tag, Package, Eye, Edit, MoreVertical, EyeOff, Trash2, Hash, Truck, MapPin, Leaf, Vegan, Wrench } from "lucide-react";
+import { Tag, Package, Eye, Edit, MoreVertical, EyeOff, Trash2, Hash, Truck, MapPin, Leaf, Vegan, Wrench, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import {
@@ -116,6 +116,7 @@ const ProductCard = ({ product, className, showActions = false, onToggleVisibili
             <Badge variant="secondary" className="font-normal text-xs"><Hash className="h-3 w-3 mr-1" />{product.articleNumber}</Badge>
             <Badge variant="secondary" className="font-normal text-xs"><Package className="h-3 w-3 mr-1" />{totalAvailableQuantity} {unit}</Badge>
             <Badge variant="secondary" className="font-normal text-xs"><Eye className="h-3 w-3 mr-1" />{product.visibility === 'public' ? 'Public' : 'Hidden'}</Badge>
+            {product.certification && <Badge variant="outline" className="font-normal text-xs border-green-600 text-green-700"><ShieldCheck className="h-3 w-3 mr-1" />{product.certification}</Badge>}
             {product.isVegan && <Badge variant="outline" className="font-normal text-xs"><Vegan className="h-3 w-3 mr-1" />Vegan</Badge>}
             {product.isVegetarian && !product.isVegan && <Badge variant="outline" className="font-normal text-xs"><Leaf className="h-3 w-3 mr-1" />Vegetarian</Badge>}
             {product.harvestOnDemand && <Badge variant="outline" className="font-normal text-xs"><Wrench className="h-3 w-3 mr-1" />On Demand</Badge>}

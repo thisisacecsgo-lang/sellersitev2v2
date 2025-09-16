@@ -11,7 +11,8 @@ import {
   Edit,
   Wrench,
   Hash,
-  Eye, // Добавлена иконка Eye
+  Eye,
+  ShieldCheck,
 } from "lucide-react";
 import { mockProducts, mockSellers } from "@/data/mockData";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
@@ -125,6 +126,12 @@ const ProductDetail = () => {
 
         {/* Badges Row 2 */}
         <div className="flex flex-wrap gap-2">
+          {product.certification && (
+            <Badge variant="outline" className="text-sm font-medium border-green-600 text-green-700">
+              <ShieldCheck className="h-3 w-3 mr-1" />
+              {product.certification}
+            </Badge>
+          )}
           {product.isVegan && (
             <Badge variant="outline" className="text-sm font-medium">
               <Vegan className="h-3 w-3 mr-1" />

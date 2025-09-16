@@ -1,6 +1,6 @@
 import type { Product } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Tag, Info, Package, Eye, Edit, MapPin, Hash, Vegan, Leaf, Wrench } from "lucide-react";
+import { Tag, Info, Package, Eye, Edit, MapPin, Hash, Vegan, Leaf, Wrench, ShieldCheck } from "lucide-react";
 import { Link } from "react-router-dom";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import CategoryIcon from "./CategoryIcon";
@@ -47,6 +47,7 @@ export const ProductQuickView = ({ product }: ProductQuickViewProps) => {
                 <Badge variant="secondary" className="font-normal text-xs"><MapPin className="h-3 w-3 mr-1" />{product.region}</Badge>
                 <Badge variant="secondary" className="font-normal text-xs"><Package className="h-3 w-3 mr-1" />{totalAvailableQuantity} {product.priceUnit}</Badge>
                 <Badge variant="secondary" className="font-normal text-xs"><Eye className="h-3 w-3 mr-1" />{product.visibility === 'public' ? 'Public' : 'Hidden'}</Badge>
+                {product.certification && <Badge variant="outline" className="font-normal text-xs border-green-600 text-green-700"><ShieldCheck className="h-3 w-3 mr-1" />{product.certification}</Badge>}
                 {product.isVegan && <Badge variant="outline" className="font-normal text-xs"><Vegan className="h-3 w-3 mr-1" />Vegan</Badge>}
                 {product.isVegetarian && !product.isVegan && <Badge variant="outline" className="font-normal text-xs"><Leaf className="h-3 w-3 mr-1" />Vegetarian</Badge>}
                 {product.harvestOnDemand && <Badge variant="outline" className="font-normal text-xs"><Wrench className="h-3 w-3 mr-1" />On Demand</Badge>}

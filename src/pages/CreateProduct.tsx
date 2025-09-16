@@ -27,20 +27,15 @@ import BackButton from "@/components/BackButton";
 import { AppBreadcrumb } from "@/components/AppBreadcrumb";
 import { showSuccess } from "@/utils/toast";
 import { Separator } from "@/components/ui/separator";
-import { mockProducts } from "@/data/mockData"; // To simulate adding a product
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { CalendarIcon, Upload } from "lucide-react"; // Import Upload icon
-import type { Product } from "@/types"; // Import Product type for generateUniqueArticleNumber
+import { mockProducts } from "@/data/mockData";
+import { Upload } from "lucide-react";
+import type { Product } from "@/types";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
-// Helper function to generate a unique 5-digit article number
 const generateUniqueArticleNumber = (existingProducts: Product[]): string => {
   let newArticleNumber: string;
   let isUnique = false;
   do {
-    // Generate a random 5-digit number (10000 to 99999)
     newArticleNumber = String(Math.floor(10000 + Math.random() * 90000));
     isUnique = !existingProducts.some(p => p.articleNumber === newArticleNumber);
   } while (!isUnique);
@@ -50,16 +45,14 @@ const generateUniqueArticleNumber = (existingProducts: Product[]): string => {
 const productSchema = z.object({
   name: z.string().min(3, { message: "Name must be at least 3 characters." }),
   category: z.string().min(1, { message: "Please select a category." }),
-  availableQuantity: z.string().min(1, { message: "Quantity is required." }),
   price: z.coerce.number().min(0, { message: "Price must be a positive number." }),
   priceUnit: z.string().min(1, { message: "Price unit is required." }),
   description: z.string().optional(),
-  // imageUrls: z.string().optional(), // This field is no longer directly collected via input
   isVegan: z.boolean().default(false),
   isVegetarian: z.boolean().default(false),
   harvestOnDemand: z.boolean().default(false),
   deliveryTimeInDays: z.coerce.number().int().min(0, { message: "Must be a positive number." }).default(1),
-  expiryDate: z.string().optional(),
+  certification: z.enum(["Bio", "Demeter", "Bioland", "None"]).optional(),
 });
 
 const CreateProduct = () => {
@@ -70,57 +63,40 @@ const CreateProduct = () => {
     defaultValues: {
       name: "",
       category: "",
-      availableQuantity: "",
       price: 0,
       priceUnit: "",
       description: "",
-      // imageUrls: "", // No longer needed as a form field
       isVegan: false,
       isVegetarian: false,
       harvestOnDemand: false,
       deliveryTimeInDays: 1,
-      expiryDate: undefined,
+      certification: "None",
     },
   });
 
   const onSubmit = (values: z.infer<typeof productSchema>) => {
     const newArticleNumber = generateUniqueArticleNumber(mockProducts);
-    
     const maxId = mockProducts.reduce((max, p) => Math.max(max, parseInt(p.id, 10)), 0);
     const newProductId = (maxId + 1).toString();
-
-    // For dummy upload, always use a placeholder image
     const imageUrls = ["/placeholder.svg"];
 
     const newProduct = {
       id: newProductId,
       sellerId: "seller-5",
-      articleNumber: newArticleNumber, // Automatically generated
+      articleNumber: newArticleNumber,
       imageUrls: imageUrls,
       status: "available",
       visibility: "public",
       createdAt: new Date().toISOString(),
       freshness: "fresh",
       ...values,
-      batches: [
-        {
-          id: `batch-${newProductId}-1`,
-          productionDate: new Date().toISOString(),
-          expiryDate: values.expiryDate || new Date().toISOString(),
-          availableQuantity: values.availableQuantity,
-        },
-      ],
+      certification: values.certification === "None" ? undefined : values.certification,
+      batches: [],
     };
-    // @ts-ignore
-    delete newProduct.expiryDate;
-    // @ts-ignore
-    delete newProduct.availableQuantity;
-    // @ts-ignore
-    // delete newProduct.imageUrls; // No longer needed as it's explicitly set above
 
-    mockProducts.push(newProduct);
+    mockProducts.push(newProduct as Product);
     showSuccess("Product created successfully!");
-    navigate(`/product/${newProductId}`);
+    navigate(`/product/${newProductId}/edit?new=true`);
   };
 
   return (
@@ -135,36 +111,8 @@ const CreateProduct = () => {
               <CardTitle>Basic Information</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Product Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., Fresh Organic Apples" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Description</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Tell buyers about your product..."
-                        className="resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <FormField control={form.control} name="name" render={({ field }) => (<FormItem><FormLabel>Product Name</FormLabel><FormControl><Input placeholder="e.g., Fresh Organic Apples" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="description" render={({ field }) => (<FormItem><FormLabel>Description</FormLabel><FormControl><Textarea placeholder="Tell buyers about your product..." className="resize-none" {...field} /></FormControl><FormMessage /></FormItem>)} />
               <FormItem>
                 <FormLabel>Product Images</FormLabel>
                 <FormControl>
@@ -173,9 +121,7 @@ const CreateProduct = () => {
                     Upload Photo
                   </Button>
                 </FormControl>
-                <FormDescription>
-                  Click to simulate uploading a product image. (Currently uses a placeholder)
-                </FormDescription>
+                <FormDescription>Click to simulate uploading a product image. (Currently uses a placeholder)</FormDescription>
               </FormItem>
             </CardContent>
           </Card>
@@ -185,205 +131,26 @@ const CreateProduct = () => {
               <CardTitle>Details & Pricing</CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Fruits and berries">Fruits and berries</SelectItem>
-                        <SelectItem value="Vegetables">Vegetables</SelectItem>
-                        <SelectItem value="Bakery">Bakery</SelectItem>
-                        <SelectItem value="Dairy products">Dairy products</SelectItem>
-                        <SelectItem value="Meat and poultry">Meat and poultry</SelectItem>
-                        <SelectItem value="Seafood">Seafood</SelectItem>
-                        <SelectItem value="Animal products">Animal products</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Price (€)</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="e.g., 5.99" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="priceUnit"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Price Unit</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a unit" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="kg">kg</SelectItem>
-                        <SelectItem value="liter">liter</SelectItem>
-                        <SelectItem value="piece">piece</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="availableQuantity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Available Quantity</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., 1kg or 1 dozen" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="deliveryTimeInDays"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Ready to ship in (days)</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="e.g., 1" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      The number of days until the product is available for pickup or delivery.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="expiryDate"
-                render={({ field }) => (
-                  <FormItem className="flex flex-col">
-                    <FormLabel>shelf live</FormLabel>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant={"outline"}
-                            className={cn(
-                              "w-full pl-3 text-left font-normal",
-                              !field.value && "text-muted-foreground"
-                            )}
-                          >
-                            {field.value ? (
-                              format(new Date(field.value), "PPP")
-                            ) : (
-                              <span>Pick a date</span>
-                            )}
-                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={field.value ? new Date(field.value) : undefined}
-                          onSelect={(date) => field.onChange(date ? date.toISOString() : undefined)}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormDescription>
-                      The date until which the product is best.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <FormField control={form.control} name="category" render={({ field }) => (<FormItem><FormLabel>Category</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a category" /></SelectTrigger></FormControl><SelectContent><SelectItem value="Fruits and berries">Fruits and berries</SelectItem><SelectItem value="Vegetables">Vegetables</SelectItem><SelectItem value="Bakery">Bakery</SelectItem><SelectItem value="Dairy products">Dairy products</SelectItem><SelectItem value="Meat and poultry">Meat and poultry</SelectItem><SelectItem value="Seafood">Seafood</SelectItem><SelectItem value="Animal products">Animal products</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="price" render={({ field }) => (<FormItem><FormLabel>Price (€)</FormLabel><FormControl><Input type="number" placeholder="e.g., 5.99" {...field} /></FormControl><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="priceUnit" render={({ field }) => (<FormItem><FormLabel>Price Unit</FormLabel><Select onValueChange={field.onChange} defaultValue={field.value}><FormControl><SelectTrigger><SelectValue placeholder="Select a unit" /></SelectTrigger></FormControl><SelectContent><SelectItem value="kg">kg</SelectItem><SelectItem value="liter">liter</SelectItem><SelectItem value="piece">piece</SelectItem></SelectContent></Select><FormMessage /></FormItem>)} />
+              <FormField control={form.control} name="deliveryTimeInDays" render={({ field }) => (<FormItem><FormLabel>Ready to ship in (days)</FormLabel><FormControl><Input type="number" placeholder="e.g., 1" {...field} /></FormControl><FormDescription>The number of days until the product is available for pickup or delivery.</FormDescription><FormMessage /></FormItem>)} />
             </CardContent>
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Additional Options</CardTitle>
-            </CardHeader>
+            <CardHeader><CardTitle>Certification</CardTitle></CardHeader>
+            <CardContent>
+              <FormField control={form.control} name="certification" render={({ field }) => (<FormItem className="space-y-3"><FormLabel>Select a certification type (optional)</FormLabel><FormControl><RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex flex-col space-y-1"><FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="None" /></FormControl><FormLabel className="font-normal">None</FormLabel></FormItem><FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="Bio" /></FormControl><FormLabel className="font-normal">Bio</FormLabel></FormItem><FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="Demeter" /></FormControl><FormLabel className="font-normal">Demeter</FormLabel></FormItem><FormItem className="flex items-center space-x-3 space-y-0"><FormControl><RadioGroupItem value="Bioland" /></FormControl><FormLabel className="font-normal">Bioland</FormLabel></FormItem></RadioGroup></FormControl><FormMessage /></FormItem>)} />
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader><CardTitle>Additional Options</CardTitle></CardHeader>
             <CardContent className="space-y-4">
-              <FormField
-                control={form.control}
-                name="isVegan"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                    <div className="space-y-0.5">
-                      <FormLabel>Vegan</FormLabel>
-                      <FormDescription>
-                        This product contains no animal products.
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="isVegetarian"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                    <div className="space-y-0.5">
-                      <FormLabel>Vegetarian</FormLabel>
-                      <FormDescription>
-                        This product is suitable for vegetarians.
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="harvestOnDemand"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                    <div className="space-y-0.5">
-                      <FormLabel>Harvest on Demand</FormLabel>
-                      <FormDescription>
-                        This product is harvested only after an order is placed.
-                      </FormDescription>
-                    </div>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
+              <FormField control={form.control} name="isVegan" render={({ field }) => (<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5"><FormLabel>Vegan</FormLabel><FormDescription>This product contains no animal products.</FormDescription></div><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>)} />
+              <FormField control={form.control} name="isVegetarian" render={({ field }) => (<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5"><FormLabel>Vegetarian</FormLabel><FormDescription>This product is suitable for vegetarians.</FormDescription></div><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>)} />
+              <FormField control={form.control} name="harvestOnDemand" render={({ field }) => (<FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm"><div className="space-y-0.5"><FormLabel>Harvest on Demand</FormLabel><FormDescription>This product is harvested only after an order is placed.</FormDescription></div><FormControl><Switch checked={field.value} onCheckedChange={field.onChange} /></FormControl></FormItem>)} />
             </CardContent>
           </Card>
 

@@ -54,6 +54,7 @@ export interface Product {
   harvestOnDemand: boolean;
   deliveryTimeInDays: number;
   freshness: "fresh" | "frozen" | "canned";
+  certification?: "Bio" | "Demeter" | "Bioland";
   batches: ProductBatch[];
 }
 
