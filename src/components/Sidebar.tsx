@@ -5,10 +5,9 @@ import { Button } from "@/components/ui/button";
 const Sidebar = () => {
   return (
     <aside className="fixed inset-y-0 left-0 z-10 hidden w-64 flex-col border-r bg-background sm:flex">
-      <div className="flex h-14 items-center border-b px-6">
+      <div className="flex h-24 items-center justify-center border-b px-6">
         <Link to="/" className="flex items-center gap-2 font-semibold">
-          <img src="/images/logooo.png" alt="MySite Logo" className="h-12 w-20"/> {/* Изменено с h-10 w-12 на h-12 w-20 */}
-          <span className="whitespace-nowrap">Hiesige Höfe</span>
+          <img src="/images/logooo.png" alt="MySite Logo" className="h-20 w-auto"/>
         </Link>
       </div>
       <nav className="flex-1 overflow-auto py-2">
