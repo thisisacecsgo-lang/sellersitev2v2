@@ -17,9 +17,6 @@ export const Footer = () => {
                 Hiesige Höfe
               </span> */}
             </Link>
-            <p className="text-muted-foreground text-sm">
-              Connecting local growers with their communities to reduce food waste.
-            </p>
           </div>
           <div>
             <h3 className="font-semibold mb-4">About</h3>
