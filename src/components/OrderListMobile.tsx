@@ -79,8 +79,8 @@ const OrderListMobile = ({ orders, noOrdersMessage, onStatusChange }: OrderListM
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="Pending">Pending</SelectItem>
-                        <SelectItem value="Ready for Pickup">Ready</SelectItem>
-                        <SelectItem value="Completed">Done</SelectItem>
+                        <SelectItem value="Ready for Pickup">To Pickup</SelectItem>
+                        <SelectItem value="Completed">Picked Up</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
