@@ -166,7 +166,11 @@ const Orders = () => {
                     {batch ? `Batch #${batchIndex! + 1} (${batch.availableQuantity})` : 'N/A'}
                   </TableCell>
                   <TableCell className="py-2 px-2">
-                    <Select value={order.status} onValueChange={(newStatus: Order['status']) => onStatusChange(order.id, newStatus)}>
+                    <Select
+                      value={order.status}
+                      onValueChange={(newStatus: Order['status']) => onStatusChange(order.id, newStatus)}
+                      disabled={order.status === 'Completed'}
+                    >
                       <SelectTrigger className={cn("w-[100px] h-6 text-xs", getStatusClasses(order.status))}>
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>

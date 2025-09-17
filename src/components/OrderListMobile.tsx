@@ -73,7 +73,11 @@ const OrderListMobile = ({ orders, noOrdersMessage, onStatusChange }: OrderListM
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">Status:</span>
-                  <Select value={order.status} onValueChange={(newStatus: Order['status']) => onStatusChange(order.id, newStatus)}>
+                  <Select
+                    value={order.status}
+                    onValueChange={(newStatus: Order['status']) => onStatusChange(order.id, newStatus)}
+                    disabled={order.status === 'Completed'}
+                  >
                     <SelectTrigger className={cn("w-[100px] h-6 text-xs", getStatusClasses(order.status))}>
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
